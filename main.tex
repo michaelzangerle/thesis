@@ -1,0 +1,158 @@
+%%%%%%%%%%%%%%%%%%%%%
+% 
+% Author: Wachter Johannes, Stefan Laesser
+% Date: 17.01.2014
+% File: main.tex
+%
+% Main
+
+%%%%%%%%%%%%%%
+% settings
+\input{template/settings/settings}
+
+
+%%%%%%%%%%%%%%
+% individual settings
+\input{document/settings/settings}
+
+
+%%%%%%%%%%%%%%
+% style
+\input{template/style}
+
+
+%%%%%%%%%%%%%%
+% hacks
+% I need no hack
+
+%%%%%%%%%%%%%%
+% packages
+\input{template/packages}
+
+
+%%%%%%%%%%%%%%
+% document attributes
+\input{document/settings/attributes}
+
+
+%%%%%%%%%%%%%%
+% pdf settings
+\input{template/settings/pdf}
+
+
+%%%%%%%%%%%%%%
+% own commands
+\input{template/commands}
+
+
+%%%%%%%%%%%%%%
+% booleans
+% title page
+\newboolean{myAddBlockingNoticeBoolean}
+\setboolean{myAddBlockingNoticeBoolean}{\myaddblockingnotice} 
+% title page
+\newboolean{myAddTitleBoolean}
+\setboolean{myAddTitleBoolean}{\myaddtitle} 
+% abstract
+\newboolean{myAddAbstractBoolean}
+\setboolean{myAddAbstractBoolean}{\myaddabstract} 
+% table of contents
+\newboolean{myAddTocBoolean}
+\setboolean{myAddTocBoolean}{\myaddtoc} 
+% table of listings
+\newboolean{myAddTolBoolean}
+\setboolean{myAddTolBoolean}{\myaddtol} 
+% table of figures
+\newboolean{myAddTofBoolean}
+\setboolean{myAddTofBoolean}{\myaddtof} 
+% table of tables
+\newboolean{myAddTotBoolean}
+\setboolean{myAddTotBoolean}{\myaddtot} 
+% todo list
+\newboolean{myAddListOfTodosBoolean}
+\setboolean{myAddListOfTodosBoolean}{\myaddlistoftodos} 
+% references list
+\newboolean{myAddReferencesBoolean}
+\setboolean{myAddReferencesBoolean}{\myaddreferences}
+% attatchment
+\newboolean{myAddAttachmentBoolean}
+\setboolean{myAddAttachmentBoolean}{\myaddattachment}
+% references list
+\newboolean{myAddStatutoryDeclarationBoolean}
+\setboolean{myAddStatutoryDeclarationBoolean}{\myaddstatutorydeclaration}
+
+%%%%%%%%%%%%%%
+% document
+\begin{document}
+
+% include blocking notice
+\ifthenelse{\boolean{myAddBlockingNoticeBoolean}}{
+	\include{document/other/blockingnotice}
+}{}
+
+% include title page
+\ifthenelse{\boolean{myAddTitleBoolean}}{
+	\include{title/titlepage}
+}{}
+
+% statutory declaration
+\ifthenelse{\boolean{myAddStatutoryDeclarationBoolean}}{
+	\include{document/other/statutorydeclaration}
+}{}
+
+% roman page numbers and such; only available in scrbook
+\frontmatter
+
+% abstract
+\ifthenelse{\boolean{myAddAbstractBoolean}}{
+	\include{document/content/abstract}
+}{}
+
+% table of contents
+\ifthenelse{\boolean{myAddTocBoolean}}{
+	\tableofcontents
+}{}
+
+% add todolist 
+\ifthenelse{\boolean{myAddListOfTodosBoolean}}{
+	\listoftodos
+}{}
+
+% marks main part using arabic page numbers and such; only available in scrbook
+\mainmatter
+
+% setcounter for chapter
+\setcounter{chapter}{\chapternumber}
+
+\input{document/content/content}
+
+% references
+\ifthenelse{\boolean{myAddReferencesBoolean}}{
+	\include{document/other/references}
+}{}
+
+% table of listings
+\ifthenelse{\boolean{myAddTolBoolean}}{
+		\lstlistoflistings
+		\addcontentsline{toc}{chapter}{Quellcodeverzeichnis}
+}{}
+
+% table of tables
+\ifthenelse{\boolean{myAddTotBoolean}}{
+	\listoftables
+	\addcontentsline{toc}{chapter}{Tabellenverzeichnis}
+}{}
+
+% table of figures
+\ifthenelse{\boolean{myAddTofBoolean}}{
+	\listoffigures
+  \addcontentsline{toc}{chapter}{Abbilungsverzeichnis}
+}{}
+
+% attachment
+\ifthenelse{\boolean{myAddAttachmentBoolean}}{
+	\include{document/other/attachment}
+}{}
+
+
+\end{document}

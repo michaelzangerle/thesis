@@ -6,7 +6,7 @@ Konkret wurden Filter für Zeit, Distanz und Höhenmeter implementiert. Die bere
 Punkte werden insofern gefiltert, als dass sie übersprungen werden und der aktuelle Punkt mit dem nachfolgenden des Ausreißers verglichen wird. Die übersprungenen Punkte werden dann nicht für die weitere Verarbeitung berücksichtigt. Abgesehen von Zeitfilter betrachten alle anderen Filter die gemessen Werten in Relation zur gemessenen Zeit was bedeutet, dass der Zeitwert größer als 0 sein muss.
 
 \section{Verschiedenen Fälle beim Filtern}
-Es gibt drei verschiedene Fälle welche beim Filtern von Ausreißern abgedeckt werden sollten. Der grundlegend Algorithmus welcher vom aktuellen Punkt ausgehend einen neuen gültigen Punkt sucht und alle ungültigen überspringt funktioniert in den ersten zwei Fällen. Im dritten Fall muss noch eine zusätzliche Überprüfung stattfinden.
+Es gibt drei verschiedene Fälle welche beim Filtern von Ausreißern abgedeckt werden sollten. Der grundlegende Algorithmus welcher vom aktuellen Punkt ausgehend einen neuen gültigen Punkt sucht und alle ungültigen überspringt funktioniert in den ersten zwei Fällen. Im dritten Fall muss noch eine zusätzliche Überprüfung stattfinden.
 
 \textbf{1. Fall}\\
 Beim ersten Fall befindet sich ein oder mehrere Ausreißer am Ende der GPS-Spur wie es in Abbildung \imgref{filterCase1} bei dem letzten Punkt der Fall ist. Dies bedeutet, dass ab einem gewissen Punkt keine weiteren validen Punkte gefunden werden und alle folgende Punkte übersprungen werden.
@@ -14,7 +14,7 @@ Beim ersten Fall befindet sich ein oder mehrere Ausreißer am Ende der GPS-Spur 
 \img{0.75}{document/graphics/filterCase1.png}{Filtern - 1. Fall}{filterCase1}
 
 \textbf{2. Fall}\\
-Beim zweiten Fall befinden sich ein oder mehrere Ausreißer zwischen validen vorangegangenen und nachfolgenden Punkten. Ein Beispiel ist in Abbildung \imgref{filterCase2} mit dem vierten Punkt aus Ausreißer abgebildet. Dies bedeutet, dass ein oder mehre Punkte übersprungen werden und danach mit den gültigen Punkten weitergearbeitet werden kann.
+Beim zweiten Fall befinden sich ein oder mehrere Ausreißer zwischen validen vorangegangenen und nachfolgenden Punkten. Ein Beispiel ist in Abbildung \imgref{filterCase2} mit dem vierten Punkt aus Ausreißer abgebildet. Dies bedeutet, dass ein oder mehrere Punkte übersprungen werden und danach mit den gültigen Punkten weitergearbeitet werden kann.
 
 \img{0.75}{document/graphics/filterCase2.png}{Filtern - 2. Fall}{filterCase2}
 
@@ -24,13 +24,13 @@ Der dritte Fall beschäftigt sich mit ein oder mehreren Ausreißern am Beginn de
 \img{0.75}{document/graphics/filterCase3.png}{Filtern - 3. Fall}{filterCase3}
 
 \section{Zeitfilter}
-Der Zeitfilter überprüft ob der Abstand zwischen zwei GPS-Punkten größer gleich einem minimalen Wert ist. Dadurch wird verhindert, dass zwei Punkte mit dem selben Zeitstempeln verarbeitet werden und bei den zeitabhängigen Berechnungen durch 0 dividiert wird. Außerdem kann man dadurch auch steuern wie viele Punkte pro GPS-Spur überprüft werden  (z.B. nur jeder 2. Punkt) beziehungsweise welche Punkte ausgelassen werden sollen um den Prozess zu beschleunigen oder weil sich der Grad an Genauigkeit nicht wesentlich verbessert.
+Der Zeitfilter überprüft ob der Abstand zwischen zwei GPS-Punkten größer gleich einem minimalen Wert ist. Dadurch wird verhindert, dass zwei Punkte mit demselben Zeitstempeln verarbeitet werden und bei den zeitabhängigen Berechnungen durch 0 dividiert wird. Außerdem kann man dadurch auch steuern wie viele Punkte pro GPS-Spur überprüft werden  (z.B. nur jeder 2. Punkt) beziehungsweise welche Punkte ausgelassen werden sollen um den Prozess zu beschleunigen oder weil sich der Grad an Genauigkeit nicht wesentlich verbessert.
 
 \section{Distanzfilter}
 Der Distanzfilter kontrolliert ob sich der Abstand zwischen zwei Punkten im Verhältnis zur Zeit in einem gewissen Bereich befindet. In dieser Arbeit wurde größer 0 m/s als minimale und kleiner 50 m/s als maximale Distanz festgelegt. Liegt ein Punkt nicht innerhalb dieser Grenzen so wird der aktuelle Punkt mit den Punkt nach dem Ausreißer verglichen. Dies wird solange gemacht bis wieder ein Punkt mit valider Distanz gefunden wird oder keine GPS-Punkte mehr vorhanden sind.
 
 \section{Höhenfilter}
-Der Höhenfilter filtert ähnlich wie der Geschwindigkeitsfilter jene GPS-Punkte, bei welchen Differenz der Höhenwerte zu groß ist. In Fall der hier verwendeten Trainingsdaten wurde 25 m/s  für diesen Filter festgelegt und alle Punkte mit einen größeren Differenz werden herausgefiltert.
+Der Höhenfilter filtert ähnlich wie der Geschwindigkeitsfilter jene GPS-Punkte, bei welcher Differenz der Höhenwerte zu groß ist. In Fall der hier verwendeten Trainingsdaten wurde 25 m/s  für diesen Filter festgelegt und alle Punkte mit einen größeren Differenz werden herausgefiltert.
 
 \pagebreak
 

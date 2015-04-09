@@ -98,3 +98,11 @@
 \newcommand{\imglabelprefix}{img}
 \newcommand{\algolabelprefix}{algo}
 % label prefixes
+
+% lists with less margin
+\newenvironment{pitemize}{
+\begin{itemize}
+  \setlength{\itemsep}{1pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}
+}{\end{itemize}}

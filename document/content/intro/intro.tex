@@ -12,13 +12,13 @@ Das Hauptziel dieser Arbeit ist es, einen Prototypen zu erstellen, welcher anhan
 
 Die in dieser Arbeit berücksichtigten Verkehrsmittel sind in folgender Liste ersichtlich. Besonders interessant ist hierbei die Unterscheidung von Bus und Auto in verkehrsabhängigen Situationen bzw. in der Stadt da diese Transporttypen in diesen Situationen sehr ähnliche Verhalten und Werte aufweisen. 
 
-\begin{itemize}
+\begin{pitemize}
 \item Fußgänger
 \item Fahrrad
 \item Bus
 \item Auto (stellvertretend für alle nicht öffentliche, motorisierte Fahrzeuge)
 \item Zug
-\end{itemize}
+\end{pitemize}
 
 Es soll weiters, für jede Person die ein Gerät besitzt das in der Lage ist eine GPS-Spur im GPX-Format aufzuzeichnen, möglich sein, diese Spur analysieren zu lassen. Dies bedeutet, dass keine speziellen Geräte oder andere Sensoren benötigt werden und dass sich dieser Prototyp mit möglichst geringen Anpassungen (Trainingsdaten, GIS-Daten und Grenzwerte in der Konfiguration) auch auf andere Regionen anwenden lässt. Zum Aufzeichnen der in dieser Arbeit verwendeten GPS-Spuren, wurde mehre Smartphones mit der App ``MyTrack`` sowie mehrere GPS-Geräte benutzt.
 
@@ -42,21 +42,6 @@ Zieht man nun verschiedene Werte aus der Auswertung hinzu kann auch festgestellt
 Eine ganze Reihe von Apps lässt sich mit den Auswertungen erstellen. Diese Apps könnten die Auswertungen in soziale Medien zu integrieren, für Fitnessanalysen verwendet werden, einen einfachen Rückblick über die eigene Fortbewegung ermöglichen oder für Umweltbewusste errechnen wie viel CO2 sie produziert oder gespart haben. Ein Reisetagebuch könnte daraus genau so Nutzen ziehen wie eine App die beim Autofahren Auskunft über die aktuell billigste Tankstelle in näherer Umgebung gibt oder eine App die einfach nur Vorschläge für alternative, schnellere Routen zu einem bekannten Ziel anbietet.
 
 Zusammenfassend kann man sagen, dass die Verwendungsmöglichkeiten für solche Daten umfangreich sind und sich am besten unter den Begriffen kontextorientierte, geographische Apps zusammenfassen lassen. Nicht zuletzt öffnen sich mit solchen Daten aber auch umfangreiche Möglichkeiten für die Werbebranche.
-
-\section{State of the Art}
-Zu den Meilensteinen auf diesem Gebiet der Forschung zählt sicher die Arbeit von Yu Zheng in welcher er unter anderem auf die Erkennung von den Abschnitten mit nur einem Verkehrsmittel eingeht. Weiters verwendete er in seiner Arbeit auch einen mit dem von den GPS-Spuren gesammelten geographischen Wissen aufgebauten Graphen welcher zur weiteren Auswertung verwendet wurde.\cite{zheng_understanding_2010}
-
-Mit der Frage wie geographische Daten in eine solche Analyse miteinbezogen werden können hat sich auch Leon Stenneth beschäftigt. Dabei hat er nicht nur fixe Daten wie Gleise und Busstationen sondern auch aktuelle Buspositionen miteinbezogen. \cite{stenneth_transportation_2011}
-
-Sowohl Stenneth als auch Zheng haben in ihren Arbeiten detailiert erklärt wieso sie welche Attribute (Geschwindigkeit, Beschleunigung, ...) für die Bestimmung des Verkehrsmittels verwendet haben und sie haben diese auch durch Versuche nach ihrer Wichtigkeit gereiht. Außerdem haben beide und auch Sasank Reddy mehrere Schlussfolgerungsmodelle (Entscheidungsbaum, Bayessches Netz, Markov Modelle, Random Forest, ...) betrachtet und miteinander verglichen. \cite{reddy_using_2010, stenneth_transportation_2011, zheng_understanding_2010}
-
-Wie man mit Verbindungsabbrüchen umgeht und zwischen ähnlichen Verkehrsmitteln unterscheiden kann hat unter anderem auch Filip Biljecki beschäftigt. Des Weiteren baut er für die unterschiedlichen Kategorien von Verkehrsmittel ein hierarchisches Modell auf, welches ihm helfen soll bessere Entscheidungen zu treffen. \cite{biljecki_transportation_2013}
-
-\subsection{Daten}
-Ein wesentlicher Unterschied zwischen all den betrachteten Publikationen sind die verwendeten Daten. Einzig die GPS-Spuren bilden eine gemeinsame Basis. Manche untersuchten die Verwendung von GSM- und WIFI-Informationen \cite{reddy_using_2010},  stützten sich auf Zusatzinformationen durch weitere Sensoren wie zum Beispiel ein Beschleunigungssensor \cite{reddy_using_2010, nadine_schussler_improving_2011}. Andere wie Leon Stenneth verwendeten Live-Informationen von den öffentlichen Verkehrsmittel und kombinierten diese mit GIS-Informationen, seien es Busstationen, Bahnstrecken, das Straßennetz oder Parkplätze \cite{stenneth_transportation_2011}.
-
-\subsection{Verkehrsmittel}
-Ein weiterer Unterschied zwischen den Publikationen sind die betrachteten Verkehrsmittel. Hierbei reicht die Spanne der unterschiedenen Verkehrsmittel von "Gehen und Motorisiert" (siehe \cite{reddy_using_2010}) bis hin zu "Gehen, Zug, U-Bahn, Rad, Auto, Straßenbahn, Bus, Fähre, Segelboot und Flugzeug"\ (siehe \cite{biljecki_transportation_2013}).
 
 \section{Weiterer Aufbau der Arbeit}
 Der Hauptteil der vorliegenden Arbeit gliedert sich in fünf große Abschnitte:

@@ -84,7 +84,7 @@ Wie bereits im Abschnitt \ref{sec:trainingdata} erwähnt, wurden die neuen Daten
 \section{GIS-Daten}
 Als relevante GIS-Daten kommt in den verschiedensten Arbeiten viel in Frage, darunter Parkplätze, Busstationen, Gleise, Bahnhöfe und das gesamte Straßennetz. All diese Daten mögen zwar relevant sein, aber da der Prototyp auch für konkrete Benutzer relevant sein soll, wird auf die Verwendung des Straßennetzes und der Parkplätze verzichtet, da dies schlicht zu viele Daten sind. Darum wird auf die Verwendung von Busstationen und der Gleise gesetzt da dies schon in der Arbeit von Stenneth \cite{stenneth_transportation_2011} zu guten Resultaten geführt hat.
 
-\subsection{Akquirierung}
+\textbf{Akquirierung}\\
 Allgemein sind GIS-Daten via OpenStreetMaps oder Google-Maps verfügbar, aber in einzelnen Stichproben hat sich herausgestellt, dass die Zusatzinformation in OpenStreetMaps wesentlich detaillierter und einfacher zum Extrahieren sind. Dafür wurde in Kauf genommen, dass diese Daten nicht standardisiert eingetragen wurden.
 
 Die Österreich-Daten von OpenStreetMaps wurden als Archiv heruntergeladen und mit Hilfen von JOSM auf den relevanten Bereich eingegrenzt. JOSM ist ein Tool mit welchem die Daten von OpenStreetMaps gepflegt werden können. Nachdem der Bereich auf Vorarlberg eingegrenzt worden ist, konnte dieser mit Hilfe von osmosis (weiteres Tool von der OpenStreetMaps Community) auf bestimmte Punkte und Relationen gefiltert werden. Dadurch war es möglich das Schienennetz von Vorarlberg sowie die Busstationen von Vorarlberg zu exportieren.

@@ -1,16 +1,16 @@
 \chapter{State of the Art}
-Zu den Meilensteinen auf diesem Gebiet der Forschung zählt sicher die Arbeit von Yu Zheng in welcher er unter anderem auf die Erkennung von den Abschnitten mit nur einem Verkehrsmittel eingeht. Weiters verwendete er in seiner Arbeit auch einen mit dem von den GPS-Spuren gesammelten geographischen Wissen aufgebauten Graphen welcher zur abschließenden Auswertung verwendet wurde.\cite{zheng_understanding_2010, zheng_understanding_2008, zheng_learning_2008}
+Zu den Meilensteinen auf diesem Gebiet der Forschung zählt die Arbeit von Yu Zheng in welcher er unter anderem auf die Erkennung von den Abschnitten mit nur einem Verkehrsmittel eingeht. Weiters verwendete er in seiner Arbeit auch einen mit dem von den GPS-Spuren gesammelten geographischen Wissen aufgebauten Graphen welcher zur abschließenden Auswertung verwendet wurde.\cite{zheng_understanding_2010, zheng_understanding_2008, zheng_learning_2008}
 
 Mit der Frage wie geographische Daten in eine solche Analyse miteinbezogen werden können hat sich unter anderem Leon Stenneth beschäftigt. Dabei hat er nicht nur fixe Daten wie Gleise und Busstationen sondern auch aktuelle Buspositionen miteinbezogen.
 
 Sowohl Stenneth als auch Zheng haben in ihren Arbeiten detailliert erklärt wieso sie welche Attribute (Geschwindigkeit, Beschleunigung, ...) für die Bestimmung des Verkehrsmittels verwendet haben und sie haben diese auch durch Versuche nach ihrer Wichtigkeit gereiht. Außerdem haben beide und auch Sasank Reddy \cite{reddy_determining_2008} mehrere Schlussfolgerungsmodelle (Entscheidungsbaum, Bayessches Netz, Markov Modelle, Random Forest, ...) betrachtet und miteinander verglichen. 
 
-Wie man mit Verbindungsabbrüchen umgeht und zwischen ähnlichen Verkehrsmitteln unterscheiden kann hat unter anderem auch Filip Biljecki beschäftigt. Des Weiteren baut er für die unterschiedlichen Kategorien von Verkehrsmittel ein hierarchisches Modell auf, welches ihm helfen soll bessere Entscheidungen zu treffen. \cite{biljecki_transportation_2013}
+Wie man mit Verbindungsabbrüchen umgeht und zwischen ähnlichen Verkehrsmitteln unterscheiden kann hat unter anderem auch Filip Biljecki beschäftigt. Des Weiteren baut er für die unterschiedlichen Kategorien von Verkehrsmittel ein hierarchisches Modell auf, welches ihm helfen soll, bessere Entscheidungen zu treffen. \cite{biljecki_transportation_2013}
 
 \clearpage
 
 \section{Daten}
-Ein wesentlicher Unterschied zwischen all den betrachteten Publikationen sind die verwendeten Daten. Einzig die GPS-Spuren bilden eine gemeinsame Basis. Manche untersuchten die Verwendung von GSM- und Wifi-Informationen \cite{reddy_using_2010}, stützten sich auf Zusatzinformationen durch weitere Sensoren wie zum Beispiel ein Beschleunigungssensor \cite{reddy_using_2010, nadine_schussler_improving_2011}. Andere wie Leon Stenneth verwendeten Live-Informationen von den öffentlichen Verkehrsmitteln und kombinierten diese mit GIS-Informationen, seien es Busstationen, Bahnstrecken, das Straßennetz oder Parkplätze \cite{stenneth_transportation_2011}.
+Ein wesentlicher Unterschied zwischen all den betrachteten Publikationen sind die verwendeten Daten. Nur die GPS-Spuren bilden eine gemeinsame Basis. Manche untersuchten die Verwendung von GSM- und Wifi-Informationen \cite{reddy_using_2010}, stützten sich auf Zusatzinformationen durch weitere Sensoren wie zum Beispiel ein Beschleunigungssensor \cite{reddy_using_2010, nadine_schussler_improving_2011}. Andere wie Leon Stenneth verwendeten Live-Informationen von den öffentlichen Verkehrsmitteln und kombinierten diese mit GIS-Informationen, seien es Busstationen, Bahnstrecken, das Straßennetz oder Parkplätze \cite{stenneth_transportation_2011}.
 
 \section{Verkehrsmittel}
 Ein weiterer Unterschied zwischen den Publikationen sind die betrachteten Verkehrsmittel. Hierbei reicht die Spanne der unterschiedenen Fortbewegungsmöglichkeiten von ``gehen, laufen, Fahrrad und motorisiert`` \cite{reddy_using_2010} bis hin zu ``gehen, Zug, U-Bahn, Rad, Auto, Straßenbahn, Bus, Fähre, Segelboot und Flugzeug`` \cite{biljecki_transportation_2013}.
@@ -50,17 +50,17 @@ In weiterer Folge stellte er fest, dass die Stopprate, Richtungswechselrate und 
 
 Für die tatsächliche Bestimmung des Typs führte Zheng verschiedene Experimente mit dem Entscheidungsbaum, der Support Vector Machine, dem Bayesschen Netz und dem Conditional Random Field durch. Dabei stellte er fest, dass der Entscheidungsbaum die besten Ergebnisse im Zusammenspiel mit der in Abschnitt \ref{schlussfolgerungsmodelle} beschriebenen Segmentierungsmethode liefert. 
 
-Während dem Analysieren der Trainingsdaten wurde im Hintergrund ein Graph aufgebaut, welcher Informationen über das betrachtete Gebiet widerspiegelt. Mit diesem Graph wurde die Schlussfolgerung nochmals überprüft und es konnte eine weitere Verbesserung erzielt werden. Schlussendlich konnte der von Zheng entwickelte Algorithmus 76,2\% der Testfälle ohne jegliche Zusatzinformationen im Sinne von GIS-Daten oder weitere Sensordaten korrekt identifizieren.
+Während dem Analysieren der Trainingsdaten wurde im Hintergrund ein Graph aufgebaut, welcher Informationen über das betrachtete Gebiet widerspiegelt. Mit diesem Graph wurden die Schlussfolgerungen nochmals überprüft und es konnte eine weitere Verbesserung erzielt werden. Schlussendlich konnte der von Zheng entwickelte Algorithmus 76,2\% der Testfälle ohne jegliche Zusatzinformationen im Sinne von GIS-Daten oder weitere Sensordaten korrekt identifizieren.
 
 \section{Stenneth}
 Leon Stenneth vergleicht in der Publikation ``Transportation Mode Detection usign Mobile Phones and GIS Information`` ähnlich wie Zheng auch verschiede Schlussfolgerungsmodelle. Allerdings verwendete er auch zusätzliche GIS-Informationen um eine genauere Bestimmung zu ermöglichen. Außerdem arbeitet die entwickelte Applikation nicht mit ganzen GPS-Spuren sondern analysiert immer 2 Punkte innerhalb eines 30 Sekunden Intervalls wodurch auch das eigentliche Segmentieren entfällt.
 
 \subsection{GIS-Informtionen}
-Die von Stenneth verwendeten GIS-Informationen beinhalten sowohl die Gleise von Zügen als auch Bushaltestellen sowie die aktuelle Position von allen Bussen. Daraus berechnete er verschiedene Zusatzinformationen für die Bestimmung des Transporttyps:
+Die von Stenneth verwendeten GIS-Informationen beinhalten sowohl die Gleise von Zügen als auch Bushaltestellen sowie die aktuelle Position von allen Bussen in Chicago. Daraus berechnete er verschiedene Zusatzinformationen für die Bestimmung des Transporttyps:
 \begin{pitemize}
-\item Die durchschnittliche Nähe zu den Gleisen ist der euklidische Distanz von den übermittelten Koordinaten zu den nächsten Gleisen. 
-\item Die durchschnittliche Nähe zu Bushaltestellen ist ebenfalls die durchschnittliche euklidische Distanz zur nächsten Bushaltestelle.
-\item Die durchschnittliche Nähe zu einem Bus ist wiederum die durchschnittliche euklidische Distanz zu einem Bus. Dies wird verwendet um festzustellen ob ein Reisender mit dem Bus unterwegs ist.
+\item Durchschnittliche Nähe zu den Gleisen
+\item Durchschnittliche Nähe zu Bushaltestellen
+\item Durchschnittliche Nähe zu dem nächsten Bus
 \end{pitemize}
 
 \subsection{Schlussfolgerungsmodelle}
@@ -77,7 +77,7 @@ Um den Typ des jeweils betrachteten Abschnitts zu bestimmen zieht auch Stenneth 
 \item Distanz zum nächsten Bus
 \end{pitemize}
 
-Wie auch Zheng stellt auch Stenneth fest, dass nur ein paar der Zusatzwerte wirklich effektiv sind. In seinem Fall waren das die durchschnittliche Geschwindigkeit, Beschleunigung und die Nähe zu den Gleisen sowie die Nähe zu einem Bus sowie die Distanz zum nächsten Bus.
+Wie auch Zheng stellt auch Stenneth fest, dass nur ein paar der Zusatzwerte wirklich effektiv sind. In seinem Fall waren das die durchschnittliche Geschwindigkeit, Beschleunigung und die Nähe zu den Gleisen sowie der Abstand zu anderen Bussen sowie die Distanz zum nächsten Bus.
 
 Die von Stenneth betrachteten Modelle sind Naive Bayes, Bayessches Netz, Entscheidungsbaum, Random Forest und Multilayer Perceptron. In den Experimenten stellte er fest, dass der Random Forest mit den GIS-Informationen das vielversprechendste Modell mit mehr als 93\% richtig erkannten Verkehrsmitteln ist. Ohne GIS-Informationen schneidet auch der Random Forest ähnlich wie bei Zheng der Entscheidungsbaum mit 76\% ab. Mit GIS-Informationen erreicht auch der Entscheidungsbaum eine Erkennungsrate von mehr als 92\%. 
 
@@ -91,7 +91,7 @@ Für die Segmentierung verwendet Biljecki dieselbe Methodik wie Zheng aber erwei
 \subsection{Schlussfolgerung}
 Um das Fortbewegungsmittel feststellen zu können wird ein Expertensystem verwendet. Dieses System basiert auf einer Fuzzy-Logic und klassifiziert die Segmente mit Wahrscheinlichkeitswerten. Dazu verwendet dieses System auch die hierarchische Gliederung der verschiedenen Verkehrsmittel welche in Abbildung \imgref{transportationModeHierarchy} ersichtlich ist. Diese Gliederung soll verhindern, dass sich das System zu früh auf einen Typ festlegen muss - das System kann den Typ dadurch Schrittweise bestimmen.
 
-\img{1}{document/graphics/transportationModeHierarchy.png}{Fortbewegungsmittel Hierarchie}{transportationModeHierarchy}
+\img{1}{document/graphics/transportationModeHierarchy.png}{Fortbewegungsmittel-Hierarchie}{transportationModeHierarchy}
 
 \section{Reddy}
 Sasank Reddy hat sich in den Publikationen ``Using Mobile Phones to Determine Transportation Modes`` und ``Determining Transportation Mode on Mobile Phones`` wie auch Stenneth und Zheng mit verschiedenen Schlussfolgerungsmodellen befasst. Bevor diese Modelle aber zum Einsatz kamen wurde evaluiert, mit welchen weiteren Sensoren man sinnvolle Daten aufzeichnen könnte. Im Zuge dessen wurde auch überprüft an welche Stelle am Körper das Smartphone die genauesten Daten liefert und wie möglichst Energieeffizient Daten aufgezeichnet und übermittelt werden können. Im Gegensatz zu anderen Publikationen wurde in diesen nicht genauer zwischen den motorisierten Verkehrsmitteln unterschieden.
@@ -106,12 +106,12 @@ Wifi und GSM in den Erkennungsprozess miteinzubeziehen konnte nach einer Reihe v
 Die vielversprechendste Kombination war jene aus GPS-Daten und den Daten des Beschleunigungssensors, welche auf für die weiteren Experimeten verwendet worden sind.
 
 \subsection{Schlussfolgerungsmodelle}
-Um da Fortbewegungsmittel des jeweiligen Abschnittes zu erkennen zieht Reddy folgende Zusatzinformationen heran:
+Um das Fortbewegungsmittel des jeweiligen Abschnittes zu erkennen zieht Reddy folgende Zusatzinformationen heran:
 
 \begin{pitemize}
 \item Geschwindigkeit
 \item Varianz des Beschleunigungssensorsignals
-\item 3 Beschleunigungssensorwerte (3 Hz, 2Hz, 1Hz)
+\item 3 Beschleunigungssensorwerte (3Hz, 2Hz, 1Hz)
 \end{pitemize}
 
 Die in dieser Publikation betrachteten Modelle sind der Entscheidungsbaum, K-Means Clustering, Naive Bayes, Nearest Neighbor, Support Vector Machine sowie ein Continuous Hidden Markov Model und ein Eintscheidungsbaum in Kombination mit einem Discrete Hidden Markov Model. Dabei konnte festgestellt werden, dass die letzte Variante die besten Resultate mit 93,6\% erzielt. Wie aber auch in den anderen Publikationen war der Entscheidungsbaum mit 91,3\% nicht weit abgeschlagen hinter dem kombinierten Ansatz.

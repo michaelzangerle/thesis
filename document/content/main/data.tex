@@ -1,16 +1,16 @@
-\chapter{Daten}
-Dieser Abschnitt behandelt die Akquirierung und die Struktur der verwendeten GPS-Daten für das Training des Entscheidungsbaums. Außerdem wird erklärt wieso der Entscheidungsbaum als Schlussfolgerungsmodell ausgewählt und wie er erstellt wurde. Aufgrund der unterschiedlichen Attribute  der beiden Fälle (mit und ohne GIS-Daten), sehen die zwei Entscheidungsbäume sehr unterschiedlich aus und werden daher nur oberflächlich miteinander verglichen.
+\chapter{Modellbildung und Einbindung der \\GPS- und GIS-Daten}
+Dieser Abschnitt behandelt die Akquirierung und die Struktur der verwendeten GPS-Daten für das Training des Entscheidungsbaums. Außerdem wird erläutert, wieso der Entscheidungsbaum als Schlussfolgerungsmodell ausgewählt und wie er erstellt wurde. Aufgrund der unterschiedlichen Attribute  der beiden Fälle (mit und ohne GIS-Daten), sehen die zwei Entscheidungsbäume sehr unterschiedlich aus und werden daher nur oberflächlich miteinander verglichen.
 
-Sowohl für die Trainingsdaten für den Entscheidungsbaum als auch für die Testdaten wird erklärt wie diese aufgezeichnet wurden. Dies inkludiert sowohl die Geräte als auch die Software, welche dazu verwendet worden ist. Weiters wird auf die Struktur der GPS-Spuren und der GIS-Daten eingegangen.
+Sowohl für die Trainingsdaten für den Entscheidungsbaum als auch für die Testdaten wird erläutert, wie diese aufgezeichnet wurden. Dies inkludiert sowohl die Geräte als auch die Software, welche dazu verwendet worden ist. Weiters wird auf die Struktur der GPS-Spuren und der GIS-Daten eingegangen.
 
-Außerdem wird erklärt woher die verwendeten GIS-Daten stammen, wie diese extrahiert wurden und welche Rolle sie im weiteren Prozess spielen. Abschließend wird auch auf weitere Daten des ÖPNV eingegangen und in welcher Weise diese hätten eingesetzt werden können.
+Außerdem wird dargelegt, woher die verwendeten GIS-Daten stammen, wie diese extrahiert wurden und welche Rolle sie im weiteren Prozess spielen. Abschließend wird auch auf die Positionsdaten der verschiedenen Verkehrsmittel des ÖPNV eingegangen und in welcher Weise diese hätten eingesetzt werden können.
 \clearpage
 
 \section{Trainingsdaten}
 \label{sec:trainingdata}
 Für das Training der Entscheidungsbäume konnten GPS-Aufzeichnungen aus einem Projekt von Sebastian Nagel "Möglichkeitsstudie zum Projekt: Mobilitäts-Tracker" verwendet werden. Diese Daten wurden mit verschiedenen GPS-Geräten (wintec, columbus, photomate, qstarz, xaiox) und der Hilfe von mehreren Personen aufgezeichnet und beinhalten alle in dieser Arbeit betrachteten Verkehrsmittel. \cite{sebastian_nagel_moglichkeitsstudie_2011}
 
-Weiters wurden zum Training auch neue Datensätze verwendet die mit zwei verschiedenen Smartphones und mit Hilfe der App ``MyTrack`` aufgezeichnet wurden. Diese App wurde ausgewählt da sie sich sehr einfach handhaben lässt und die einzelnen Aufzeichnungen komfortabel exportiert werden können. 
+Weiters wurden zum Training auch neue Datensätze verwendet, die mit zwei verschiedenen Smartphones und mit Hilfe der App ``MyTrack`` aufgezeichnet wurden. Diese App wurde ausgewählt, da sie sich sehr einfach handhaben lässt und die einzelnen Aufzeichnungen komfortabel exportiert werden können. 
 
 Einen groben Überblick über die gesammelten Daten bietet die Tabelle \ref{datenuebsicht}. Die erste Spalte enthält den Verkehrsmitteltyp, die Zweite die Anzahl der Segmente  und die dritte Spalte enthält die Gesamtdistanz in Kilometern von dem jeweiligen Typ. Insgesamt beinhalten die Trainingsdaten 180 Segmente der verschiedenen Transportmittel und erstrecken sich über 2000 Kilometer.
 
@@ -33,12 +33,14 @@ Bus	& 9 & 46,16\\
 \textbf{Gesamt} & \textbf{180} & \textbf{2.172,04}\\
 \hline
 \end{tabular}
-\caption{Datenübersicht}
+\caption{Trainingsdatenübersicht}
 \label{datenuebsicht}
 \end{table}
 
 \subsection{Struktur}
-Diese Trainingsdaten sind in den einzelnen Dateien als XML abgelegt und entsprechen dem gängigen GPX-Format wie es im Listing \coderef{gpxfile} ersichtlich ist. Üblicherweise enthält eine solche Datei einen Track (trk) welcher aus mehreren Tracksegmenten (trkseg) bestehen kann. Die Tracksegmente bestehen wiederum aus beliebig vielen Trackpoints (trkpt) welche eine genaue Koordinate sowie einen Zeitstempel und die Höhenmeter beinhalten.
+Diese Trainingsdaten sind in den einzelnen Dateien als XML abgelegt und entsprechen dem gängigen GPX-Format, wie es im Listing \coderef{gpxfile} ersichtlich ist. Üblicherweise enthält eine solche Datei einen Track (trk) welcher aus mehreren Tracksegmenten (trkseg) bestehen kann. Die Tracksegmente bestehen wiederum aus beliebig vielen Trackpoints (trkpt) welche eine genaue Koordinate sowie einen Zeitstempel und die Höhenmeter beinhalten.
+
+\todo{verweis auf spezifikation von gpx sowie beschreibung von xml format/struktur}
 
 \begin{code}[xml]{GPX-Datei}{gpxfile}
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -65,30 +67,42 @@ Diese Trainingsdaten sind in den einzelnen Dateien als XML abgelegt und entsprec
 \end{code}
 
 \subsection{Entscheidungsbaum}
-Aufgrund des guten Abschneidens des Entscheidungsbaums in verschiedenen Arbeiten  \cite{stenneth_transportation_2011, reddy_using_2010, sebastian_nagel_moglichkeitsstudie_2011,zheng_learning_2008} wurde auch in dieser Arbeit ein Entscheidungsbaum verwendet. Dazu wurden die Trainingsdaten mit Hilfe des Prototyps analysiert und in die Ergebnisse als CSV abgelegt. Daraus konnte dann mit Hilfe des Tools RapidMiner ein Entscheidungsbaum generiert werden. 
+Aufgrund des guten Abschneidens des Entscheidungsbaums in verschiedenen Arbeiten  \cite{stenneth_transportation_2011}, \cite{reddy_using_2010}, \cite{sebastian_nagel_moglichkeitsstudie_2011}und \cite{zheng_learning_2008} wurde auch in dieser Arbeit ein Entscheidungsbaum verwendet. Dazu wurden die Trainingsdaten mit Hilfe des Prototyps analysiert und in die Ergebnisse als CSV abgelegt. Daraus konnte dann mit Hilfe des Tools RapidMiner ein Entscheidungsbaum generiert werden. 
+
+\todo{inwiefern analysiert}
+\todo{warum csv}
+\todo{warum rapidminer -> vorteile evtl arbeit von nagel s.?}
 
 \subsubsection{Entscheidungsbaum ohne GIS-Daten}
 Der Entscheidungsbaum ohne Berücksichtigung von GIS-Daten ist in Abbildung \imgref{decissiontree} zu sehen. Bei Entscheidungsbäumen muss beachtet werden, dass sie nicht zu sehr auf die Trainingsdaten angepasst werden.
 
+\todo{warum overfitting? beleg!}
+
 \img{1}{document/graphics/decission_tree_without.png}{Entscheidungsbaum ohne GIS-Daten}{decissiontree}
+
+\todo{bild im querformat!}
+\todo{beschreibung der zusätlich errechneten daten wie distanz, geschwindigkeit, ...}
 
 \subsubsection{Entscheidungsbaum mit GIS-Daten}
 
 \todo{entscheidungsbaum mit gis daten}
 
 \section{Neue Aufzeichnungen}
-Wie bereits im Abschnitt \ref{sec:trainingdata} erwähnt, wurden die neuen Daten mit zwei Smartphones (Samsung Galaxy S und einem LG Nexus 5) und der App ``MyTrack`` (sieh Abbildung \imgref{myTrack}) aufgezeichnet. Neben der einfachen Handhabung bietet diese App auch an nur Punkte mit einer Mindestgenauigkeit aufzuzeichnen was in Folge beim Filtern ein wenig Arbeit abnimmt. Diese neuen Daten werden hauptsächlich zum Testen verwendet werden und nur ein Teil davon ist in die Trainingsdaten eingeflossen. Weiters kann man zwar ein Fortbewegungsmittel pro Aufzeichnung angeben aber dies hat keinerlei Einfluss auf die Aufzeichnung und dient nur zur optischen Unterscheidung.
+Wie bereits im Abschnitt \ref{sec:trainingdata} erwähnt, wurden die neuen Daten mit zwei Smartphones (Samsung Galaxy S und einem LG Nexus 5) und der App ``MyTrack`` (sieh Abbildung \imgref{myTrack}) aufgezeichnet. Neben der einfachen Handhabung bietet diese App auch an nur Punkte mit einer Mindestgenauigkeit aufzuzeichnen was in Folge beim Filtern ein wenig Arbeit abnimmt. Diese neuen Daten werden hauptsächlich zum Testen verwendet werden und nur ein Teil davon ist in die Trainingsdaten eingeflossen. Weiters kann man zwar ein Fortbewegungsmittel pro Aufzeichnung angeben, aber dies hat keinerlei Einfluss auf die Aufzeichnung selbst oder die Daten - es dient lediglich der visuellen Darstellung/Unterscheidung der einzelnen Aufzeichnungen.
 
 \img{1}{document/graphics/myTrack.png}{Die App myTrack}{myTrack}
 
 \section{GIS-Daten}
-Als relevante GIS-Daten kommt in den verschiedensten Arbeiten viel in Frage, darunter Parkplätze, Busstationen, Gleise, Bahnhöfe und das gesamte Straßennetz. All diese Daten mögen zwar relevant sein, aber da der Prototyp auch für konkrete Benutzer relevant sein soll, wird auf die Verwendung des Straßennetzes und der Parkplätze verzichtet, da dies schlicht zu viele Daten sind. Darum wird auf die Verwendung von Busstationen und der Gleise gesetzt da dies schon in der Arbeit von Stenneth \cite{stenneth_transportation_2011} zu guten Resultaten geführt hat.
+Als relevante GIS-Daten kommt laut den verschiedensten Publikationen zum Thema Verkehrsmittelerkennung einiges in Frage wie z.B. Parkplätze, Busstationen, Gleise, Bahnhöfe und das gesamte Straßennetz. All diese Daten mögen zwar relevant sein, aber es handelt sich auch um sehr viele Daten was wiederum bedeutet, dass die Bearbeitungszeit einer Aufzeichnung rasch ansteigt. Da der Prototyp auch für konkrete Endbenutzer interessant sein soll, wird auf die Verwendung des Straßennetzes und der Parkplätze verzichtet, um die Bearbeitungszeit möglichst gering zu halten. Deshalb wird auf die Verwendung von Busstationen und der Gleise gesetzt da dies schon in der Arbeit von Stenneth \cite{stenneth_transportation_2011} zu guten Resultaten geführt hat. Dieser Ansatz wird ergänzt mit den GIS-Daten des Autobahnnetzes da in diesen viel Potential vermutet wird und es sich um eine überschaubare Menge an Daten handelt.
 
 \textbf{Akquirierung}\\
 Allgemein sind GIS-Daten via OpenStreetMaps oder Google-Maps verfügbar, aber in einzelnen Stichproben hat sich herausgestellt, dass die Zusatzinformation in OpenStreetMaps wesentlich detaillierter und einfacher zum Extrahieren sind. Dafür wurde in Kauf genommen, dass diese Daten nicht standardisiert eingetragen wurden.
 
-Die Österreich-Daten von OpenStreetMaps wurden als Archiv heruntergeladen und mit Hilfen von JOSM auf den relevanten Bereich eingegrenzt. JOSM ist ein Tool mit welchem die Daten von OpenStreetMaps gepflegt werden können. Nachdem der Bereich auf Vorarlberg eingegrenzt worden ist, konnte dieser mit Hilfe von osmosis (weiteres Tool von der OpenStreetMaps-Community) auf bestimmte Punkte und Verbindungen gefiltert werden. Dadurch war es möglich das Schienennetz von Vorarlberg sowie die Busstationen von Vorarlberg zu exportieren.
+Die Österreich-Daten von OpenStreetMaps wurden als Archiv heruntergeladen und mit Hilfen von JOSM auf den relevanten Bereich eingegrenzt. JOSM ist ein Tool mit welchem die Daten von OpenStreetMaps gepflegt werden können. Nachdem der Bereich auf Vorarlberg eingegrenzt worden ist, konnte dieser mit Hilfe von osmosis (weiteres Tool von der OpenStreetMaps-Community) auf bestimmte Punkte und Verbindungen gefiltert werden. Dadurch war es möglich, das Schienennetz von Vorarlberg sowie die Busstationen von Vorarlberg zu exportieren.
+
+\todo{einbundung der gis daten ins modell}
 
 \section{Weitere Daten}
-Neben den zusätzlichen Werten die aus den GPS-Spuren berechnet werden können und den GIS-Daten wurde auch überlegt Daten des öffentlichen Personennahverkehrs einzubinden, da diese in Vorarlberg über eine GPS-Position eines jeden Busses verfügen würden. Die Verwendung dieser Daten wäre insofern vielversprechend gewesen, als dass man einen ähnlichen Ansatz wie Stenneth verfolgen hätte können. Man hätte dadurch überprüfen können ob an der jeweiligen Stelle gerade ein Bus steht und darüber Rückschlüsse treffen können. Da diese Daten aber zum Zeitpunkt dieser Arbeit weder für diese Arbeit noch für die Öffentlichkeit verfügbar sind scheidet diese Möglichkeit aus.
+Neben den zusätzlichen Werten, die aus den GPS-Spuren berechnet werden können und den GIS-Daten, wurde auch überlegt, Daten des öffentlichen Personennahverkehrs einzubinden, da diese in Vorarlberg über eine GPS-Position eines jeden Busses verfügen würden. Die Verwendung dieser Daten wäre insofern vielversprechend gewesen, als dass man einen ähnlichen Ansatz wie Stenneth verfolgen hätte können. Man hätte dadurch überprüfen können ob an der jeweiligen Stelle gerade ein Bus steht und darüber Rückschlüsse treffen können. Da diese Daten aber zum Zeitpunkt dieser Arbeit weder für diese Arbeit noch für die Öffentlichkeit verfügbar sind, scheidet diese Möglichkeit aus.
+
 

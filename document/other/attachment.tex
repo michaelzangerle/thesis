@@ -18,7 +18,6 @@ Konkret wurden Filter für Zeit, Distanz und Höhenmeter implementiert. Die somi
 \end{pitemize}
 
 GPS-Punkte, welche nicht den definierten Grenzwerten entsprechen werden im der weiteren Verarbeitung nicht betrachtet. Abgesehen vom Zeitfilter betrachten alle anderen Filter die gemessenen Werte in Relation zur gemessenen Zeit, was bedeutet, dass der Zeitwert größer als 0 sein muss und von mehren GPS-Punkten mit der selben Zeit nur einer betrachtet wird.
-\clearpage
 
 \section*{Verschiedene Fälle beim Filtern}
 Es gibt drei verschiedene Fälle, welche beim Filtern von Ausreißern abgedeckt werden sollten. Der grundlegende Algorithmus, welcher vom aktuellen Punkt ausgehend einen neuen gültigen Punkt sucht und alle ungültigen überspringt, funktioniert in den ersten zwei Fällen. Im dritten Fall muss noch eine zusätzliche Überprüfung stattfinden.

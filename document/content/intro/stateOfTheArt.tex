@@ -7,8 +7,6 @@ Sowohl Stenneth als auch Zheng haben in ihren Arbeiten detailliert erklärt, wie
 
 Wie man mit Verbindungsabbrüchen umgeht und zwischen ähnlichen Verkehrsmitteln unterscheiden kann hat unter anderem auch Filip Biljecki beschäftigt. Des Weiteren baut er für die unterschiedlichen Kategorien von Verkehrsmitteln ein hierarchisches Modell auf, welches ihm helfen soll, bessere Entscheidungen zu treffen. \cite{biljecki_transportation_2013}
 
-\clearpage
-
 \section{Daten}
 Ein wesentlicher Unterschied zwischen all den betrachteten Publikationen sind die verwendeten Daten. Nur die GPS-Spuren bilden eine gemeinsame Basis. Manche untersuchten die Verwendung von GSM- und Wifi-Informationen \cite{reddy_using_2010}, stützten sich auf Zusatzinformationen durch weitere Sensoren wie zum Beispiel einem Beschleunigungssensor \cite{reddy_using_2010}  \cite{nadine_schussler_improving_2011}. Andere, wie Leon Stenneth, verwendeten Live-Informationen von den öffentlichen Verkehrsmitteln und kombinierten diese mit GIS-Informationen, seien es Busstationen, Bahnstrecken, das Straßennetz oder Parkplätze \cite{stenneth_transportation_2011}.
 
@@ -23,9 +21,7 @@ Die Applikation, welche im Zusammenhang mit den Arbeiten entstanden ist, nennt s
 
 Mit Hilfe der so gesammelten Daten konnte unter anderem Datamining betrieben und populäre Strecken festgestellt sowie Verkehrssituationen beurteilt werden. Außerdem konnten auch aktuelle Positionswerte mit einem GPS-fähigen Smartphone/Handy ausgewertet werden und Informationen wie z.B. Abfahrtszeiten der öffentlichen Verkehrsmittel angeboten werden. Wurde aber z.B. eine Strecke mit dem Auto in die Stadt gesucht so konnte auf Grund der bereits analysierten Fahrten über durchschnittliche Geschwindigkeit festgestellt werden, welche Strecke am schnellsten ans Ziel führt.
 
-In diesem von Microsoft Research geführten Projekt standen umfangreiche Test- und Trainingsdaten (1,2 Millionen Kilometer und 48.000 Stunden) zur Verfügung. \cite{microsoft_research_geolife_2015} Ein Bildschirmfoto der Applikation ist in Abbildung \imgref{geolife} zu sehen. 
-
-\img{1}{document/graphics/geolife.jpg}{Geolife (Quelle: research.microsoft.com)}{geolife}
+In diesem von Microsoft Research geführten Projekt standen umfangreiche Test- und Trainingsdaten (1,2 Millionen Kilometer und 48.000 Stunden) zur Verfügung. \cite{microsoft_research_geolife_2015} Ein Bildschirmfoto der Applikation ist in Abbildung \imgref{geolife} zu sehen. \img{1}{document/graphics/geolife.jpg}{Geolife (Quelle: research.microsoft.com)}{geolife}
 
 \subsection{Segmentierung}
 Die Publikationen von Zheng beinhalten auch eine der detailliersten Beschreibungen des Segmentierungsvorgangs. Dabei werden GPS-Spuren in Abschnitte, in welchen nur ein Verkehrsmittel verwendet wird, unterteilt. Diese Abschnitte können dann in weiterer Folge genauer analysiert und das benutzte Verkehrsmittel bestimmt werden.

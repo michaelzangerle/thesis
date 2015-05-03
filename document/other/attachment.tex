@@ -1,2 +1,56 @@
-\chapter*{Anhang}
-\addcontentsline{toc}{chapter}{Anhang}
+\chapter*{Anhang 1}
+\addcontentsline{toc}{chapter}{Anhang 1}
+
+Wie auch bei vielen anderen Arbeiten konnte auch bei dieser Arbeit festgestellt werden, dass sich in den GPS-Spuren einige Ausreißer befanden. Dies konnte vor allem dann beobachtet werden, wenn man sich in einem Zug befand, durch einen Tunnel fuhr oder auch wenn man sich auf einem überdachten Bahnsteig befand. Die Ausreißer werden durch unrealistisch große Distanzabstände oder Sprünge in den Höhenwerten bemerkt. Da diese Werte das Ergebnis verfälschen würden, mussten verschiedene Filter implementiert werden. 
+
+Konkret wurden Filter für Zeit, Distanz und Höhenmeter implementiert. Die somit bereinigten Resultate hatten bereits auf den Entscheidungsbaum ohne GIS-Daten große Auswirkungen. Die Grenzwerte für diese Filter können in einer Konfigurationsdatei festgelegt und je nach geografischer Region und Testdaten angepasst werden. Diese Filter können auch als konfigurierbares Regelwerk verstanden und wie folgt beeinflusst werden:
+
+\todo{beschreibung und auswirkung}
+
+\begin{pitemize}
+\item Minimale Zeitspanne zwischen 2 Punkten
+\item Maximale Distanz pro Sekunde
+\item Minimale Distanz pro Sekunde
+\item Maximale Änderung der Höhenmeter zwischen 2 Punkten pro Sekunde
+\item Minimaler Wert für Verhältnis zwischen gültigen und aufgezeichneten Punkten
+\item Anzahl der zu überspringenden Punkte am Start
+\item Minimale Anzahl von Punkten pro Segment
+\end{pitemize}
+
+GPS-Punkte, welche nicht den definierten Grenzwerten entsprechen werden im der weiteren Verarbeitung nicht betrachtet. Abgesehen vom Zeitfilter betrachten alle anderen Filter die gemessenen Werte in Relation zur gemessenen Zeit, was bedeutet, dass der Zeitwert größer als 0 sein muss und von mehren GPS-Punkten mit der selben Zeit nur einer betrachtet wird.
+\clearpage
+
+\section*{Verschiedene Fälle beim Filtern}
+Es gibt drei verschiedene Fälle, welche beim Filtern von Ausreißern abgedeckt werden sollten. Der grundlegende Algorithmus, welcher vom aktuellen Punkt ausgehend einen neuen gültigen Punkt sucht und alle ungültigen überspringt, funktioniert in den ersten zwei Fällen. Im dritten Fall muss noch eine zusätzliche Überprüfung stattfinden.
+
+\textbf{1. Fall}\\
+Beim ersten Fall befinden sich ein oder mehrere Ausreißer am Ende der GPS-Spur wie es in Abbildung \imgref{filterCase1} bei dem letzten Punkt der Fall ist. Dies bedeutet, dass ab einem gewissen Punkt keine weiteren validen Punkte gefunden und alle folgenden Punkte übersprungen werden.
+
+\img{0.75}{document/graphics/filterCase1.png}{Filtern - 1. Fall}{filterCase1}
+
+\textbf{2. Fall}\\
+Beim zweiten Fall befinden sich ein oder mehrere Ausreißer zwischen validen vorangegangenen und nachfolgenden Punkten. Ein Beispiel ist in Abbildung \imgref{filterCase2} mit dem vierten Punkt als Ausreißer abgebildet. Dies bedeutet, dass ein oder mehrere Punkte übersprungen werden und danach mit den gültigen Punkten weitergearbeitet werden kann.
+
+\img{0.75}{document/graphics/filterCase2.png}{Filtern - 2. Fall}{filterCase2}
+
+\textbf{3. Fall}\\
+\todo{überarbeiten da änderung in implementierung}
+Im dritten Fall befinden sich ein oder mehrere Ausreißer am Beginn der GPS-Spur. Damit ist gemeint, dass vom Start weg keine gültigen Punkte vorhanden sind und erst im Laufe der Aufzeichnung gültige Punkte aufgezeichnet werden. Dies kann vorkommen, wenn die Aufzeichnung der GPS-Spur sofort nach dem Aktivieren des GPS-Moduls startet. Die Position konnte noch nicht mit ausreichender Genauigkeit bestimmt werden und es wird mit einer niederen Genauigkeit gestartet. Im Laufe der Aufzeichnung steigt die Genauigkeit und es kann zu einem Sprung von ungenauen zu den genauen Punkten kommen. Ein Beispiel hierfür ist in Abbildung \imgref{filterCase3} mit den ersten 3 Punkten als Ausreißern ersichtlich.
+
+\img{0.75}{document/graphics/filterCase3.png}{Filtern - 3. Fall}{filterCase3}
+
+Als Filterkriterium für diesen Fall wurde ein Grenzwert für minimale Anzahl von aufeinander folgenden GPS-Punkten festgelegt. Dieser Grenzwert soll dabei helfen zu entscheiden, ab wann genügend gültige Werte bzw. Punkte mit ausreichender Genauigkeit vorhanden sind, um von dort mit der weiteren Analyse zu beginnen. Im Zuge dessen wurde auch ein minimaler Wert für das Verhältnis von ungültigen zu aufgezeichneten Punkten eingeführt. Dadurch kann entschieden werden ob die verarbeitete GPS-Spur überhaupt für die weitere Verarbeitung in Frage kommt oder schlicht zu ungenau ist.
+
+\section*{Zeitfilter}
+Der Zeitfilter überprüf,t ob der Abstand zwischen zwei GPS-Punkten größer gleich einem minimalen Wert (in diesem Fall 0) ist. Dadurch wird verhindert, dass zwei Punkte mit demselben Zeitstempel verarbeitet werden und bei den zeitabhängigen Berechnungen durch 0 dividiert wird. Außerdem kann man dadurch auch steuern, wie viele Punkte pro GPS-Spur überprüft werden  (z.B. nur jeder 2. Punkt), beziehungsweise welche Punkte ausgelassen werden sollen um den Prozess zu beschleunigen oder weil sich der Grad an Genauigkeit nicht wesentlich verbessert.
+
+\section*{Distanzfilter}
+Der Distanzfilter kontrolliert, ob sich der Abstand zwischen zwei Punkten im Verhältnis zur Zeit in einem gewissen Bereich befindet. In dieser Arbeit wurde größer 0 m pro Zeiteinheit als minimale und kleiner 50 m pro Zeiteinheit als maximale Distanz festgelegt. Liegt ein Punkt nicht innerhalb dieser Grenzen so wird der aktuelle Punkt mit dem Punkt nach dem Ausreißer verglichen. Dies wird solange gemacht bis wieder ein Punkt mit valider Distanz gefunden wird oder keine GPS-Punkte mehr vorhanden sind.
+
+\section*{Höhenfilter}
+Der Höhenfilter filtert, ähnlich wie der Geschwindigkeitsfilter, jene GPS-Punkte, bei welchen die Differenz der Höhenwerte zu groß ist. Im Fall der hier verwendeten Trainingsdaten wurde 25 m/s  für diesen Filter festgelegt und alle Punkte mit einen größeren Differenz werden herausgefiltert.
+
+\todo{quellen?}
+\todo{auswirkungen}
+
+\clearpage

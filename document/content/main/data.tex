@@ -8,7 +8,7 @@ Außerdem wird dargelegt, woher die verwendeten GIS-Daten stammen, wie diese ext
 
 \section{Trainingsdaten}
 \label{sec:trainingdata}
-Für das Training der Entscheidungsbäume konnten GPS-Aufzeichnungen aus einem Projekt von Sebastian Nagel "Möglichkeitsstudie zum Projekt: Mobilitäts-Tracker" verwendet werden. Diese Daten wurden mit verschiedenen GPS-Geräten (wintec, columbus, photomate, qstarz, xaiox) und der Hilfe von mehreren Personen aufgezeichnet und beinhalten alle in dieser Arbeit betrachteten Verkehrsmittel. \cite{sebastian_nagel_moglichkeitsstudie_2011}
+Für das Training der Entscheidungsbäume konnten GPS-Aufzeichnungen aus einem Projekt von Sebastian Nagel "Möglichkeitsstudie zum Projekt: Mobilitäts-Tracker" verwendet werden. Diese Daten wurden mit verschiedenen GPS-Geräten (Wintec WTB-202, Columbus V-900, photoMate 887 Lite, qStarz BT-Q1300, xaiox) und der Hilfe von mehreren Personen aufgezeichnet und beinhalten alle in dieser Arbeit betrachteten Verkehrsmittel. \cite{sebastian_nagel_moglichkeitsstudie_2011}
 
 Weiters wurden zum Training auch neue Datensätze verwendet, die mit zwei verschiedenen Smartphones und mit Hilfe der App ``MyTrack`` aufgezeichnet wurden. Diese App wurde ausgewählt, da sie sich sehr einfach handhaben lässt und die einzelnen Aufzeichnungen komfortabel exportiert werden können. 
 
@@ -37,10 +37,18 @@ Bus	& 9 & 46,16\\
 \label{datenuebsicht}
 \end{table}
 
-\subsection{Struktur}
-Diese Trainingsdaten sind in den einzelnen Dateien als XML abgelegt und entsprechen dem gängigen GPX-Format, wie es im Listing \coderef{gpxfile} ersichtlich ist. Üblicherweise enthält eine solche Datei einen Track (trk) welcher aus mehreren Tracksegmenten (trkseg) bestehen kann. Die Tracksegmente bestehen wiederum aus beliebig vielen Trackpoints (trkpt) welche eine genaue Koordinate sowie einen Zeitstempel und die Höhenmeter beinhalten.
+\subsection{Struktur der GPS-Daten}
+Diese Trainingsdaten sind in den einzelnen Dateien als XML abgelegt und entsprechen dem gängigen GPX-Format, wie es im Listing \coderef{gpxfile} ersichtlich ist. Die Spezifikation für GPX kann auf der Webseite von Topografix unter \url{ http://www.topografix.com/GPX/1/1/} gefunden werden. Ein zugehöriges XML-Schema findet man hier \url{http://www.topografix.com/GPX/1/1/gpx.xsd}. \cite{topografix_gpx_2004} 
 
-\todo{verweis auf spezifikation von gpx sowie beschreibung von xml format/struktur}
+\paragraph{Track (trk)}
+Üblicherweise beginnt eine solche Datei mit einem gpx-Element, welches wiederum einen Track enthält. Ein Track repräsentiert eine Aufzeichnung oder Spur und enthält eine Folge aller aufgezeichneten Trackpoints. Diese sind aber wiederum in ein oder mehrere Tracksegmente gegliedert.
+
+\paragraph{Tracksegment (trkseg)}
+Ein Track kann aus einem oder mehreren Tracksegmenten bestehen. Die Tracksegmente enthalten wiederum beliebig vielen aufeinander folgenden Trackpoints. Mit diesen Segmenten kann ein Track in logische Abschnitte unterteilt werden. Außerdem kann ein neues Segment kann begonnen werden, wenn zum Beispiel die Verbindung verloren oder der GPS-Empfänger aus- und wieder eingeschaltet wurde.
+
+\paragraph{Trackpoint (trkpt)}
+Ein Trackpoint entspricht einem Punkt des aufgezeichneten Tracks und enthält Koordinate (Längen- und Breitengrad) sowie einen Zeitstempel und die Höhenmeter. Es gibt aber auch Fälle, in welchen bei einem Trackpoint auch die Geschwindigkeits- oder Beschleunigungsdaten abgelegt wurden.
+ 
 
 \begin{code}[xml]{GPX-Datei}{gpxfile}
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -67,21 +75,21 @@ Diese Trainingsdaten sind in den einzelnen Dateien als XML abgelegt und entsprec
 \end{code}
 
 \subsection{Entscheidungsbaum}
-Aufgrund des guten Abschneidens des Entscheidungsbaums in verschiedenen Arbeiten  \cite{stenneth_transportation_2011}, \cite{reddy_using_2010}, \cite{sebastian_nagel_moglichkeitsstudie_2011}und \cite{zheng_learning_2008} wurde auch in dieser Arbeit ein Entscheidungsbaum verwendet. Dazu wurden die Trainingsdaten mit Hilfe des Prototyps analysiert und in die Ergebnisse als CSV abgelegt. Daraus konnte dann mit Hilfe des Tools RapidMiner ein Entscheidungsbaum generiert werden. 
+Aufgrund des guten Abschneidens des Entscheidungsbaums in verschiedenen Arbeiten  \cite{stenneth_transportation_2011}, \cite{reddy_using_2010}, \cite{sebastian_nagel_moglichkeitsstudie_2011}und \cite{zheng_learning_2008} wurde auch in dieser Arbeit ein Entscheidungsbaum als Schlussfolgerungsmodell verwendet. Um einen Entscheidungsbaum erstellen zu können werden Trainingsdaten benötigt. Daraus werden dann die Regeln für den Entscheidungsbaum bzw. die jeweiligen Entscheidungen des Baums abgeleitet.
 
-\todo{inwiefern analysiert}
-\todo{warum csv}
-\todo{warum rapidminer -> vorteile evtl arbeit von nagel s.? export? beschreibung generell}
+Deshalb wurde für diese Trainingsdaten ein Teil der gesammelten GPS-Daten manuell segmentiert und mit dem benutzten Verkehrsmittel ergänzt. Mit Hilfe des Prototyps wurden die Trainigsdaten eingelesen, gefiltert und mit zusätzlichen Informationen bereichert. Diese zusätzlichen Informationen sind bei der Variante ohne GIS-Daten zum Beispiel Geschwindigkeit und Beschleunigung. Bei der Variante mit GIS-Daten wird unter anderem die Nähe zu Bushaltestellen oder zu Schienen ergänzt. Danach wurde für alle eingelesenen Segmente die berechneten Werte und das dazugehörige Verkehrsmittel in einer Datei abgelegt.
+
+Für die konkrete Generierung der Entscheidungsbäume wurde schließlich das Tool Rapidminer verwendet. Dabei handelt es sich um eine Open-Source Datamining Software welche sowohl verschiedenste Datenquellen unterstützt (Datenbanken und auch einzelne Dateien) als auch die Generierung von Entscheidungsbäumen über eine komfortable Benutzeroberfläche erlaubt. Die vom Prototypen genierte CSV-Datei konnte dadurch einfach eingebunden von RapidMiner eingelesen und ausgewertet und schlussendlich die Entscheindungsbäume generiert werden. Diese können dann sowohl als Bilder als auch in Textform exportiert werden.
 
 \subsubsection{Entscheidungsbaum ohne GIS-Daten}
 Der Entscheidungsbaum ohne Berücksichtigung von GIS-Daten ist in Abbildung \imgref{decissiontree} zu sehen. Bei Entscheidungsbäumen muss beachtet werden, dass sie nicht zu sehr auf die Trainingsdaten angepasst werden.
 
 \todo{warum overfitting? beleg!}
-
-\img{1}{document/graphics/decission_tree_without.png}{Entscheidungsbaum ohne GIS-Daten}{decissiontree}
-
-\todo{bild im querformat!}
 \todo{beschreibung der zusätlich errechneten daten wie distanz, geschwindigkeit, ...}
+
+\img{0.68}{document/graphics/decission_tree_without.png}{Entscheidungsbaum ohne GIS-Daten}{decissiontree}
+\clearpage
+
 
 \subsubsection{Entscheidungsbaum mit GIS-Daten}
 

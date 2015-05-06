@@ -1,11 +1,11 @@
 \chapter*{Anhang 1}
 \addcontentsline{toc}{chapter}{Anhang 1}
 
-Wie auch bei vielen anderen Arbeiten konnte auch bei dieser Arbeit festgestellt werden, dass sich in den GPS-Spuren einige Ausreißer befanden. Dies konnte vor allem dann beobachtet werden, wenn man sich in einem Zug befand, durch einen Tunnel fuhr oder auch wenn man sich auf einem überdachten Bahnsteig befand. Die Ausreißer werden durch unrealistisch große Distanzabstände oder Sprünge in den Höhenwerten bemerkt. Da diese Werte das Ergebnis verfälschen würden, mussten verschiedene Filter implementiert werden. 
+Wie auch bei vielen anderen Publikation die sich mit GPS-Daten beschäftigen,  konnte auch bei dieser Arbeit festgestellt werden, dass sich in den GPS-Spuren einige Ausreißer befanden. Dies konnte vor allem dann beobachtet werden, wenn man sich in einem Zug befand, durch einen Tunnel fuhr oder auch wenn man sich auf einem überdachten Bahnsteig befand. Die Ausreißer werden durch unrealistisch große Distanzabstände oder Sprünge in den Höhenwerten bemerkt. Da diese Werte das Ergebnis verfälschen würden, mussten verschiedene Filter implementiert werden. 
+
+In verschiedensten Publikation zum Thema GPS wird beim Filtern von fehlerhaften Außreisern auf den Kalman-Filter gesetzt (z.B. \cite{caron_gpsimu_2006} und \cite{jun_smoothing_2006}). Da das Filtern an sich aber nicht im Fokus dieser Arbeit stand und es zur Zeit dieser Arbeit keine Implementation für die gewählte Programmiersprache PHP gab wurde auf einfachere Filtermöglichkeiten gesetzt. 
 
 Konkret wurden Filter für Zeit, Distanz und Höhenmeter implementiert. Die somit bereinigten Resultate hatten bereits auf den Entscheidungsbaum ohne GIS-Daten große Auswirkungen. Die Grenzwerte für diese Filter können in einer Konfigurationsdatei festgelegt und je nach geografischer Region und Testdaten angepasst werden. Diese Filter können auch als konfigurierbares Regelwerk verstanden und wie folgt beeinflusst werden:
-
-\todo{beschreibung und auswirkung}
 
 \begin{pitemize}
 \item Minimale Zeitspanne zwischen 2 Punkten
@@ -17,7 +17,19 @@ Konkret wurden Filter für Zeit, Distanz und Höhenmeter implementiert. Die somi
 \item Minimale Anzahl von Punkten pro Segment
 \end{pitemize}
 
-GPS-Punkte, welche nicht den definierten Grenzwerten entsprechen werden im der weiteren Verarbeitung nicht betrachtet. Abgesehen vom Zeitfilter betrachten alle anderen Filter die gemessenen Werte in Relation zur gemessenen Zeit, was bedeutet, dass der Zeitwert größer als 0 sein muss und von mehren GPS-Punkten mit der selben Zeit nur einer betrachtet wird.
+GPS-Punkte, welche nicht den definierten Grenzwerten entsprechen werden im der weiteren Verarbeitung nicht betrachtet. Abgesehen vom Zeitfilter betrachten alle anderen Filter die gemessenen Werte in Relation zur gemessenen Zeit, was bedeutet, dass der Zeitwert größer als 0 sein muss und von mehren GPS-Punkten mit der selben Zeit nur einer betrachtet wird. In den nächsten Absätzen findet sich eine genauere Beschreibung der einzelnen Parameter und ihrer Auswirkungen.
+
+\paragraph{Minimale Zeitspanne zwischen 2 Punkten} Mit Hilfe dieses Konfigurationsparameters kann zum einen sichergestellt werden, dass sich nicht mehrere Trackpunkte mit dem selben Zeitstempel eingeschlichen haben und zum anderen kann man damit auch die Genauigkeit bzw. die Anzahl der zu verarbeitenden Punkte steuern.
+
+\paragraph{Maximale/minimale Distanz pro Sekunde} Durch diesen Parameter kann sichergestellt werden, dass man sich innerhalb einer gewissen Zeitspanne nur eine gewisse Strecke zurücklegen kann beziehungsweise auch Punkte filtern in denen man sich nicht wirklich bewegt hat. Dadurch können die richtig großen Sprünge gefiltert werden und Punkte ohne Bewegung herausgefiltert werden..
+
+\paragraph{Maximale Änderung der Höhenmeter zwischen 2 Punkten pro Sekunde} Hierbei wird überprüft ob es große Sprünge im Bereich der Höhenmeter gibt. 
+
+\paragraph{Minimaler Wert für Verhältnis zwischen gültigen und aufgezeichneten Punkten} Durch dieses Verhältnis kann entschieden werden ob sich überhaupt noch genug gültige GPS-Informationen für den weiteren Bestimmungsprozess in einem Track.
+
+\paragraph{Anzahl der zu überspringenden Punkte am Start} Durch diesen Konfigurationsparameter kann gesteuert werden wie viele Punkte am Beginn einer Aufzeichnung übersprungen werden. Dies rührt daher, dass sich beim Start einer Aufzeichnung gerne Ausreiser einschleichen bis sich der Positionsbestimmungsvorgang eingependelt hat. Durch diesen Parameter können einige dieser Trackpoints übersprungen werden.
+
+\paragraph{Minimale Anzahl von Punkten pro Segment} Über diesen Parameter kann gesteuert werden, wie viele Punkte sich in einem Tracksegment befinden, damit es überhaupt weiterverarbeitet wird. Der minimale Wert für diesen Parameter ist 2. 
 
 \section*{Verschiedene Fälle beim Filtern}
 Es gibt drei verschiedene Fälle, welche beim Filtern von Ausreißern abgedeckt werden sollten. Der grundlegende Algorithmus, welcher vom aktuellen Punkt ausgehend einen neuen gültigen Punkt sucht und alle ungültigen überspringt, funktioniert in den ersten zwei Fällen. Im dritten Fall muss noch eine zusätzliche Überprüfung stattfinden.
@@ -33,12 +45,11 @@ Beim zweiten Fall befinden sich ein oder mehrere Ausreißer zwischen validen vor
 \img{0.75}{document/graphics/filterCase2.png}{Filtern - 2. Fall}{filterCase2}
 
 \textbf{3. Fall}\\
-\todo{überarbeiten da änderung in implementierung}
 Im dritten Fall befinden sich ein oder mehrere Ausreißer am Beginn der GPS-Spur. Damit ist gemeint, dass vom Start weg keine gültigen Punkte vorhanden sind und erst im Laufe der Aufzeichnung gültige Punkte aufgezeichnet werden. Dies kann vorkommen, wenn die Aufzeichnung der GPS-Spur sofort nach dem Aktivieren des GPS-Moduls startet. Die Position konnte noch nicht mit ausreichender Genauigkeit bestimmt werden und es wird mit einer niederen Genauigkeit gestartet. Im Laufe der Aufzeichnung steigt die Genauigkeit und es kann zu einem Sprung von ungenauen zu den genauen Punkten kommen. Ein Beispiel hierfür ist in Abbildung \imgref{filterCase3} mit den ersten 3 Punkten als Ausreißern ersichtlich.
 
 \img{0.75}{document/graphics/filterCase3.png}{Filtern - 3. Fall}{filterCase3}
 
-Als Filterkriterium für diesen Fall wurde ein Grenzwert für minimale Anzahl von aufeinander folgenden GPS-Punkten festgelegt. Dieser Grenzwert soll dabei helfen zu entscheiden, ab wann genügend gültige Werte bzw. Punkte mit ausreichender Genauigkeit vorhanden sind, um von dort mit der weiteren Analyse zu beginnen. Im Zuge dessen wurde auch ein minimaler Wert für das Verhältnis von ungültigen zu aufgezeichneten Punkten eingeführt. Dadurch kann entschieden werden ob die verarbeitete GPS-Spur überhaupt für die weitere Verarbeitung in Frage kommt oder schlicht zu ungenau ist.
+Da keinerlei Information über die Genauigkeit der aufgezeichneten GPS-Punkte gesammelt wurde, ist es eine komplexe Aufgabe einen gültigen Startpunkt zu finden ohne unnötig viele GPS-Daten zu überspringen. In einzelnen Testfällen kam es vor, dass ein großer Teil der Strecke einfach weggelassen wurde, weil kein gültiger Startpunkt bzw. nicht genügend valide und aufeinander folgende Punkte gefunden werden konnten. Deshalb wurde eine konstanter Parameter für die Anzahl der zu überspringenden GPS-Punkte am Anfang eines Tracks festgelegt.
 
 \section*{Zeitfilter}
 Der Zeitfilter überprüf,t ob der Abstand zwischen zwei GPS-Punkten größer gleich einem minimalen Wert (in diesem Fall 0) ist. Dadurch wird verhindert, dass zwei Punkte mit demselben Zeitstempel verarbeitet werden und bei den zeitabhängigen Berechnungen durch 0 dividiert wird. Außerdem kann man dadurch auch steuern, wie viele Punkte pro GPS-Spur überprüft werden  (z.B. nur jeder 2. Punkt), beziehungsweise welche Punkte ausgelassen werden sollen um den Prozess zu beschleunigen oder weil sich der Grad an Genauigkeit nicht wesentlich verbessert.
@@ -48,8 +59,5 @@ Der Distanzfilter kontrolliert, ob sich der Abstand zwischen zwei Punkten im Ver
 
 \section*{Höhenfilter}
 Der Höhenfilter filtert, ähnlich wie der Geschwindigkeitsfilter, jene GPS-Punkte, bei welchen die Differenz der Höhenwerte zu groß ist. Im Fall der hier verwendeten Trainingsdaten wurde 25 m/s  für diesen Filter festgelegt und alle Punkte mit einen größeren Differenz werden herausgefiltert.
-
-\todo{quellen?}
-\todo{auswirkungen}
 
 \clearpage

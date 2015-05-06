@@ -81,15 +81,17 @@ Deshalb wurde für diese Trainingsdaten ein Teil der gesammelten GPS-Daten manue
 
 Für die konkrete Generierung der Entscheidungsbäume wurde schließlich das Tool Rapidminer verwendet. Dabei handelt es sich um eine Open-Source Datamining Software welche sowohl verschiedenste Datenquellen unterstützt (Datenbanken und auch einzelne Dateien) als auch die Generierung von Entscheidungsbäumen über eine komfortable Benutzeroberfläche erlaubt. Die vom Prototypen genierte CSV-Datei konnte dadurch einfach eingebunden von RapidMiner eingelesen und ausgewertet und schlussendlich die Entscheindungsbäume generiert werden. Diese können dann sowohl als Bilder als auch in Textform exportiert werden.
 
-\subsubsection{Entscheidungsbaum ohne GIS-Daten}
-Der Entscheidungsbaum ohne Berücksichtigung von GIS-Daten ist in Abbildung \imgref{decissiontree} zu sehen. Bei Entscheidungsbäumen muss beachtet werden, dass sie nicht zu sehr auf die Trainingsdaten angepasst werden.
+\subsubsection{Überanpassung (Overfitting)}
+Beim Erstellen von Entscheidungsbäumen wie auch bei anderen von Trainingsdaten lernenden Algorithmen muss beachtet werden, dass das Ergebnis nicht zu sehr auf die Trainingsdaten zugeschnitten ist. Dies bedeutet man möchte, dass mit Hilfe der Trainingsdaten ein Modell generiert wird, welches auch für Nichttrainingsdaten ein akzeptables Resultat liefert und nicht zu sehr auf die Gegebenheiten / Ungenauigkeiten in den Trainingsdaten spezialisiert ist. Ist dies jedoch der Fall so spricht man von einer Überanpassung (Overfitting) des Modells auf die Daten.  \cite{tom_dietterich_overfitting_1995}
 
-\todo{warum overfitting? beleg!}
-\todo{beschreibung der zusätlich errechneten daten wie distanz, geschwindigkeit, ...}
+\subsubsection{Zurückschneiden (Pruning)}
+Ist ein Entscheidungsbaum zu sehr angepasst auf die Trainingsdaten so muss dieser wieder zurückgeschnitten werden. Dies bedeutet, dass einzelne Blätter oder auch Teilbäume wieder entfernt werden um ein bestmögliches Resultat (geringe Anzahl an Fehlern) für Nichttrainingsdaten zu erhalten. Für diese Aufgabe wurden verschiedene Algorithmen Entwickelt, welche unter anderem in der Publikation ``Pruning Decision Trees with Misclassification Costs`` von Jeffrey Bradford beschrieben werden. \cite{jeffrey_p._bradford_pruning_1998}
+
+\subsubsection{Entscheidungsbaum ohne GIS-Daten}
+Der Entscheidungsbaum ohne Berücksichtigung von GIS-Daten ist in Abbildung \imgref{decissiontree} zu sehen. Bei diesem Entscheidungsbaum wurden mittlere und maximale Geschwindigkeit, Distanz sowie mittlere und maximale Beschleunigung als Indikatoren für den Entscheidungsprozess gewählt. Wie diese Werte berechnet und ergänzt werden wird im Abschnitt über den Prototypen selbst, erklärt. 
 
 \img{0.68}{document/graphics/decission_tree_without.png}{Entscheidungsbaum ohne GIS-Daten}{decissiontree}
 \clearpage
-
 
 \subsubsection{Entscheidungsbaum mit GIS-Daten}
 
@@ -108,7 +110,7 @@ Allgemein sind GIS-Daten via OpenStreetMaps oder Google-Maps verfügbar, aber in
 
 Die Österreich-Daten von OpenStreetMaps wurden als Archiv heruntergeladen und mit Hilfen von JOSM auf den relevanten Bereich eingegrenzt. JOSM ist ein Tool mit welchem die Daten von OpenStreetMaps gepflegt werden können. Nachdem der Bereich auf Vorarlberg eingegrenzt worden ist, konnte dieser mit Hilfe von osmosis (weiteres Tool von der OpenStreetMaps-Community) auf bestimmte Punkte und Verbindungen gefiltert werden. Dadurch war es möglich, das Schienennetz von Vorarlberg sowie die Busstationen von Vorarlberg zu exportieren.
 
-\todo{einbundung der gis daten ins modell}
+\todo{einbindung der gis daten ins modell}
 
 \section{Weitere Daten}
 Neben den zusätzlichen Werten, die aus den GPS-Spuren berechnet werden können und den GIS-Daten, wurde auch überlegt, Daten des öffentlichen Personennahverkehrs einzubinden, da diese in Vorarlberg über eine GPS-Position eines jeden Busses verfügen würden. Die Verwendung dieser Daten wäre insofern vielversprechend gewesen, als dass man einen ähnlichen Ansatz wie Stenneth verfolgen hätte können. Man hätte dadurch überprüfen können ob an der jeweiligen Stelle gerade ein Bus steht und darüber Rückschlüsse treffen können. Da diese Daten aber zum Zeitpunkt dieser Arbeit weder für diese Arbeit noch für die Öffentlichkeit verfügbar sind, scheidet diese Möglichkeit aus.

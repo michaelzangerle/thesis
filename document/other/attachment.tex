@@ -60,4 +60,10 @@ Der Distanzfilter kontrolliert, ob sich der Abstand zwischen zwei Punkten im Ver
 \section*{Höhenfilter}
 Der Höhenfilter filtert, ähnlich wie der Geschwindigkeitsfilter, jene GPS-Punkte, bei welchen die Differenz der Höhenwerte zu groß ist. Im Fall der hier verwendeten Trainingsdaten wurde 25 m/s  für diesen Filter festgelegt und alle Punkte mit einen größeren Differenz werden herausgefiltert.
 
+\section*{Resultat der Filter}
+Ein postitives Resultat der angewandten Filter auf die GPS Daten sind in Abbildung \imgref{withoutFilter} und Abbildung \imgref{withFilter} zu sehen. Es konnte jedoch festgestellt werden, dass zum Beispiel eine zu hohe Mindestdistanz bei Testdaten einer Mountainbike-Tour zu einem Verlust von sehr vielen Trackpunkten führen würde. Darum sollte die Mindestdistanz eher kleiner gewählt werden um auch bei solchen Tracks gute Resultate und eine gewisse Detailtreu zu erhalten.
+
+\img{0.75}{document/graphics/not_filtered_track.png}{GPS-Track ohne Filter}{withoutFilter}
+\img{0.75}{document/graphics/filtered_track.png}{GSP-Track mit Filter}{withFilter}
+
 \clearpage

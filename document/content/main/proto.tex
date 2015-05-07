@@ -1,7 +1,47 @@
 \chapter{Der Prototyp}
+
+Im Rahmen dieser Thesis  wurde auch ein Prototyp für die Erkennung von Verkehrsmitteln aus GPS-Daten entwickelt. In Abstimmung mit den Zielen, dass es im Prinzip jeder Person (mit einem Gerät das GPS-Tracks aufzeichnen kann und Zugang zu einem Computer mit Internetzug) möglich sein soll ihre eigenen Daten mit diesem Prototypen analysieren zu lassen wurde eine Webapplikation entwickelt. Diese Applikation verwendet serverseitig das PHP-Framework Symfony als Grundlage und stellt eine REST-Schnittstelle zur Kommunikation zu Verfügung.
+
+Der Prototyp bietet neben dem Filtern, Segmentieren und Analysieren der GPS-Daten auch eine Visualisierung der analysierten Daten an. Dies bedeutet, dass das Resultat der Verarbeitung auf einer Karte dargestellt wird. Zusätzlich zu der Darstellung der Karte wird dem Benutzer durch auch die Möglichkeit geboten, die Resultate des Prozesses zu bearbeiten und somit gegebenenfalls das Verkehrsmittel zu korrigieren. 
+
+Sowohl der vom System bestimmte als auch der vom Benutzer  korrigierte Verkehrsmitteltyp wird in der Datenbank abgelegt um Aussagen über die Genauigkeit beider Verfahren (mit und ohne GIS-Daten) treffen zu können. Dies Auswertung werden wiederum durch verschiedene Diagramme und Statistiken visualisiert.
+
 \clearpage
 
-\todo{verweis auf vorheriges filtern in anhang}
+\section{Aufbau und Architektur}
+Der Kern der Webapplikation ist in einer Pipes-and-Filter Architektur aufgebaut. Diese Architektur bietet sich an wenn man einen Datenstrom verarbeiten will. Dabei werden die einzelnen Schritte der Verarbeitung in sogenannte Filter unterteilt und diese werden mit Kanälen (Pipes) verbunden. Die Daten fließen somit in einen Filter, werden dort bearbeitet und schlussendlich über die verbunden Kanäle zu einem oder mehreren nachfolgenden Filtern weitergeleitet. Am Ende einer solchen Kette steht eine Senke (sink) in welcher die Daten schlussendlich abgelegt werden (z.B. eine Datei). Durch dieses Architekturmuster wird eine Codegliederung in einzelnen Komponenten/Arbeitsschritte in gewisser Weise bereits vorgegeben. Aber es ergeben sich auch andere Vorteile wie z.B. Flexibilität bezüglich der Datenquelle, Austauschbarkeit oder auch den Endergebnissen. Weiters müssen bei diesem Ansatz auch keine Zwischendateien o.Ä. geschrieben werden. \cite{buschmann_pipes_1998} 
+
+So werden im Falle dieses Prototyps die Trainingsdaten in eine Datei geschrieben oder bei einer Anfrage über die Webapplikation werden die diese in die Datenbank geschrieben. Hierbei unterscheiden sich nicht nur die Persistierungsarten sondern auch die Darstellung der Daten selbst da in die Datei im CSV-Format geschrieben wird.
+
+Die Anordnung der einzelnen Filter für die Verarbeitung der GPS-Daten ist im Falle der Trainingsdaten in Abbildung \imgref{pipesAndFilterTraining} ersichtlich. Hierbei wird das Verzeichnis mit den Trainingsdaten definiert und dem ersten Filter (Filereader) werden nach und nach die einzelnen Dateien übergeben. Nachdem die Daten den Trackpoint-, und Tracksegmentfilter durchlaufen haben werden sie schließlich vom letzten Filter (Filewriter) in die Datei geschrieben.
+
+\img{1}{document/graphics/pipes_and_filter_training.png}{Pipes- und Filter- Struktur für Trainingsdaten}{pipesAndFilterTraining}
+
+\subsection{Filereader-Filter}
+Der Filereader-Filter liest die Datei mit dem angegeben Dateinamen als XML-Datei ein, sucht sich alle Segmente (trkseg) aus dieser Datei und gibt diese schließlich an den nächsten Filter weiter.
+
+\subsection{Trackpoint-Filter}
+Der Trackpoint-Filter ist nicht nur ein Filter im Sinne des Architekturmusters sondern auch im Sinne seiner Aufgabe. Er versucht all jene Trackpunkte (trkpt) herauszufiltern die nicht den konfigurierten Grenzwerten entsprechen. Dies bedeutet, dass all jene Trackpunkte gefiltert werden bei welchen der Zeitabstand, die Geschwindigkeit oder die Änderung im Bereich der Höhenmeter über oder unter den Grenzwerten liegen. Dadurch werden die einzelnen Segmente von den gröbsten fehlerhaften Ausreisern bereinigt bevor sie an den nächsten Filter weitergeben werden.
+
+\subsection{Tracksegment-Filter}
+Der Tracksegment-Filter ist einer der wichtigsten Filter in dem Verarbeitungsprozess. Er berechnet für jedes Segment die für die weitere Verarbeitung benötigten Zusatzwerte. Dies bedeutet, dass er die mittlere und maximale Beschleunigung, die mittlere und maximale Geschwindigkeit sowie die Distanz berechnet. Im Falle der Trainingsdaten ergänzt er die Segmentdaten noch mit den in den Trainingsdaten definierten Verkehrsmitteltyp.
+
+\subsection{Filewriter-Filter}
+Der Filewriter-Filter übernimmt das Schreiben der übergebenen Daten in eine Datei. Hierbei werden die vom Tracksegment-Filter übergeben Segment in einer Datei im CSV-Format abgelegt, welche in weiterer Folge im Rapidminer verwendet wird.
+
+Die Anordnung der einzelnen Filter für die Verarbeitung der GPS-Daten die über die Webapplikation verarbeitet werden sollen ist in Abbildung \imgref{pipesAndFilter} ersichtlich. Der Ablauf ist hierbei ähnlich wie jener bei den Trainingsdaten, allerdings wird je nach Verarbeitungsvariante (mit oder ohne GIS-Daten) der Tracksegment-Filter oder aber der TracksegmentGIS-Filter ausgewählt. Das Ergebnis dieser Filter wird dann nicht in den Filewrite weitergeleitet sondern kommt in den sogenannten Segmentierungsfilter. Von dort werden die Daten in den  DecissionTree-Filter oder DecissionTreeGis-Filter weitergeleiten von wo aus sie schlussendlich in den Postprocessing-Filter kommen und dann in der Datenbank abgelegt werden. 
+
+\img{0.6}{document/graphics/pipes_and_filter.png}{Pipes- und Filter- Struktur}{pipesAndFilter}
+
+\clearpage
+\subsection{TracksegmentGIS-Filter} \todo{besserer name?}
+\subsection{Segmentation-Filter}
+\subsection{DecissionTree-Filter}
+\subsection{DecissionTreeGIS-Filter}  \todo{besserer name?}
+\subsection{Postprocessing-Filter}
+\subsection{Database-Filter}
+
+\section{UI?}
+
 
 \section{Funktionalitäten}
-\section{Aufbau und Architektur}

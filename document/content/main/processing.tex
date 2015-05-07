@@ -24,4 +24,22 @@
 
 \section{Segmentierung}
 \label{segmentierung}
+Bei der Segmentierung geht es in erster Linie darum, den Umfang des Problems der Verkehrsmittelbestimmung zu verkleinern. Dies bedeutet, man versucht das angegebenen GPS-Tracksegment in Geh-Segment und nicht Geh-Segmente aufzuteilen und dadurch statt zwischen mehreren Verkehrsmitteln (Gehen, Bus, Zug, Auto, Fahrrad) nur mehr zwischen zwei Typen unterscheiden muss. Die genauere Unterscheidung kann dann in einem weiteren Schritt folgen in welchem jedoch schon klar ist wo es sich um ein Segment handelt in welchem eine Person zu Fuß unterwegs war oder nicht. 
+
+Zheng sagt in diesem Zusammenhang, dass es zwischen jedem Wechsel eines Verkehrsmittels einen Abschnitt gibt bei welchem man zu Fuß unterwegs war, auch wenn dieser Abschnitt sehr klein ist. Ein Wechsel erfolgt nie direkt wie z.B. von einem Zug in den Bus ohne über einen Bahnsteig oder ähnliches gehen zu müssen. Diese Aussage hat sich aus seinen umfangreichen Testdaten ableiten lassen. Dies bedeutet, dass wenn ein Verkehrsmittelwechsel stattgefunden hat, dann gibt es auch Trackpunkte in welchen eine Geschwindigkeit und eine Beschleunigung von nahezu 0 zu erwarten ist. Daraus hat er folgenden Algorithmus bzw Regeln abgeleitet:  \cite{zheng_understanding_2010}
+
+\begin{pitemize}
+\item Finde alle Geh-Punkte und nicht Geh-Punkte des betrachteten Abschnitts oder Tracks anhand von Grenzwerten für Geschwindigkeit und Beschleunigung und fasse die aufeinander folgenden Punkte von selben Typ in Segmente zusammen.
+\item Liegt die Distanz oder die Zeit eines solchen Segment unterhalb einer definierten Grenze so vereine dieses Segment mit dem Vorherigen.
+\item Überschreitet ein Segment eine bestimmte Länge (200 Meter) ist es ein ``sicheres Segment``. Liegt die Distanz eines Segments jedoch unterhalb dieses Werts so ist es ein ``unsicheres Segment``. Überschreitet die Anzahl der aufeinander folgenden ``unsicheren Segmenten`` einen bestimmten Grenzwert so werden die  aufeinander folgenden ``unsicheren Segmenten`` vereint und als nicht-geh-Segment betrachtet.
+\end{pitemize}
+
+Biljeki ergänzt diesen Ansatz von Zheng mit seinen Erfahrungen in welchen er feststellte, dass bei einem Wechsel des Verkehrsmittels auch oft das Signal verloren geht. Aus diesem Grund beendet Biljecki ein Segment, wenn die Verbindung verloren wurde und startet ein Neues. Den Verbindungsverlust interpretiert Biljecki so, dass er für mindestens 30 Sekunden keinen weiteren Trackpoint findet. Weiters segmentiert Biljecki dann, wenn er für mehr als 12 Sekunden keine bzw. wenig Bewegung (< 2km/h) festellen konnte. Diese beiden Änderungen an dem Algorithmus von Zheng begründet Biljecki damit, dass eine Übersegmentierung besser ist als eine Untersegmentierung. Aufeinander folgende Segmente mit dem selben Typ kann man immer noch in einem nächsten Schritt zusammenlegen. \cite{biljecki_transportation_2013}
+
+Für den Prototypen wurde im wesentlichen der durch Biljecki erweiterte Ansatz von Zheng gewählt mit der Einschränkung, dass die Klassifizierung in ``sichere`` und ``unsichere`` Segemente nicht übernommen wurde. Dies wurde mit der Aussage von Biljecki begründet, dass eine Übersegmentierung besser ist als eine Untersegmentierung.
+
+
+
+
+
 \subsection{Terminologie}

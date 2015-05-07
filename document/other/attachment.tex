@@ -1,9 +1,10 @@
-\chapter*{Anhang 1	\markleft{Anhang 1}}
+\chapter*{Anhang 1\markleft{Anhang 1}}
+\label{anhang1}
 \addcontentsline{toc}{chapter}{Anhang 1}
 
 Wie auch bei vielen anderen Publikation die sich mit GPS-Daten beschäftigen,  konnte auch bei dieser Arbeit festgestellt werden, dass sich in den GPS-Spuren einige Ausreißer befanden. Dies konnte vor allem dann beobachtet werden, wenn man sich in einem Zug befand, durch einen Tunnel fuhr oder auch wenn man sich auf einem überdachten Bahnsteig befand. Die Ausreißer werden durch unrealistisch große Distanzabstände oder Sprünge in den Höhenwerten bemerkt. Da diese Werte das Ergebnis verfälschen würden, mussten verschiedene Filter implementiert werden. 
 
-In verschiedensten Publikation zum Thema GPS wird beim Filtern von fehlerhaften Außreisern auf den Kalman-Filter gesetzt (z.B. \cite{caron_gpsimu_2006} und \cite{jun_smoothing_2006}). Da das Filtern an sich aber nicht im Fokus dieser Arbeit stand und es zur Zeit dieser Arbeit keine Implementation für die gewählte Programmiersprache PHP gab wurde auf einfachere Filtermöglichkeiten gesetzt. 
+In verschiedensten Publikation zum Thema GPS wird beim Filtern von fehlerhaften Außreisern auf den Kalman-Filter gesetzt (z.B. \cite{caron_gpsimu_2006} und \cite{jun_smoothing_2006}). Da das Filtern an sich aber nicht im Fokus dieser Arbeit stand und es zur Zeit dieser Arbeit keine Implementation des Kalmanfilters für die gewählte Programmiersprache PHP gab wurde auf einfachere Filtermöglichkeiten, wie sie in \cite{schuessler_processing_2009} grob beschrieben werden, gesetzt. 
 
 Konkret wurden Filter für Zeit, Distanz und Höhenmeter implementiert. Die somit bereinigten Resultate hatten bereits auf den Entscheidungsbaum ohne GIS-Daten große Auswirkungen. Die Grenzwerte für diese Filter können in einer Konfigurationsdatei festgelegt und je nach geografischer Region und Testdaten angepasst werden. Diese Filter können auch als konfigurierbares Regelwerk verstanden und wie folgt beeinflusst werden:
 

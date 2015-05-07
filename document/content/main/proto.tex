@@ -5,7 +5,6 @@ Im Rahmen dieser Thesis  wurde auch ein Prototyp für die Erkennung von Verkehrs
 Der Prototyp bietet neben dem Filtern, Segmentieren und Analysieren der GPS-Daten auch eine Visualisierung der analysierten Daten an. Dies bedeutet, dass das Resultat der Verarbeitung auf einer Karte dargestellt wird. Zusätzlich zu der Darstellung der Karte wird dem Benutzer durch auch die Möglichkeit geboten, die Resultate des Prozesses zu bearbeiten und somit gegebenenfalls das Verkehrsmittel zu korrigieren. 
 
 Sowohl der vom System bestimmte als auch der vom Benutzer  korrigierte Verkehrsmitteltyp wird in der Datenbank abgelegt um Aussagen über die Genauigkeit beider Verfahren (mit und ohne GIS-Daten) treffen zu können. Dies Auswertung werden wiederum durch verschiedene Diagramme und Statistiken visualisiert.
-
 \clearpage
 
 \section{Aufbau und Architektur}
@@ -13,35 +12,42 @@ Der Kern der Webapplikation ist in einer Pipes-and-Filter Architektur aufgebaut.
 
 So werden im Falle dieses Prototyps die Trainingsdaten in eine Datei geschrieben oder bei einer Anfrage über die Webapplikation werden die diese in die Datenbank geschrieben. Hierbei unterscheiden sich nicht nur die Persistierungsarten sondern auch die Darstellung der Daten selbst da in die Datei im CSV-Format geschrieben wird.
 
-Die Anordnung der einzelnen Filter für die Verarbeitung der GPS-Daten ist im Falle der Trainingsdaten in Abbildung \imgref{pipesAndFilterTraining} ersichtlich. Hierbei wird das Verzeichnis mit den Trainingsdaten definiert und dem ersten Filter (Filereader) werden nach und nach die einzelnen Dateien übergeben. Nachdem die Daten den Trackpoint-, und Tracksegmentfilter durchlaufen haben werden sie schließlich vom letzten Filter (Filewriter) in die Datei geschrieben.
+\subsection{Pipes und Filter-Anordnung für Trainingsdaten}
+Die Anordnung der einzelnen Filter für die Verarbeitung der GPS-Daten ist im Falle der Trainingsdaten in Abbildung \imgref{pipesAndFilterTraining} ersichtlich. Hierbei wird das Verzeichnis mit den Trainingsdaten definiert und dem ersten Filter (Filereader) werden nach und nach die einzelnen Dateien übergeben. Nachdem die Daten den Trackpoint-, und Tracksegmentfilter (grün ohne GIS-Daten, orange mit GIS-Daten) durchlaufen haben werden sie schließlich vom letzten Filter (Filewriter) in die Datei geschrieben.
 
 \img{1}{document/graphics/pipes_and_filter_training.png}{Pipes- und Filter- Struktur für Trainingsdaten}{pipesAndFilterTraining}
 
-\subsection{Filereader-Filter}
+\subsubsection{Filereader-Filter}
 Der Filereader-Filter liest die Datei mit dem angegeben Dateinamen als XML-Datei ein, sucht sich alle Segmente (trkseg) aus dieser Datei und gibt diese schließlich an den nächsten Filter weiter.
 
-\subsection{Trackpoint-Filter}
+\subsubsection{Trackpoint-Filter}
 Der Trackpoint-Filter ist nicht nur ein Filter im Sinne des Architekturmusters sondern auch im Sinne seiner Aufgabe. Er versucht all jene Trackpunkte (trkpt) herauszufiltern die nicht den konfigurierten Grenzwerten entsprechen. Dies bedeutet, dass all jene Trackpunkte gefiltert werden bei welchen der Zeitabstand, die Geschwindigkeit oder die Änderung im Bereich der Höhenmeter über oder unter den Grenzwerten liegen. Dadurch werden die einzelnen Segmente von den gröbsten fehlerhaften Ausreisern bereinigt bevor sie an den nächsten Filter weitergeben werden.
 
-\subsection{Tracksegment-Filter}
+\subsubsection{Tracksegment-Filter}
 Der Tracksegment-Filter ist einer der wichtigsten Filter in dem Verarbeitungsprozess. Er berechnet für jedes Segment die für die weitere Verarbeitung benötigten Zusatzwerte. Dies bedeutet, dass er die mittlere und maximale Beschleunigung, die mittlere und maximale Geschwindigkeit sowie die Distanz berechnet. Im Falle der Trainingsdaten ergänzt er die Segmentdaten noch mit den in den Trainingsdaten definierten Verkehrsmitteltyp.
+\todo{bei maximal Werten eventuell nicht absolutes Maximum sondern nur 95\% davon verwenden? siehe Biljecki und Zheng (V1-3)}
 
-\subsection{Filewriter-Filter}
+\subsubsection{Filewriter-Filter}
 Der Filewriter-Filter übernimmt das Schreiben der übergebenen Daten in eine Datei. Hierbei werden die vom Tracksegment-Filter übergeben Segment in einer Datei im CSV-Format abgelegt, welche in weiterer Folge im Rapidminer verwendet wird.
 
-Die Anordnung der einzelnen Filter für die Verarbeitung der GPS-Daten die über die Webapplikation verarbeitet werden sollen ist in Abbildung \imgref{pipesAndFilter} ersichtlich. Der Ablauf ist hierbei ähnlich wie jener bei den Trainingsdaten, allerdings wird je nach Verarbeitungsvariante (mit oder ohne GIS-Daten) der Tracksegment-Filter oder aber der TracksegmentGIS-Filter ausgewählt. Das Ergebnis dieser Filter wird dann nicht in den Filewrite weitergeleitet sondern kommt in den sogenannten Segmentierungsfilter. Von dort werden die Daten in den  DecissionTree-Filter oder DecissionTreeGis-Filter weitergeleiten von wo aus sie schlussendlich in den Postprocessing-Filter kommen und dann in der Datenbank abgelegt werden. 
+\subsection{Pipes und Filter-Anordnung für die Webapplikation}
+Die Anordnung der einzelnen Filter für die Verarbeitung der GPS-Daten die über die Webapplikation verarbeitet werden sollen ist in Abbildung \imgref{pipesAndFilter} ersichtlich. Der Ablauf ist hierbei ähnlich wie jener bei den Trainingsdaten, und es wird wiederum zwischen den zwei Modi mit GIS-Daten (orange) oder ohne GIS-Daten (grün) unterschieden. Ausgehend von Trackpoint-Filter wird der Tracksegment-Filter oder aber der GISTracksegment-Filter ausgewählt. Das Ergebnis dieser Filter wird dann nicht in den Filewrite weitergeleitet sondern kommt in den sogenannten Segmentierungsfilter. Von dort werden die Daten in den  TravelMode- oder GISTravelMode-Filter weitergeleiten. Im letzten Schritt werden die Daten nochmal vom Postprocessing-Filter überarbeiten und werden dann in der Datenbank abgelegt werden. 
 
 \img{0.6}{document/graphics/pipes_and_filter.png}{Pipes- und Filter- Struktur}{pipesAndFilter}
 
 \clearpage
-\subsection{TracksegmentGIS-Filter} \todo{besserer name?}
+\subsection{GISTracksegment-Filter}
+Der GISTracksegment-Filter macht im wesentlichen das Selbe wie der normale Tracksegment-Filter, allerdings berechnet er zusätzlich zu den Geschwindigkeit und Beschleunigungswerten noch die Abstände zu den verschiedenen Infrastrukturen wie Busstationen, Schienen und Autobahnen. Diese Werte werden im weiteren Verlauf benötigt um beim GISTravelMode-Filter eine genauere Bestimmung zu ermöglichen.
+\todo{eventuell noch anpassen wenn sich features ändern}
+
 \subsection{Segmentation-Filter}
-\subsection{DecissionTree-Filter}
-\subsection{DecissionTreeGIS-Filter}  \todo{besserer name?}
+Der Segementation-Filter teilt die Tracksegmente der einzelnen Tracks in Teile, welche mit hoher Wahrscheinlichkeit nur mit einem Verkehrsmittel bewältigt wurden. Dazu verwendet dieser auch die Geschwindigkeits- sowie Beschleunigungswerte aus dem vorherigen (GIS)Tracksegment-Filter. Dieser Vorgang stützt sich auf die Ergebnisse aus den Publikationen von Zheng \cite{zheng_understanding_2010} und Biljecki \cite{biljecki_transportation_2013}. Der genaue Ablauf dieses Prozesses ist im Abschnitt \nameref{segmentierung} beschrieben.
+
+\subsection{TravelMode-Filter und GISTravelMode-Filter}
+In diesen Filtern wird der eigentliche Verkehrsmitteltyp anhand der berechneten Werte bestimmt. Dies geschieht in beiden Fällen mit Hilfe des Entscheidungsbaumes (siehe Abschnitt \nameref{entscheidungsbaum} und \nameref{entscheidungsbaumGIS}) welcher mit Hilfe der jeweiligen Trainingsdaten generiert worden ist. 
+
 \subsection{Postprocessing-Filter}
-\subsection{Database-Filter}
+Bei diesem Filter geht es darum, dass wenn alle Verkehrsmittel aller Segmente eines Tracks bestimmt worden sind, die Wahrscheinlichkeit der Wechsel nochmals überprüft wird. Diese letzte Überprüfung der Resultate der Entscheidungsbäume basiert auf Zheng \cite{zheng_understanding_2010} und soll verhindern, dass sehr unwahrscheinliche Verkehrsmittelwechsels wie zum Beispiel ``Auto->zu Fuß->Auto->zu Fuß->Auto`` entstehen. Zheng trifft diese letzte Entscheidung über den Verkehrsmitteltyp in weiterer Folge aber nicht nur auf Grund von Wahrscheinlichkeiten sondern auch durch jenen Graph den er während des Analysierens der Trainingsdaten aufgebaut hat. In diesem Postprocessing-Filter wurde der Wahrscheinlichkeiten-basierte Ansatz implementiert, welcher in der Evaluierung von Zheng einen Anstieg der korrekten Erkennungsrate um 2\% zur Folge hatte.
 
-\section{UI?}
-
-
-\section{Funktionalitäten}
+\section{UI und Funktionalitäten?}
+\todo{ui und funktionalitäten für den benutzer}

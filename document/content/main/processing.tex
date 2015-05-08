@@ -1,7 +1,45 @@
 \chapter{Die Klassifizierungsmethodik}
+In diesem Abschnitt wird der Prozess der Klassifizierung eines GPS-Tracks bzw. dessen einzelne Abschnitte erklärt. Dies inkludiert den Segmentierungsvorgang sowie die Entscheidungsbäume als Schlussfolgerungsmodelle und endet mit dem Nachbearbeiten um Anordnungen mit sehr geringer Wahrscheinlichkeit (Kontextfehler) zu verhindern.
 
-\todo{verweis auf vorheriges filtern in anhang}
-\todo{diagramm für ablauf}
+Unter dem Segmentierungsvorgang versteht man das Aufteile einer GPS-Spur in Abschnitte in welchen mit hoher Wahrscheinlichkeit nur ein Verkehrsmittel benutzt worden ist. Dabei wird versucht die Segmente zu finden in welchen man zu Fuß unterwegs war. Diese werden dann als Geh-Segmente gekennzeichnet. Die anderen Segmente werden als nicht Geh-Segmente klassifiziert. Dadurch, dass nur zwischen 2 temporären Verkehrsmitteln unterschieden wird, vereinfacht sich die  Verkehrsmittelbestimmung drastisch.
+
+Nach der Segmentierung folgt die konkrete Bestimmung des jeweiligen Verkehrsmittels für die einzelnen Abschnitte welche aus dem Segmentierungsvorgang hervorgegangen sind. In dieser Arbeit wurde die Bestimmung mit Hilfe von Entscheidungsbäumen realisiert. Dabei gibt es einen Entscheidungsbaum für die Klassifizierung mit und einen für die Klassifizierung ohne GIS-Daten. 
+
+Schlussendlich werden die klassifizierten Abschnitte ein letztes mal auf ihre Wahrscheinlichkeit in dieser Reihenfolge überprüft. Dies bedeutet, dass überprüft wird wie wahrscheinlich es ist, dass man die Abfolge von z.B. ``Auto->zu Fuß->Auto->zu Fuß->Auto`` in einer GPS-Spur vorfindet oder ob es sich doch um einen Fehler der Bestimmung durch den fehlenden Kontext handeln könnte. Diese letzte Überprüfung sieht die einzelnen Abschnitte also im Kontext der anderen und kann daher ein Letztes mal überprüfen ob das Ergebnis plausibel ist.
+\clearpage
+
+\section{Segmentierung}
+\label{segmentierung}
+Bei der Segmentierung geht es in erster Linie darum, den Umfang des Problems der Verkehrsmittelbestimmung zu verkleinern. Dies bedeutet, man versucht das angegebenen GPS-Tracksegment in Geh-Segment und nicht Geh-Segmente aufzuteilen und dadurch statt zwischen mehreren Verkehrsmitteln (Gehen, Bus, Zug, Auto, Fahrrad) nur mehr zwischen zwei Typen unterscheiden muss. Die genauere Unterscheidung kann dann in einem weiteren Schritt folgen in welchem jedoch schon klar ist wo es sich um ein Segment handelt in welchem eine Person zu Fuß unterwegs war oder nicht. 
+
+Zheng sagt in diesem Zusammenhang, dass es zwischen jedem Wechsel eines Verkehrsmittels einen Abschnitt gibt bei welchem man zu Fuß unterwegs war, auch wenn dieser Abschnitt sehr klein ist. Ein Wechsel erfolgt nie direkt wie z.B. von einem Zug in den Bus ohne über einen Bahnsteig oder ähnliches gehen zu müssen. Diese Aussage hat sich aus seinen umfangreichen Testdaten ableiten lassen. Dies bedeutet, dass wenn ein Verkehrsmittelwechsel stattgefunden hat, dann gibt es auch Trackpunkte in welchen eine Geschwindigkeit und eine Beschleunigung von nahezu 0 zu erwarten ist. Daraus hat er folgenden Algorithmus bzw Regeln abgeleitet:  \cite{zheng_understanding_2010}
+
+\begin{pitemize}
+\item Finde alle Geh-Punkte und nicht Geh-Punkte des betrachteten Abschnitts oder Tracks anhand von Grenzwerten für Geschwindigkeit und Beschleunigung und fasse die aufeinander folgenden Punkte von selben Typ in Segmente zusammen.
+\item Liegt die Distanz oder die Zeit eines solchen Segment unterhalb einer definierten Grenze so vereine dieses Segment mit dem Vorherigen.
+\item Überschreitet ein Segment eine bestimmte Länge (200 Meter) ist es ein ``sicheres Segment``. Liegt die Distanz eines Segments jedoch unterhalb dieses Werts so ist es ein ``unsicheres Segment``. Überschreitet die Anzahl der aufeinander folgenden ``unsicheren Segmenten`` einen bestimmten Grenzwert so werden die  aufeinander folgenden ``unsicheren Segmenten`` vereint und als nicht-geh-Segment betrachtet.
+\end{pitemize}
+
+Biljeki ergänzt diesen Ansatz von Zheng mit seinen Erfahrungen in welchen er feststellte, dass bei einem Wechsel des Verkehrsmittels auch oft das Signal verloren geht. Aus diesem Grund beendet Biljecki ein Segment, wenn die Verbindung verloren wurde und startet ein Neues. Den Verbindungsverlust interpretiert Biljecki so, dass er für mindestens 30 Sekunden keinen weiteren Trackpoint findet. Weiters segmentiert Biljecki dann, wenn er für mehr als 12 Sekunden keine bzw. wenig Bewegung (< 2km/h) festellen konnte. Diese beiden Änderungen an dem Algorithmus von Zheng begründet Biljecki damit, dass eine Übersegmentierung besser ist als eine Untersegmentierung. Aufeinander folgende Segmente mit dem selben Typ kann man immer noch in einem nächsten Schritt zusammenlegen. \cite{biljecki_transportation_2013}
+
+Für den Prototypen wurde im wesentlichen der durch Biljecki erweiterte Ansatz von Zheng gewählt mit der Einschränkung, dass die Klassifizierung in ``sichere`` und ``unsichere`` Segemente nicht übernommen wurde. Dies wurde mit der Aussage von Biljecki begründet, dass eine Übersegmentierung besser ist als eine Untersegmentierung. Das Resultat eines Segmentierungsvorgangs kann man in Abbildung \imgref{segmentierung} sehen. Jeder Kreis auf der eingezeichneten Route zeigt den Start bzw. das Ende eines Segments. Auf Basis dieser ersten Aufteilung kann nun die genauere Bestimmung des Verkehrsmittels erfolgen.
+
+\img{0.75}{document/graphics/segmentierung.png}{Grundlegende Segmentierung}{segmentierung}
+\clearpage
+
+\section{Schlussfolgerungsvariablen}
+Als Grundlage für die Schlussfolgerung durch die Entscheidungsbäume müssen zuerst Variablen die für die Schlussfolgerung sehr wichtig bzw. möglichst ausschlaggebend für die betrachteten Verkehrsmittel sind, festgelegt werden. Dies Variablen können dabei diverse Geschwindigkeitsabhängige Werte wie durchschnittliche und maximale Geschwindigkeit sein oder auch Beschleunigungswerte und  Abstände zu bestimmten Infrastrukturen. Eine Übersicht über die Schlussfolgerungsvariablen in den betrachteten Publikationen ist in der Tabelle \ref{variablenuebersicht} abgebildet. Diese Werte sind nach der Anzahl der Vorkommnisse in den Publikationen gereiht und bildet eine Grundlage für die in dieser Arbeit verwendeten Variablen.
+
+zheng nicht alle verwendet nur SR, VCR und DCR --> besser wie alle anderen\\ 
+stenneth auch nciht alle --> effektivsten waren avg. v. , avg rail, avg bus, avg accel, candidate bus closeness\\
+
+
+nicht mögliche entfernen \\
+mit biljecki evtl. Argumentieren über anzahl der features \\
+auf gis features hinweisen \\
+nicht wirklich miteinander vergleichbar weil unterschiedl. viele modi \\
+max V ist nur die 3 höchste oder 95\% davon \\
+critical point von gonzales nicht enthalten \\
 
 \begin{landscape}
 \begin{table}[h]
@@ -28,9 +66,20 @@ Varianz d. Geschwindigkeit & x &  &  &  &  &  & \textbf{1} \\ \hline
 \end{tabular}
 \caption{Übersicht über die in verschieden Publikationen verwendeten Kriterien}
 \textsuperscript{1} \cite{zheng_understanding_2010}, \textsuperscript{2} \cite{stenneth_transportation_2011}, \textsuperscript{3} \cite{reddy_using_2010}, \textsuperscript{4} \cite{biljecki_transportation_2013}, \textsuperscript{5} \cite{gonzalez_automating_2010}, \textsuperscript{6} \cite{nadine_schussler_improving_2011}, 
-\label{datenuebsicht}
+\label{variablenuebersicht}
 \end{table}
 \end{landscape}
+
+\todo{verweis auf vorheriges filtern in anhang}
+\todo{diagramm für ablauf}
+feature auswahl \\
+feature auswahl GIS \\
+segmentierungsprozess \\
+entscheidungsbaum \\
+entscheidungsbaum GIS \\
+postprocess \\
+\clearpage
+
 
 \section{Aufbereitung ohne GIS-Daten}
 \subsection{Auswahl}
@@ -49,22 +98,15 @@ Varianz d. Geschwindigkeit & x &  &  &  &  &  & \textbf{1} \\ \hline
 \subsubsection{Maximale Beschleunigung}
 \subsection{Abstand zu Bushaltestellen}
 \subsection{Abstand zu Gleisen}
+avg. rail line closeness
+avg. bus closeness
+candidate bus closeness
+avg. bus stop closeness
+avg. bus line closeness
+avg. metro closeness
+avg. tram line closeness
+public transport stop distance
+
+
 \clearpage
 
-\section{Segmentierung}
-\label{segmentierung}
-Bei der Segmentierung geht es in erster Linie darum, den Umfang des Problems der Verkehrsmittelbestimmung zu verkleinern. Dies bedeutet, man versucht das angegebenen GPS-Tracksegment in Geh-Segment und nicht Geh-Segmente aufzuteilen und dadurch statt zwischen mehreren Verkehrsmitteln (Gehen, Bus, Zug, Auto, Fahrrad) nur mehr zwischen zwei Typen unterscheiden muss. Die genauere Unterscheidung kann dann in einem weiteren Schritt folgen in welchem jedoch schon klar ist wo es sich um ein Segment handelt in welchem eine Person zu Fuß unterwegs war oder nicht. 
-
-Zheng sagt in diesem Zusammenhang, dass es zwischen jedem Wechsel eines Verkehrsmittels einen Abschnitt gibt bei welchem man zu Fuß unterwegs war, auch wenn dieser Abschnitt sehr klein ist. Ein Wechsel erfolgt nie direkt wie z.B. von einem Zug in den Bus ohne über einen Bahnsteig oder ähnliches gehen zu müssen. Diese Aussage hat sich aus seinen umfangreichen Testdaten ableiten lassen. Dies bedeutet, dass wenn ein Verkehrsmittelwechsel stattgefunden hat, dann gibt es auch Trackpunkte in welchen eine Geschwindigkeit und eine Beschleunigung von nahezu 0 zu erwarten ist. Daraus hat er folgenden Algorithmus bzw Regeln abgeleitet:  \cite{zheng_understanding_2010}
-
-\begin{pitemize}
-\item Finde alle Geh-Punkte und nicht Geh-Punkte des betrachteten Abschnitts oder Tracks anhand von Grenzwerten für Geschwindigkeit und Beschleunigung und fasse die aufeinander folgenden Punkte von selben Typ in Segmente zusammen.
-\item Liegt die Distanz oder die Zeit eines solchen Segment unterhalb einer definierten Grenze so vereine dieses Segment mit dem Vorherigen.
-\item Überschreitet ein Segment eine bestimmte Länge (200 Meter) ist es ein ``sicheres Segment``. Liegt die Distanz eines Segments jedoch unterhalb dieses Werts so ist es ein ``unsicheres Segment``. Überschreitet die Anzahl der aufeinander folgenden ``unsicheren Segmenten`` einen bestimmten Grenzwert so werden die  aufeinander folgenden ``unsicheren Segmenten`` vereint und als nicht-geh-Segment betrachtet.
-\end{pitemize}
-
-Biljeki ergänzt diesen Ansatz von Zheng mit seinen Erfahrungen in welchen er feststellte, dass bei einem Wechsel des Verkehrsmittels auch oft das Signal verloren geht. Aus diesem Grund beendet Biljecki ein Segment, wenn die Verbindung verloren wurde und startet ein Neues. Den Verbindungsverlust interpretiert Biljecki so, dass er für mindestens 30 Sekunden keinen weiteren Trackpoint findet. Weiters segmentiert Biljecki dann, wenn er für mehr als 12 Sekunden keine bzw. wenig Bewegung (< 2km/h) festellen konnte. Diese beiden Änderungen an dem Algorithmus von Zheng begründet Biljecki damit, dass eine Übersegmentierung besser ist als eine Untersegmentierung. Aufeinander folgende Segmente mit dem selben Typ kann man immer noch in einem nächsten Schritt zusammenlegen. \cite{biljecki_transportation_2013}
-
-Für den Prototypen wurde im wesentlichen der durch Biljecki erweiterte Ansatz von Zheng gewählt mit der Einschränkung, dass die Klassifizierung in ``sichere`` und ``unsichere`` Segemente nicht übernommen wurde. Dies wurde mit der Aussage von Biljecki begründet, dass eine Übersegmentierung besser ist als eine Untersegmentierung. Das Resultat eines Segmentierungsvorgangs kann man in Abbildung \imgref{segmentierung} sehen. Jeder Kreis auf der eingezeichneten Route zeigt den Start bzw. das Ende eines Segments. Auf Basis dieser ersten Aufteilung kann nun die genauere Bestimmung des Verkehrsmittels erfolgen.
-
-\img{0.75}{document/graphics/segmentierung.png}{Grundlegende Segmentierung}{segmentierung}

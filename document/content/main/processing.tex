@@ -1,4 +1,4 @@
-\chapter{Die Klassifizierungsmethodik}
+\chapter{Segmentierung und Klassifizierung}
 In diesem Abschnitt wird der Prozess der Klassifizierung eines GPS-Tracks bzw. dessen einzelne Abschnitte erklärt. Dies inkludiert den Segmentierungsvorgang sowie die Entscheidungsbäume als Schlussfolgerungsmodelle und endet mit dem Nachbearbeiten um Anordnungen mit sehr geringer Wahrscheinlichkeit (Kontextfehler) zu verhindern.
 
 Unter dem Segmentierungsvorgang versteht man das Aufteile einer GPS-Spur in Abschnitte in welchen mit hoher Wahrscheinlichkeit nur ein Verkehrsmittel benutzt worden ist. Dabei wird versucht die Segmente zu finden in welchen man zu Fuß unterwegs war. Diese werden dann als Geh-Segmente gekennzeichnet. Die anderen Segmente werden als nicht Geh-Segmente klassifiziert. Dadurch, dass nur zwischen 2 temporären Verkehrsmitteln unterschieden wird, vereinfacht sich die  Verkehrsmittelbestimmung drastisch.
@@ -28,18 +28,36 @@ Für den Prototypen wurde im wesentlichen der durch Biljecki erweiterte Ansatz v
 \clearpage
 
 \section{Schlussfolgerungsvariablen}
-Als Grundlage für die Schlussfolgerung durch die Entscheidungsbäume müssen zuerst Variablen die für die Schlussfolgerung sehr wichtig bzw. möglichst ausschlaggebend für die betrachteten Verkehrsmittel sind, festgelegt werden. Dies Variablen können dabei diverse Geschwindigkeitsabhängige Werte wie durchschnittliche und maximale Geschwindigkeit sein oder auch Beschleunigungswerte und  Abstände zu bestimmten Infrastrukturen. Eine Übersicht über die Schlussfolgerungsvariablen in den betrachteten Publikationen ist in der Tabelle \ref{variablenuebersicht} abgebildet. Diese Werte sind nach der Anzahl der Vorkommnisse in den Publikationen gereiht und bildet eine Grundlage für die in dieser Arbeit verwendeten Variablen.
+Als Grundlage für die Schlussfolgerung durch die Entscheidungsbäume müssen zuerst Variablen die für die Schlussfolgerung sehr wichtig bzw. möglichst ausschlaggebend für die betrachteten Verkehrsmittel sind, festgelegt werden. Dies Variablen können dabei diverse geschwindigkeitsabhängige Werte wie durchschnittliche und maximale Geschwindigkeit sein oder auch Beschleunigungswerte und  Abstände zu bestimmten Infrastrukturen. Eine Übersicht über die Schlussfolgerungsvariablen in den betrachteten Publikationen ist in der Tabelle \ref{variablenuebersicht} abgebildet. Diese Werte sind nach der Anzahl der Vorkommnisse in den Publikationen gereiht und bildet eine Grundlage für die in dieser Arbeit verwendeten Variablen. 
 
-zheng nicht alle verwendet nur SR, VCR und DCR --> besser wie alle anderen\\ 
-stenneth auch nciht alle --> effektivsten waren avg. v. , avg rail, avg bus, avg accel, candidate bus closeness\\
+Aus Gründen der Vollständigkeit muss noch erwähnt werden, dass aufgrund eines anderen Segmentierungsverfahrens nicht alle Variablen von Gonzales  \cite{gonzalez_automating_2010} aufgeführt sind. Außerdem handelt es sich bei der maximalen Geschwindigkeit nicht um das absolute Maximum sondern um 95\% davon bzw. ist es die dritt höchste Geschwindigkeit die gemessen wurde. 
+
+Weiters muss noch erwähnt werden, dass sowohl Zheng  \cite{zheng_understanding_2010} als auch Stenneth \cite{stenneth_transportation_2011} nicht alle Variablen schlussendlich verwendet haben. Sie haben sich allerdings evaluiert, welche Variablen in ihrem Projekt die größte Wirkung zeigen. Dies war bei Zheng \cite{zheng_understanding_2010} die Kombination von der Stopprate, der Geschwindigkeitsänderungsrate und der Richtungsänderungsrate. Fügte er weitere Variablen hinzu konnte eine Verschlechterung der Ergebnisse beobachten. Bei Stenneth \cite{stenneth_transportation_2011} hat die Evaluierung ergeben, dass die durchschnittliche Geschwindigkeit und Beschleunigung kombiniert mit verschiedenen GIS-Werten das beste Ergebnis geliefert. 
+
+Die betrachtet GIS-Werte waren bei Stenneth \cite{stenneth_transportation_2011} der durchschnittliche Abstand zu Gleisen, Bussen und dem Buskandidat (jener Bus in dem sich die Person am ehesten Befand). Biljecki verwendete den Abstand zu Gleisen, Bushaltestellen, Buslinien, U-Bahn und Straßenbahn als Indikatoren für die Schlussfolgerung. Schüssler \cite{nadine_schussler_improving_2011} inkludiert von den möglichen GIS-Werten nur den Abstand zu öffentlichen Verkehrsmitteln aller Art.
+
+\subsection{Reihung der allgemeinen Variablen}
+Die in dieser Arbeit verwendeten Schlussfolgerungsvariablen basieren auf der Reihung welche in Tabelle \ref{variablenuebersicht} ersichtlich ist. Die allgmeine Geschwindigkeit an fünfter Stelle wurden lediglich deshalb übersprungen, weil sie bereits zwei mal vertreten ist. 
+
+\begin{pitemize}
+\item durchschnittliche Geschwindigkeit
+\item maximale Geschwindigkeit
+\item durchschnittliche Beschleunigung
+\item maximale Beschleunigung
+\item Stopprate
+\end{pitemize}
 
 
-nicht mögliche entfernen \\
-mit biljecki evtl. Argumentieren über anzahl der features \\
-auf gis features hinweisen \\
-nicht wirklich miteinander vergleichbar weil unterschiedl. viele modi \\
-max V ist nur die 3 höchste oder 95\% davon \\
-critical point von gonzales nicht enthalten \\
+\subsection{Reihung der GIS-Variablen}
+Bei der Auswahl der GIS-Variablen fallen jene mit U-Bahn und Straßenbahn weg, da es diese im Raum Vorarlberg nicht gibt. Jene Variablen die spezifische GPS-Daten von einzelnen Verkehrsmitteln benötigen, konnten auch Aufgrund von fehlenden Schnittstellen nicht verwendet werden. Somit wurden folgende Variablen für die GIS-gestützte Analyse verwendet:
+
+\begin{pitemize}
+\item durchschnittliche Nähe zu Busstationen
+\item durchschnittliche Nähe zu Bahnhöfen
+\item durchschnittliche Nähe zu Gleisen	
+\item durchschnittliche Nähe zu Autobahnen
+\end{pitemize}
+\clearpage
 
 \begin{landscape}
 \begin{table}[h]
@@ -69,16 +87,6 @@ Varianz d. Geschwindigkeit & x &  &  &  &  &  & \textbf{1} \\ \hline
 \label{variablenuebersicht}
 \end{table}
 \end{landscape}
-
-\todo{verweis auf vorheriges filtern in anhang}
-\todo{diagramm für ablauf}
-feature auswahl \\
-feature auswahl GIS \\
-segmentierungsprozess \\
-entscheidungsbaum \\
-entscheidungsbaum GIS \\
-postprocess \\
-\clearpage
 
 
 \section{Aufbereitung ohne GIS-Daten}

@@ -24,6 +24,7 @@ Der Filereader-Filter liest die Datei mit dem angegeben Dateinamen als XML-Datei
 Der Trackpoint-Filter ist nicht nur ein Filter im Sinne des Architekturmusters sondern auch im Sinne seiner Aufgabe. Er versucht all jene Trackpunkte (trkpt) herauszufiltern die nicht den konfigurierten Grenzwerten entsprechen. Dies bedeutet, dass all jene Trackpunkte gefiltert werden bei welchen der Zeitabstand, die Geschwindigkeit oder die Änderung im Bereich der Höhenmeter über oder unter den Grenzwerten liegen. Dadurch werden die einzelnen Segmente von den gröbsten fehlerhaften Ausreisern bereinigt bevor sie an den nächsten Filter weitergeben werden.
 
 \subsubsection{Tracksegment-Filter}
+\label{tracksegmentFilter}
 Der Tracksegment-Filter ist einer der wichtigsten Filter in dem Verarbeitungsprozess. Er berechnet für jedes Segment die für die weitere Verarbeitung benötigten Zusatzwerte. Dies bedeutet, dass er die mittlere und maximale Beschleunigung, die mittlere und maximale Geschwindigkeit sowie die Distanz berechnet. Im Falle der Trainingsdaten ergänzt er die Segmentdaten noch mit den in den Trainingsdaten definierten Verkehrsmitteltyp.
 \todo{bei maximal Werten eventuell nicht absolutes Maximum sondern nur 95\% davon verwenden? siehe Biljecki und Zheng (V1-3)}
 
@@ -37,6 +38,7 @@ Die Anordnung der einzelnen Filter für die Verarbeitung der GPS-Daten die über
 
 \clearpage
 \subsection{GISTracksegment-Filter}
+\label{gisTracksegmentFilter}
 Der GISTracksegment-Filter macht im wesentlichen das Selbe wie der normale Tracksegment-Filter, allerdings berechnet er zusätzlich zu den Geschwindigkeit und Beschleunigungswerten noch die Abstände zu den verschiedenen Infrastrukturen wie Busstationen, Schienen und Autobahnen. Diese Werte werden im weiteren Verlauf benötigt um beim GISTravelMode-Filter eine genauere Bestimmung zu ermöglichen.
 \todo{eventuell noch anpassen wenn sich features ändern}
 

@@ -37,7 +37,7 @@ Weiters muss noch erwähnt werden, dass sowohl Zheng  \cite{zheng_understanding_
 Die betrachtet GIS-Werte waren bei Stenneth \cite{stenneth_transportation_2011} der durchschnittliche Abstand zu Gleisen, Bussen und dem Buskandidat (jener Bus in dem sich die Person am ehesten Befand). Biljecki verwendete den Abstand zu Gleisen, Bushaltestellen, Buslinien, U-Bahn und Straßenbahn als Indikatoren für die Schlussfolgerung. Schüssler \cite{nadine_schussler_improving_2011} inkludiert von den möglichen GIS-Werten nur den Abstand zu öffentlichen Verkehrsmitteln aller Art.
 
 \subsection{Reihung der allgemeinen Variablen}
-Die in dieser Arbeit verwendeten Schlussfolgerungsvariablen basieren auf der Reihung welche in Tabelle \ref{variablenuebersicht} ersichtlich ist. Die allgmeine Geschwindigkeit an fünfter Stelle wurden lediglich deshalb übersprungen, weil sie bereits zwei mal vertreten ist. 
+Die in dieser Arbeit verwendeten Schlussfolgerungsvariablen basieren auf der Reihung welche in Tabelle \ref{variablenuebersicht} ersichtlich ist. Die allgmeine Geschwindigkeit an fünfter Stelle wurden deshalb übersprungen, weil sie bereits zwei mal vertreten ist und bereits Zheng gesagt hat, dass die Geschwindigkeit allein kein aussagekräftiger Indikator für ein Verkehrsmittel ist \cite{zheng_understanding_2010}. 
 
 \begin{pitemize}
 \item durchschnittliche Geschwindigkeit
@@ -82,39 +82,60 @@ durchschn. Genauigkeit &  & x &  &  &  &  & \textbf{1} \\ \hline
 erwartete Geschwindigkeit & x &  &  &  &  &  & \textbf{1} \\ \hline
 Varianz d. Geschwindigkeit & x &  &  &  &  &  & \textbf{1} \\ \hline
 \end{tabular}
-\caption{Übersicht über die in verschieden Publikationen verwendeten Kriterien}
-\textsuperscript{1} \cite{zheng_understanding_2010}, \textsuperscript{2} \cite{stenneth_transportation_2011}, \textsuperscript{3} \cite{reddy_using_2010}, \textsuperscript{4} \cite{biljecki_transportation_2013}, \textsuperscript{5} \cite{gonzalez_automating_2010}, \textsuperscript{6} \cite{nadine_schussler_improving_2011}, 
+\caption{Entscheidungsvariablenübersicht}
+\textsuperscript{1} \cite{zheng_understanding_2010}, \textsuperscript{2} \cite{stenneth_transportation_2011}, \textsuperscript{3} \cite{reddy_using_2010}, \textsuperscript{4} \cite{biljecki_transportation_2013}, \textsuperscript{5} \cite{gonzalez_automating_2010}, \textsuperscript{6} \cite{nadine_schussler_improving_2011}
 \label{variablenuebersicht}
 \end{table}
 \end{landscape}
 
+\section{Berechnung der allgemeinen Entscheidungsvariablen}
+Das Hinzufügen und Berechnen der Entscheidungsvariablen ohne GIS-Daten, wird von dem Tracksegment-Filter (siehe Abschnitt \nameref{tracksegmentFilter}), realisiert. Dabei ist die Berechnung der grundlegenden Geschwindigkeit zwischen zwei GPS-Punkten essentiell da alle weiteren Entscheidungsvariablen darauf aufbauen. 
 
-\section{Aufbereitung ohne GIS-Daten}
-\subsection{Auswahl}
-\subsubsection{Durchschnittliche Geschwindigkeit}
-\subsubsection{Maximale Geschwindigkeit}
-\subsubsection{Durchschnittliche Beschleunigung}
-\subsubsection{Maximale Beschleunigung}
-\subsubsection{Distanz}
+\subsection{Geschwindigkeit}
+Berechnet wurde die Geschwindigkeit (v) als Durchschnittsgeschwindigkeit, die als Verhältnis vom zurückgelegten Weg (s) zur Zeit (t) ausdrückt wird, wie es z.B. im Buch ``Physik`` von Douglas Giancoli definiert wird \cite[S.~27]{douglas_giancoli_physik_2010} und in \ref{geschwindigkeitsformel} ersichtlich ist. 
+\begin{equation}
+v = \frac{s}{t}
+\label{geschwindigkeitsformel}
+\end{equation}
+
+Die Zeit ist dabei die Differenz zwischen den Zeitstempeln von zwei GPS-Trackpunkten und der Weg die Differenz zwischen den zwei Koordinaten. Die Berechnung des Weges basiert auf Orthodromen, was die kürzeste Verbindung zweier Punkte auf einer Kugeloberfläche beschreibt.  \cite{movable_type_ltd_calculate_2015}
+
+\todo{andere formel?}
+
+\paragraph{Durchschnittliche Geschwindigkeit} Die durchschnittliche Geschwindigkeit wird über alle Geschwindigkeiten eines Segments berechnet.
+
+\paragraph{Maximale Geschwindigkeit} Die maximale Geschwindigkeit wird aus allen Geschwindigkeiten des Segments ermittelt. Dabei ist aber anzumerken, dass nicht die absolute Geschwindigkeit sondern die 3. höchste Geschwindigkeit verwendet wird um fehlerhaften Ausreißern vorzubeugen. 
+
+\subsection{Beschleunigung}
+Die Beschleunigung ist als Geschwindigkeitsunterschied zwischen zwei Punkten pro Zeiteinheit definiert \cite[S.~51]{douglas_giancoli_physik_2010}. Somit wurde diese auf Basis der ermittelten Geschwindigkeit berechnet und darüber folgende zwei Entscheidungsvariablen bestimmt. 
+
+\paragraph{Durchschnittliche Beschleunigung} Die durchschnittliche Beschleunigung für das betrachtete Segment. 
+
+\paragraph{Maximale Beschleunigung} Die maximal gemessene Beschleunigung für das betrachtete Segment. 
+
+\subsubsection{Stopprate}
+Wie Zheng in \cite{zheng_understanding_2010} beschrieben hat, ist die Geschwindigkeit als Basis für Entscheidungsvariablen nur bedingt geeignet, da diese sehr von der aktuellen Verkehrssituation abhängig ist. Deshalb setzt Zheng auf die Kombination von Richtungswechsel, Geschwindigkeitswechsel und der Stopprate. Dieser Aussage widerspricht allerdings die Auswahl der Entscheidungsvariablen von anderen Autoren wie Biljecki  \cite{biljecki_transportation_2013}, Gonzales \cite{gonzalez_automating_2010}, Schüssler \cite{nadine_schussler_improving_2011} und Reddy \cite{reddy_using_2010}. 
+
+Die Stopprate ist für Zheng in so fern sehr aussagekräftig, da er an spezifischen Verkehrsmitteln auch eine spezfische Rate festmachen kann. Dies ist Beispielhaft in Abbildung \ref{stop_rate_zheng} ersichtlich. Dabei stoppt eine Person im Auto (a) wesentlich weniger oft wie zum Beispiel ein Bus (b) da dieser auch bei Bushaltestellen anhalten muss. Noch öfter stoppt laut Zheng nur ein Fußgänger (c). Im Falle des Prototyps ist wird die Erkennung von Stopps bereits beim Segmentieren benötigt und durch die anderen Entscheidungsvariablen sehr auf die Geschwindigkeit gesetzt, deshalb wird die Stopprate als weitere Entscheidungsvariable ausgewählt.
+
+\img{0.75}{document/graphics/stop_rate_zheng.png}{Stopprate laut Zheng (Quelle: \cite{zheng_understanding_2010})}{stop_rate_zheng}
+
+
 \clearpage
 
 \section{Aufbereitung mit GIS-Daten}
-\subsection{Auswahl}
+%\item durchschnittliche Nähe zu Busstationen
+%\item durchschnittliche Nähe zu Bahnhöfen
+%\item durchschnittliche Nähe zu Gleisen	
+%\item durchschnittliche Nähe zu Autobahnen
 \subsubsection{Durchschnittliche Geschwindigkeit}
 \subsubsection{Maximale Geschwindigkeit}
 \subsubsection{Durchschnittliche Beschleunigung}
 \subsubsection{Maximale Beschleunigung}
 \subsection{Abstand zu Bushaltestellen}
 \subsection{Abstand zu Gleisen}
-avg. rail line closeness
-avg. bus closeness
-candidate bus closeness
-avg. bus stop closeness
-avg. bus line closeness
-avg. metro closeness
-avg. tram line closeness
-public transport stop distance
-
 
 \clearpage
 
+\section{Zusammenfassung}
+\todo{zusammenfassung processing?}

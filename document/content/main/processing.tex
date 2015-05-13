@@ -28,6 +28,7 @@ Für den Prototypen wurde im wesentlichen der durch Biljecki erweiterte Ansatz v
 \clearpage
 
 \section{Schlussfolgerungsvariablen}
+\label{schlussfolgerungsvariablen}
 Als Grundlage für die Schlussfolgerung durch die Entscheidungsbäume müssen zuerst Variablen die für die Schlussfolgerung sehr wichtig bzw. möglichst ausschlaggebend für die betrachteten Verkehrsmittel sind, festgelegt werden. Dies Variablen können dabei diverse geschwindigkeitsabhängige Werte wie durchschnittliche und maximale Geschwindigkeit sein oder auch Beschleunigungswerte und  Abstände zu bestimmten Infrastrukturen. Eine Übersicht über die Schlussfolgerungsvariablen in den betrachteten Publikationen ist in der Tabelle \ref{variablenuebersicht} abgebildet. Diese Werte sind nach der Anzahl der Vorkommnisse in den Publikationen gereiht und bildet eine Grundlage für die in dieser Arbeit verwendeten Variablen. 
 
 Aus Gründen der Vollständigkeit muss noch erwähnt werden, dass aufgrund eines anderen Segmentierungsverfahrens nicht alle Variablen von Gonzales  \cite{gonzalez_automating_2010} aufgeführt sind. Außerdem handelt es sich bei der maximalen Geschwindigkeit nicht um das absolute Maximum sondern um 95\% davon bzw. ist es die dritt höchste Geschwindigkeit die gemessen wurde. 
@@ -98,25 +99,32 @@ v = \frac{s}{t}
 \label{geschwindigkeitsformel}
 \end{equation}
 
-Die Zeit ist dabei die Differenz zwischen den Zeitstempeln von zwei GPS-Trackpunkten und der Weg die Differenz zwischen den zwei Koordinaten. Die Berechnung des Weges basiert auf Orthodromen, was die kürzeste Verbindung zweier Punkte auf einer Kugeloberfläche beschreibt.  \cite{movable_type_ltd_calculate_2015}
+Die Zeit ist dabei die Differenz zwischen den Zeitstempeln von zwei GPS-Trackpunkten und der Weg die Differenz zwischen den zwei Koordinaten. Zur Berechnung des Weges (der Luftlinienentfernung) zwischen zwei Koordinaten gibt es laut \cite{movable_type_ltd_calculate_2015} mehrere Möglichkeiten. Welche man verwendet hängt von den Längen der betrachteten Strecken, der gewünschten Genauigkeit sowie der gewünschten Zeit ab. Da es sich bei den hier betrachteten Distanzen immer um sehr kleine Distanzen im Verhältnis zur Erde selbst handelt aber diese aufgrund ihrer weiteren Verwendung zur Berechnung der Geschwindigkeit möglichst genau sein soll wird in diesem Prototyp die Haversine-Formel (siehe die Gleichungen \ref{haversineformel}) verwendet. Dabei sind $\varphi$ die Breitengrade, $\lambda$ die Längengrade, R der Erdradius und $\triangle\varphi$ bzw. $\triangle \lambda$ die Differenz der Breiten- bzw. Längengrade.\cite{movable_type_ltd_calculate_2015}
 
-\todo{andere formel?}
+\begin{equation}
+\label{haversineformel}
+\begin{aligned}
+a &= sin^{2}(\triangle \varphi/2) + cos \varphi_1  * cos \varphi_2 * sin^{2}(\triangle \lambda/2) \\
+c &= 2 * atan2( \sqrt{a}, \sqrt{(1-a)}) \\
+d &= R * c
+\end{aligned}
+\end{equation}
 
-\paragraph{Durchschnittliche Geschwindigkeit} Die durchschnittliche Geschwindigkeit wird über alle Geschwindigkeiten eines Segments berechnet.
+\paragraph{Durchschnittliche Geschwindigkeit} Die durchschnittliche Geschwindigkeit wird über alle Geschwindigkeitswerte eines Segments berechnet.
 
-\paragraph{Maximale Geschwindigkeit} Die maximale Geschwindigkeit wird aus allen Geschwindigkeiten des Segments ermittelt. Dabei ist aber anzumerken, dass nicht die absolute Geschwindigkeit sondern die 3. höchste Geschwindigkeit verwendet wird um fehlerhaften Ausreißern vorzubeugen. 
+\paragraph{Maximale Geschwindigkeit} Die maximale Geschwindigkeit wird aus allen Geschwindigkeitwerten des Segments ermittelt. Dabei ist aber anzumerken, dass nicht die absolute Geschwindigkeit sondern die 3. höchste Geschwindigkeit verwendet wird um fehlerhaften Ausreißern vorzubeugen.
 
 \subsection{Beschleunigung}
 Die Beschleunigung ist als Geschwindigkeitsunterschied zwischen zwei Punkten pro Zeiteinheit definiert \cite[S.~51]{douglas_giancoli_physik_2010}. Somit wurde diese auf Basis der ermittelten Geschwindigkeit berechnet und darüber folgende zwei Entscheidungsvariablen bestimmt. 
 
 \paragraph{Durchschnittliche Beschleunigung} Die durchschnittliche Beschleunigung für das betrachtete Segment. 
 
-\paragraph{Maximale Beschleunigung} Die maximal gemessene Beschleunigung für das betrachtete Segment. 
+\paragraph{Maximale Beschleunigung} Die maximal gemessene Beschleunigung für das betrachtete Segment.
 
 \subsubsection{Stopprate}
 Wie Zheng in \cite{zheng_understanding_2010} beschrieben hat, ist die Geschwindigkeit als Basis für Entscheidungsvariablen nur bedingt geeignet, da diese sehr von der aktuellen Verkehrssituation abhängig ist. Deshalb setzt Zheng auf die Kombination von Richtungswechsel, Geschwindigkeitswechsel und der Stopprate. Dieser Aussage widerspricht allerdings die Auswahl der Entscheidungsvariablen von anderen Autoren wie Biljecki  \cite{biljecki_transportation_2013}, Gonzales \cite{gonzalez_automating_2010}, Schüssler \cite{nadine_schussler_improving_2011} und Reddy \cite{reddy_using_2010}. 
 
-Die Stopprate ist für Zheng in so fern sehr aussagekräftig, da er an spezifischen Verkehrsmitteln auch eine spezfische Rate festmachen kann. Dies ist Beispielhaft in Abbildung \ref{stop_rate_zheng} ersichtlich. Dabei stoppt eine Person im Auto (a) wesentlich weniger oft wie zum Beispiel ein Bus (b) da dieser auch bei Bushaltestellen anhalten muss. Noch öfter stoppt laut Zheng nur ein Fußgänger (c). Im Falle des Prototyps ist wird die Erkennung von Stopps bereits beim Segmentieren benötigt und durch die anderen Entscheidungsvariablen sehr auf die Geschwindigkeit gesetzt, deshalb wird die Stopprate als weitere Entscheidungsvariable ausgewählt.
+Die Stopprate ist für Zheng in so fern sehr aussagekräftig, da er an spezifischen Verkehrsmitteln auch eine spezifische Stopprate bzw. ein Stoppverhalten festmachen kann. Dies ist Beispielhaft in Abbildung \ref{stop_rate_zheng} ersichtlich. Dabei stoppt eine Person im Auto (a) wesentlich weniger oft wie zum Beispiel ein Bus (b) da dieser z.B. auch bei Bushaltestellen anhalten muss. Noch öfter stoppt laut Zheng nur ein Fußgänger (c) \cite{zheng_understanding_2010}. Im Falle des Prototyps ist wird die Erkennung von Stopps bereits beim Segmentieren benötigt und dadurch, dass die anderen Entscheidungsvariablen sehr auf die Geschwindigkeit basieren, wurde die Stopprate als weitere Entscheidungsvariable die nicht abhängig von der Geschwindigkeit ist ausgewählt. 
 
 \img{0.75}{document/graphics/stop_rate_zheng.png}{Stopprate laut Zheng (Quelle: \cite{zheng_understanding_2010})}{stop_rate_zheng}
 

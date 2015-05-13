@@ -25,8 +25,7 @@ Der Trackpoint-Filter ist nicht nur ein Filter im Sinne des Architekturmusters s
 
 \subsubsection{Tracksegment-Filter}
 \label{tracksegmentFilter}
-Der Tracksegment-Filter ist einer der wichtigsten Filter in dem Verarbeitungsprozess. Er berechnet für jedes Segment die für die weitere Verarbeitung benötigten Zusatzwerte. Dies bedeutet, dass er die mittlere und maximale Beschleunigung, die mittlere und maximale Geschwindigkeit sowie die Distanz berechnet. Im Falle der Trainingsdaten ergänzt er die Segmentdaten noch mit den in den Trainingsdaten definierten Verkehrsmitteltyp.
-\todo{bei maximal Werten eventuell nicht absolutes Maximum sondern nur 95\% davon verwenden? siehe Biljecki und Zheng (V1-3)}
+Der Tracksegment-Filter ist einer der wichtigsten Filter in dem Verarbeitungsprozess. Er berechnet für jedes Segment die für die weitere Verarbeitung benötigten Zusatzwerte. Dies bedeutet, dass er die mittlere und maximale Beschleunigung, die mittlere und maximale Geschwindigkeit sowie die Stopprate berechnet. Weitere Informationen über die gewählten Zusatzwerte sowie die Auswahl selbst sind im Abschnitt \nameref{schlussfolgerungsvariablen} zu finden.  Im Falle der Trainingsdaten ergänzt er die Segmentdaten noch mit den in den Trainingsdaten definierten Verkehrsmitteltyp.
 
 \subsubsection{Filewriter-Filter}
 Der Filewriter-Filter übernimmt das Schreiben der übergebenen Daten in eine Datei. Hierbei werden die vom Tracksegment-Filter übergeben Segment in einer Datei im CSV-Format abgelegt, welche in weiterer Folge im Rapidminer verwendet wird.

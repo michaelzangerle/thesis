@@ -73,10 +73,10 @@ verwendet GIS Daten &  & x &  & x &  & x & \textbf{3} \\ \hline
 Geschwindigkeit &  &  & x &  &  & x & \textbf{2} \\ \hline
 max. Beschleunigung & x &  &  &  & x &  & \textbf{2} \\ \hline
 Richtungswechselrate & x & x &  &  &  &  & \textbf{2} \\ \hline
+Stopprate & x &  &  &  &  &  & \textbf{1} \\ \hline
 Distanz des Segments & x &  &  &  &  &  & \textbf{1} \\ \hline
 Distanz des Tracks &  &  &  &  & x &  & \textbf{1} \\ \hline
 Geschwindigkeitswechselrate & x &  &  &  &  &  & \textbf{1} \\ \hline
-Stopprate & x &  &  &  &  &  & \textbf{1} \\ \hline
 durchschn. Varianz d. Beschl. &  &  &  &  &  & x & \textbf{1} \\ \hline
 durchschn. beweg. Geschw. &  &  &  & x &  &  & \textbf{1} \\ \hline
 durchschn. Genauigkeit &  & x &  &  &  &  & \textbf{1} \\ \hline
@@ -124,7 +124,9 @@ Die Beschleunigung ist als Geschwindigkeitsunterschied zwischen zwei Punkten pro
 \subsubsection{Stopprate}
 Wie Zheng in \cite{zheng_understanding_2010} beschrieben hat, ist die Geschwindigkeit als Basis für Entscheidungsvariablen nur bedingt geeignet, da diese sehr von der aktuellen Verkehrssituation abhängig ist. Deshalb setzt Zheng auf die Kombination von Richtungswechsel, Geschwindigkeitswechsel und der Stopprate. Dieser Aussage widerspricht allerdings die Auswahl der Entscheidungsvariablen von anderen Autoren wie Biljecki  \cite{biljecki_transportation_2013}, Gonzales \cite{gonzalez_automating_2010}, Schüssler \cite{nadine_schussler_improving_2011} und Reddy \cite{reddy_using_2010}. 
 
-Die Stopprate ist für Zheng in so fern sehr aussagekräftig, da er an spezifischen Verkehrsmitteln auch eine spezifische Stopprate bzw. ein Stoppverhalten festmachen kann. Dies ist Beispielhaft in Abbildung \ref{stop_rate_zheng} ersichtlich. Dabei stoppt eine Person im Auto (a) wesentlich weniger oft wie zum Beispiel ein Bus (b) da dieser z.B. auch bei Bushaltestellen anhalten muss. Noch öfter stoppt laut Zheng nur ein Fußgänger (c) \cite{zheng_understanding_2010}. Im Falle des Prototyps ist wird die Erkennung von Stopps bereits beim Segmentieren benötigt und dadurch, dass die anderen Entscheidungsvariablen sehr auf die Geschwindigkeit basieren, wurde die Stopprate als weitere Entscheidungsvariable die nicht abhängig von der Geschwindigkeit ist ausgewählt. 
+Die Stopprate ist für Zheng in so fern sehr aussagekräftig, da er an spezifischen Verkehrsmitteln auch eine spezifische Stopprate bzw. ein Stoppverhalten festmachen kann. Dies ist Beispielhaft in Abbildung \ref{stop_rate_zheng} ersichtlich. Dabei stoppt eine Person im Auto (a) wesentlich weniger oft wie zum Beispiel ein Bus (b) da dieser nicht nur bei Kreuzungen sondern auch bei Bushaltestellen anhalten muss. Noch öfter stoppt laut Zheng nur ein Fußgänger (c) \cite{zheng_understanding_2010}. Im Falle des Prototyps ist wird die Erkennung von Stopps bereits beim Segmentieren benötigt und dadurch, dass die anderen Entscheidungsvariablen sehr auf die Geschwindigkeit basieren, wurde die Stopprate als weitere Entscheidungsvariable die nicht abhängig von der Geschwindigkeit ist ausgewählt. 
+
+\todo{was gilt als stopp - bilijecki?}
 
 \img{0.75}{document/graphics/stop_rate_zheng.png}{Stopprate laut Zheng (Quelle: \cite{zheng_understanding_2010})}{stop_rate_zheng}
 

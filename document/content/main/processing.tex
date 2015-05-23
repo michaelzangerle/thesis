@@ -53,8 +53,7 @@ Die in dieser Arbeit verwendeten Schlussfolgerungsvariablen basieren auf der Rei
 Bei der Auswahl der GIS-Variablen fallen jene mit U-Bahn und Straßenbahn weg, da es diese im Raum Vorarlberg nicht gibt. Jene Variablen die spezifische GPS-Daten von einzelnen Verkehrsmitteln benötigen, konnten auch Aufgrund von fehlenden Schnittstellen nicht verwendet werden. Somit wurden folgende Variablen für die GIS-gestützte Analyse verwendet:
 
 \begin{pitemize}
-\item durchschnittliche Nähe zu Busstationen
-\item durchschnittliche Nähe zu Bahnhöfen
+\item durchschnittliche Nähe zu Busstationen und Bahnhöfen
 \item durchschnittliche Nähe zu Gleisen	
 \item durchschnittliche Nähe zu Autobahnen
 \end{pitemize}
@@ -122,7 +121,7 @@ Die Beschleunigung ist als Geschwindigkeitsunterschied zwischen zwei Punkten pro
 \paragraph{Maximale Beschleunigung} Die maximal gemessene Beschleunigung für das betrachtete Segment.
 
 \subsubsection{Stopprate}
-Wie Zheng in \cite{zheng_understanding_2010} beschrieben hat, ist die Geschwindigkeit als Basis für Entscheidungsvariablen nur bedingt geeignet, da diese sehr von der aktuellen Verkehrssituation abhängig ist. Deshalb setzt Zheng auf die Kombination von Richtungswechsel, Geschwindigkeitswechsel und der Stopprate. Dieser Aussage widerspricht allerdings die Auswahl der Entscheidungsvariablen von anderen Autoren wie Biljecki  \cite{biljecki_transportation_2013}, Gonzales \cite{gonzalez_automating_2010}, Schüssler \cite{nadine_schussler_improving_2011} und Reddy \cite{reddy_using_2010}. 
+Wie Zheng in \cite{zheng_understanding_2010} beschrieben hat, ist die Geschwindigkeit als Basis für Entscheidungsvariablen nur bedingt geeignet, da diese sehr von der aktuellen Verkehrssituation abhängig ist. Deshalb setzt Zheng auf die Kombination von Richtungswechsel, Geschwindigkeitswechsel und der Stopprate. Dieser Aussage widerspricht indirekt die Auswahl der Entscheidungsvariablen von anderen Autoren wie Biljecki  \cite{biljecki_transportation_2013}, Gonzales \cite{gonzalez_automating_2010}, Schüssler \cite{nadine_schussler_improving_2011} und Reddy \cite{reddy_using_2010} (siehe Tabelle \ref{variablenuebersicht}). 
 
 Die Stopprate ist für Zheng in so fern sehr aussagekräftig, da er an spezifischen Verkehrsmitteln auch eine spezifische Stopprate bzw. ein Stoppverhalten festmachen kann. Dies ist Beispielhaft in Abbildung \imgref{stop_rate_zheng} ersichtlich. Dabei stoppt eine Person im Auto (a) wesentlich weniger oft wie zum Beispiel ein Bus (b) da dieser nicht nur bei Kreuzungen sondern auch bei Bushaltestellen anhalten muss. Noch öfter stoppt laut Zheng nur ein Fußgänger (c) \cite{zheng_understanding_2010}. Im Falle des Prototyps ist wird die Erkennung von Stopps bereits beim Segmentieren benötigt und dadurch, dass die anderen Entscheidungsvariablen sehr auf die Geschwindigkeit basieren, wurde die Stopprate als weitere Entscheidungsvariable die nicht abhängig von der Geschwindigkeit ist ausgewählt. Als Stopp gelten dabei eine bestimmte Anzahl von Trackpunkten (z.B. über eine Zeit von 5 Sekunden) bei welchen die Geschwindigkeit unterhalb einem Grenzwert (z.B. unter 2km/h) liegt. Diese Werte können wiederum in der Konfigurtion eingestellt werden.
 
@@ -131,7 +130,8 @@ Die Stopprate ist für Zheng in so fern sehr aussagekräftig, da er an spezifisc
 
 \clearpage
 
-\section{Aufbereitung mit GIS-Daten}
+\section{Berechnung der GIS-Entscheidungsvariablen}
+\label{gisdaten}
 %\item durchschnittliche Nähe zu Busstationen
 %\item durchschnittliche Nähe zu Bahnhöfen
 %\item durchschnittliche Nähe zu Gleisen	
@@ -144,6 +144,3 @@ Die Stopprate ist für Zheng in so fern sehr aussagekräftig, da er an spezifisc
 \subsection{Abstand zu Gleisen}
 
 \clearpage
-
-\section{Zusammenfassung}
-\todo{zusammenfassung processing?}

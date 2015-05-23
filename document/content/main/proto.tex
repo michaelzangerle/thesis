@@ -12,7 +12,7 @@ Der Kern der Webapplikation ist in einer Pipes-and-Filter Architektur aufgebaut.
 
 So werden im Falle dieses Prototyps die Trainingsdaten in eine Datei geschrieben oder bei einer Anfrage über die Webapplikation werden die diese in die Datenbank geschrieben. Hierbei unterscheiden sich nicht nur die Persistierungsarten sondern auch die Darstellung der Daten selbst da in die Datei im CSV-Format geschrieben wird.
 
-\subsection{Pipes und Filter-Anordnung für Trainingsdaten}
+\subsection{Pipes und Filter-Architektur für Trainingsdaten}
 Die Anordnung der einzelnen Filter für die Verarbeitung der GPS-Daten ist im Falle der Trainingsdaten in Abbildung \imgref{pipesAndFilterTraining} ersichtlich. Hierbei wird das Verzeichnis mit den Trainingsdaten definiert und dem ersten Filter (Filereader) werden nach und nach die einzelnen Dateien übergeben. Nachdem die Daten den Trackpoint-, und Tracksegmentfilter (grün ohne GIS-Daten, orange mit GIS-Daten) durchlaufen haben werden sie schließlich vom letzten Filter (FileWriter) in eine Datei geschrieben.
 
 \img{1}{document/graphics/pipes_and_filter_diagram_training.png}{Pipes- und Filter- Struktur für Trainingsdaten}{pipesAndFilterTraining}
@@ -30,7 +30,7 @@ Der Tracksegment-Filter ist einer der wichtigsten Filter in dem Verarbeitungspro
 \subsubsection{FileWriter-Filter}
 Der FileWriter-Filter übernimmt das Schreiben der übergebenen Daten in eine Datei. Hierbei werden die vom Tracksegment-Filter übergeben Segment in einer Datei im CSV-Format abgelegt, welche in weiterer Folge im Rapidminer verwendet wird.
 
-\subsection{Pipes und Filter-Anordnung für die Webapplikation}
+\subsection{Pipes und Filter-Architektur für die Webapplikation}
 Die Anordnung der einzelnen Filter für die Verarbeitung der GPS-Daten die über die Webapplikation verarbeitet werden sollen ist in Abbildung \imgref{pipesAndFilter} ersichtlich. Der Ablauf ist hierbei ähnlich wie jener bei den Trainingsdaten, und es wird wiederum zwischen den zwei Modi mit GIS-Daten (orange) oder ohne GIS-Daten (grün) unterschieden. Ausgehend vom FileReader- und Trackpoint-Filter kommen die Daten in den Segmentation-Filter. Von dort kommen sie je nach Analyse-Art in dem Tracksegment-Filter oder in dem GISTracksegment-Filter. Das Ergebnis dieser Filter kommt danach in den TravelModel- bzw. GISTravelModeFilter wo die eigentlichen Verkehrsmittel bestimmt werden. Anschließend werden die Ergebnisse dem Postprocess-Filter übergeben welche die bestimmten Verkehrsmitteln ein letztes mal überprüft um schlussendlich an den Database-Filter übergeben zu werden, welcher die Ergebnisse für die Datenbank aufbereitet in dieser ablegt.
 
 \img{0.85}{document/graphics/pipes_and_filter_diagram.png}{Pipes- und Filter- Struktur der Webapplikation}{pipesAndFilter}
@@ -48,8 +48,21 @@ In diesen Filtern wird der eigentliche Verkehrsmitteltyp anhand der berechneten 
 \subsubsection{Postprocessing-Filter}
 Bei diesem Filter geht es darum, dass wenn alle Verkehrsmittel aller Segmente eines Tracks bestimmt worden sind, die Wahrscheinlichkeit der Wechsel nochmals überprüft wird. Diese letzte Überprüfung der Resultate der Entscheidungsbäume basiert auf Zheng \cite{zheng_understanding_2010} und soll verhindern, dass sehr unwahrscheinliche Verkehrsmittelwechsels wie zum Beispiel ``Auto->zu Fuß->Auto->zu Fuß->Auto`` entstehen. Zheng trifft diese letzte Entscheidung über den Verkehrsmitteltyp in weiterer Folge aber nicht nur auf Grund von Wahrscheinlichkeiten sondern auch durch jenen Graph den er während des Analysierens der Trainingsdaten aufgebaut hat. In diesem Postprocessing-Filter wurde der Wahrscheinlichkeiten-basierte Ansatz implementiert, welcher in der Evaluierung von Zheng einen Anstieg der korrekten Erkennungsrate um 2\% zur Folge hatte.
 
+\todo{entfernen des postprocessing weil keine weiteren informationen?}
+
 \subsubsection{Database-Filter}
 Da das Ablegen der ermittelten Ergebnisse in der Datenbank  nur eine Variante (neben z.B. dem Ablegen  in einer Datei) von vielen ist kümmert sich dieser Filter darum, dass die übergebenen Daten für die Datenbank auf bereitet werden und schlussendlich persistiert werden können.
 
-\section{UI und Funktionalitäten?}
-\todo{ui und funktionalitäten für den benutzer}
+\section{Verwendung der Applikation}
+Die Oberfläche der Webapplikation ist sehr einfach gehalten und besteht im wesentlich aus 3 verschiedenen Seiten. Einer Startseite (Home) welche das Projekt kurz vorstellt, einer Seite auf welcher ein Track analysiert werden kann (Create) und einer Seite (Results) auf welcher die Resultate aller Auswertungen angezeigt werden.  
+
+\textbf{Create-Seite}
+Auf dieser Seite wird einem Benutzer die Möglichkeit geboten einen Track hochzuladen und diesen mit einem von den 2 Varianten (mit und ohne GIS-Daten) analysieren zu lassen. Ist dies geschehen so wird eine Karte angezeigt, auf welche die ausgelesenen Segemente dargestellt werden. Dies Segmente werden je nach ermitteltem Verkehrsmitteltyp in verschiedenen Farben visualisiert. Per Klick auf eines dieser Segmente kann der Verkehrsmitteltyp dieses Typs korrigiert werden (siehe Abbildung \imgref{webapp1}). Diese Korrektur hat wiederum Einfluss auf die Auswertung der Ergebnisse welche in Abbildung \imgref{webapp2} ersichtlich sind.
+
+\img{0.75}{document/graphics/webapp1.png}{Korrigieren eines Verkehrsmitteltyps eines analysierten Tracks}{webapp1}
+
+\textbf{Results-Seite}
+Die Resultate aller vorgenommenen Analysen und Änderungen werden auf dieser Seite als Diagramme dargestellt. Dabei zeigt das erste Diagramm, das Verhältnis der analysierten und korrekt erkannten Segmente. Das zweite Diagramm zeigt die Anzahl der korrekt analysierten Segemente und die Gsamtanzahl der Segmente. Alle weitere Diagramme betreffen ein spezifisches Verkehrsmittel und geben darüber Auskunft welche Verkehrsmittel eigentlich richtig gewesen wären. Alle Diagramme zeigen dabei die Werte für beide verfügbaren Analysemethode an um einen direkten Vergleich machen zu können. Eine Ausschnitt dieser Seite in in Abbildung \imgref{webapp2} zu sehen.
+
+\img{0.75}{document/graphics/webapp2.png}{Ausschnitt zu den Resultaten der analysierten Tracks}{webapp2}
+\todo{bild updaten}

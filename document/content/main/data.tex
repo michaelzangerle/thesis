@@ -74,12 +74,13 @@ Ein Trackpoint entspricht einem Punkt des aufgezeichneten Tracks und enthält Ko
 </gpx>
 \end{code}
 
-\subsection{Entscheidungsbaum}
+\subsection{Entscheidungsbaum als Schlussfolgerungsmodell}
+\label{entscheidungsbaumAlsSchlussfolgerungsmodell}
 Aufgrund des guten Abschneidens des Entscheidungsbaums in verschiedenen Arbeiten  \cite{stenneth_transportation_2011}, \cite{reddy_using_2010}, \cite{sebastian_nagel_moglichkeitsstudie_2011}und \cite{zheng_learning_2008} wurde auch in dieser Arbeit ein Entscheidungsbaum als Schlussfolgerungsmodell verwendet. Um einen Entscheidungsbaum erstellen zu können werden Trainingsdaten benötigt. Daraus werden dann die Regeln für den Entscheidungsbaum bzw. die jeweiligen Entscheidungen des Baums abgeleitet.
 
-Deshalb wurde für diese Trainingsdaten ein Teil der gesammelten GPS-Daten manuell segmentiert und mit dem benutzten Verkehrsmittel ergänzt. Mit Hilfe des Prototyps wurden die Trainigsdaten eingelesen, gefiltert und mit zusätzlichen Informationen bereichert. Diese zusätzlichen Informationen sind bei der Variante ohne GIS-Daten zum Beispiel Geschwindigkeit und Beschleunigung. Bei der Variante mit GIS-Daten wird unter anderem die Nähe zu Bushaltestellen oder zu Schienen ergänzt. Danach wurde für alle eingelesenen Segmente die berechneten Werte und das dazugehörige Verkehrsmittel in einer Datei abgelegt. Diese Daten wurden im CSV-Format abgelegt da Rapidminer mit der Communiy-Lizenz nur CSV unterstützt.
+Deshalb wurde für diese Trainingsdaten ein Teil der gesammelten GPS-Daten manuell segmentiert und mit dem benutzten Verkehrsmittel ergänzt. Mit Hilfe des Prototyps wurden die Trainigsdaten eingelesen, gefiltert und mit zusätzlichen Informationen bereichert. Diese zusätzlichen Informationen sind bei der Variante ohne GIS-Daten zum Beispiel Geschwindigkeit und Beschleunigung. Bei der Variante mit GIS-Daten wird unter anderem die Nähe zu Bushaltestellen oder zu Schienen ergänzt. Danach wurde für alle eingelesenen Segmente die berechneten Werte und das dazugehörige Verkehrsmittel in einer Datei im CSV-Format abgelegt. 
 
-Für die konkrete Generierung der Entscheidungsbäume wurde schließlich das Tool Rapidminer verwendet. Dabei handelt es sich um eine Open-Source Datamining Software welche sowohl verschiedenste Datenquellen unterstützt (Datenbanken und auch einzelne Dateien) als auch die Generierung von Entscheidungsbäumen über eine komfortable Benutzeroberfläche erlaubt. Die vom Prototypen genierte CSV-Datei konnte dadurch einfach eingebunden von RapidMiner eingelesen und ausgewertet und schlussendlich die Entscheindungsbäume generiert werden. Diese können dann sowohl als Bilder als auch in Textform exportiert werden.
+Für die konkrete Generierung der Entscheidungsbäume wurde das Tool Rapidminer verwendet. Dabei handelt es sich um eine Open-Source Datamining Software welche sowohl verschiedenste Datenquellen unterstützt (Datenbanken und auch einzelne Dateien in unterschiedlichen Dateiformaten) als auch die Generierung von Entscheidungsbäumen über eine komfortable Benutzeroberfläche erlaubt. In der freien Community-Version ist jedoch nur der CSV-Import verfügbar. Deshalb wurde vom Prototypen auch eine CSV-Datei generiert welche in Folge einfach in Rapidminer eingebunden und ausgewertet werden konnten. Schlussendlich wurden aus den eingebundenen Daten Entscheindungsbäume für die Variante mit GIS-Daten und ohne generiert. Diese können sowohl als Bilder als auch in Textform exportiert werden. In weiterer Folge wurde aus diesen Entscheidungsbäumen in Textform PHP-Klassen geniert siehe Abschnitt \nameref{entscheidungsbaumGenerierungPHP}.
 
 \subsubsection{Überanpassung (Overfitting)}
 Beim Erstellen von Entscheidungsbäumen wie auch bei anderen von Trainingsdaten lernenden Algorithmen muss beachtet werden, dass das Ergebnis nicht zu sehr auf die Trainingsdaten zugeschnitten ist. Dies bedeutet man möchte, dass mit Hilfe der Trainingsdaten ein Modell generiert wird, welches auch für Nichttrainingsdaten ein akzeptables Resultat liefert und nicht zu sehr auf die Gegebenheiten / Ungenauigkeiten in den Trainingsdaten spezialisiert ist. Ist dies jedoch der Fall so spricht man von einer Überanpassung (Overfitting) des Modells auf die Daten.  \cite{tom_dietterich_overfitting_1995}
@@ -96,8 +97,11 @@ Der Entscheidungsbaum ohne Berücksichtigung von GIS-Daten ist in Abbildung \img
 
 \subsubsection{Entscheidungsbaum mit GIS-Daten}
 \label{entscheidungsbaumGIS}
-
 \todo{entscheidungsbaum mit gis daten}
+\todo{entscheidungsbaum mit gis daten bild}
+\img{0.68}{document/graphics/decission-tree-stoprate.png}{Entscheidungsbaum mit GIS-Daten}{GISdecissiontree}
+\clearpage
+
 
 \section{Neue Aufzeichnungen}
 Wie bereits im Abschnitt \ref{sec:trainingdata} erwähnt, wurden die neuen Daten mit zwei Smartphones (Samsung Galaxy S und einem LG Nexus 5) und der App ``MyTrack`` (sieh Abbildung \imgref{myTrack}) aufgezeichnet. Neben der einfachen Handhabung bietet diese App auch an nur Punkte mit einer Mindestgenauigkeit aufzuzeichnen was in Folge beim Filtern ein wenig Arbeit abnimmt. Diese neuen Daten werden hauptsächlich zum Testen verwendet werden und nur ein Teil davon ist in die Trainingsdaten eingeflossen. Weiters kann man zwar ein Fortbewegungsmittel pro Aufzeichnung angeben, aber dies hat keinerlei Einfluss auf die Aufzeichnung selbst oder die Daten - es dient lediglich der visuellen Darstellung/Unterscheidung der einzelnen Aufzeichnungen.
@@ -110,9 +114,9 @@ Als relevante GIS-Daten kommt laut den verschiedensten Publikationen zum Thema V
 \textbf{Akquirierung}\\
 Allgemein sind GIS-Daten via OpenStreetMaps oder Google-Maps verfügbar, aber in einzelnen Stichproben hat sich herausgestellt, dass die Zusatzinformation in OpenStreetMaps wesentlich detaillierter und einfacher zum Extrahieren sind. Dafür wurde in Kauf genommen, dass diese Daten nicht standardisiert eingetragen wurden.
 
-Die Österreich-Daten von OpenStreetMaps wurden als Archiv heruntergeladen und mit Hilfen von JOSM auf den relevanten Bereich eingegrenzt. JOSM ist ein Tool mit welchem die Daten von OpenStreetMaps gepflegt werden können. Nachdem der Bereich auf Vorarlberg eingegrenzt worden ist, konnte dieser mit Hilfe von osmosis (weiteres Tool von der OpenStreetMaps-Community) auf bestimmte Punkte und Verbindungen gefiltert werden. Dadurch war es möglich, das Schienennetz von Vorarlberg sowie die Busstationen von Vorarlberg zu exportieren.
+Die Österreich-Daten von OpenStreetMaps wurden als Archiv heruntergeladen und mit Hilfen von JOSM auf den relevanten Bereich eingegrenzt. JOSM ist ein Tool mit welchem die Daten von OpenStreetMaps gepflegt werden können. Nachdem der Bereich auf Vorarlberg eingegrenzt worden ist, konnte dieser mit Hilfe von osmosis (weiteres Tool von der OpenStreetMaps-Community) auf bestimmte Punkte und Verbindungen gefiltert werden. Dadurch war es möglich, das Schienennetz von Vorarlberg sowie die Busstationen von Vorarlberg als XML-Datei zu exportieren. Diese XML-Dateien für Busstationen, das Autobahnnetz und das Schienennetz wurden anschließend eingelesen und in die Datenbank importiert. 
 
-\todo{einbindung der gis daten ins modell}
+In weiterer Folgen können diese Daten zur genaueren Bestimmung eines Verkehrsmitteltyps verwendet werden. Dazu werden Werte für die Nähe zu Bushaltestellen sowie Bahnhöfen bei Trackpunkten ohne Bewegung ermittelt. Außerdem wird in regelmäßigen Abständen die Nähe zu den Schienen und der Autobahn für jedes Segment berechnet. Dieser Prozess wird im Abschnitt \nameref{gisdaten} genauer beschrieben.
 
 \section{Weitere Daten}
 Neben den zusätzlichen Werten, die aus den GPS-Spuren berechnet werden können und den GIS-Daten, wurde auch überlegt, Daten des öffentlichen Personennahverkehrs einzubinden, da diese in Vorarlberg über eine GPS-Position eines jeden Busses verfügen würden. Die Verwendung dieser Daten wäre insofern vielversprechend gewesen, als dass man einen ähnlichen Ansatz wie Stenneth verfolgen hätte können. Man hätte dadurch überprüfen können ob an der jeweiligen Stelle gerade ein Bus steht und darüber Rückschlüsse treffen können. Da diese Daten aber zum Zeitpunkt dieser Arbeit weder für diese Arbeit noch für die Öffentlichkeit verfügbar sind, scheidet diese Möglichkeit aus.

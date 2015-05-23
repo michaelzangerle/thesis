@@ -1,5 +1,60 @@
-\chapter{Analyse?}
-\todo{selbes kapitel?}
-\pagebreak
-\section{Entscheidungsbaum}
-\section{Nachbearbeitung}
+\section{Klassifizierung der Verkehrsmittel}
+Die Klassifizierung der Segmente bzw. das Bestimmen des Verkehrsmittels für ein Segment basiert bei beiden Analysearten (mit und ohne GIS-Daten) auf Entscheidungsbäumen. Wie bereits in Abbildung \imgref{decissiontree} und in Abbildung \imgref{GISdecissiontree} ersichtlich und im Abschnitt \nameref{schlussfolgerungsvariablen} genau beschrieben verwendet der Entscheidungsbaum ohne GIS-Daten ausschließlich Geschwindigkeits- und Beschleunigungswerte sowie die Stopprate als Indikatoren. Der Entscheidungsbaum mit GIS-Daten fügt diesen aber noch einen Wert für die Nahe zu verschieden Infrastrukturen hinzu. Dies bedeutet, dass für jedes Segment bestimmte Entscheidungskriterien abhängig von Analysetyp festgestellt werden müssen bevor der Entscheidungsbaum das Verkehrsmittel bestimmen kann. 
+
+\subsubsection{Erstellen der Entscheidungsbäume}
+\label{entscheidungsbaumGenerierungPHP}
+Wie bereits im Abschnitt \nameref{entscheidungsbaumAlsSchlussfolgerungsmodell} beschrieben, konnte in der Community-Version von Rapidminer der generierte Entscheidungsbaum als Bild oder Text exportiert werden. Um jedoch bei dem Erstellen des Entscheidungsbaums möglichst flexibel zu sein (z.B. erweitern der Trainingsdaten) wurd ein Parser für die textuelle Darstellung des Entscheidungsbaums implementiert. 
+
+Ein Ausschnitt des Entscheidungsbaums als Text ist in Listing \coderef{entscheidungsbaumText} zu sehen. Dabei stellt jede Zeile mindestens einen Knoten im Baum dar. Eine Zeile kann mit Indikatoren für die Tiefe des Knotens im Baum beginnen. Dabei steht jedes ``|`` für eine Ebene tiefer im Baum. Jene zwei Zeilen am Beginn ohne Tiefenangabe bilden somit den Wurzelknoten. Außerdem gibt es jeden Knoten der kein Blatt ist zwei mal in dieser Darstellung. Diese beiden Knoten unterscheiden sich dabei nur durch ihren Vergleichsoperator, denn dieser ist genau das Gegenteil des anderen. Dadurch können beide Fälle bei überprüfen ob eine Bedingung zutrifft, abgebildet werden.
+
+Jede Zeile besteht aus dem Namen der Entscheidungsvariable, einem Vergleichsoperator und einem Wert. Hat dieser Knoten nur mehr ein Kind-Knoten mit dem Resultat so folgt hinter dem Wert das Resultat. Das Resultat besteht dabei aus dem bestimmten Verkehrsmittel und einer Übersicht über die Vorkommnisse aller Verkehrsmittel für die getroffenen Entscheidungen.
+
+Die Kind-Knoten sind jeweils dem letzten Knoten auf dem vorherigen Level zugeordnet.
+
+\begin{code}[]{Entscheidungsbaum in Textform}{entscheidungsbaumText}
+meanvelocity > 20.830: train {bike=0, walk=0, car=0, bus=0, train=5}
+meanvelocity <= 20.830
+|   meanvelocity > 2.041
+|   |   meanvelocity > 7.837
+|   |   |   meanvelocity > 8.772: car {bike=0, walk=0, car=46, bus=1, train=2}
+|   |   |   meanvelocity <= 8.772
+|   |   |   |   meanacceleration > 2.728: bus {bike=0, walk=0, car=0, bus=2, train=0}
+|   |   |   |   meanacceleration <= 2.728: car {bike=0, walk=0, car=3, bus=0, train=0}
+...
+\end{code}
+
+\textbf{Parsen und Cachen der Entscheidungsbäume}
+Die von Rapidminer gelieferten Entscheidungsbäume wurden im Prototypen als Teil der Konfiguration hinterlegt. Damit die Entscheidungsbäume nicht für jeden Anfrage geparst und erstellt werden müssen, bietet das Framework Symfony die Möglichkeit die aus Konfigurationsdateien entstandenen Resultate zu cachen. Dies bedeutet in diesem Fall, dass die Entscheidungsbäume eingelesen sowie geparst werden und danach mit Hilfe des Resultats eine PHP-Datei erstellt wird. Darin wird die Initialisierung des Entscheidungsbaums als Code abgelegt (siehe Listing \coderef{entscheidungsbaumPHP}). Dadurch muss der Entscheidungsbaum nicht jedes mal neu geparst sondern nur ein Objekt mit genau diesem Baum instanziiert werden. 
+
+\begin{code}[PHP]{Ausschnitt des generierten Entscheidungsbaums als PHP-Klasse}{entscheidungsbaumPHP}
+...
+class BasicDecisionTree implements DecisionTreeInterface
+{
+    protected $tree;
+
+    function __construct()
+    {
+        $node0 = new Node();
+        $node0->setDecision(new Decision('meanvelocity', '>', 20.83));
+        $node1 = new Node();
+        $node1->setResult(new Result(0,0,0,0,5));
+        ...
+        $node0->setRight($node2);
+        $node1->setParent($node1);
+        $node2->setParent($node0);
+        $node2->setLeft($node3);
+        ...
+\end{code}
+
+Damit dieser Vorgang nur gemacht wird, wenn sich die Datei mit dem Entscheidungsbaum in Textform verändert, merkt Symfony sich das Änderungsdatum und entscheidet basierend darauf ob die PHP-Datei neu generiert werden muss.
+
+\subsubsection{Verwendung der Entscheidungsbäume}
+\label{entscheidungsbaum_verwendung}
+Die Entscheidungsbäume werden in de jeweiligen TravelMode-Filter verwendet. Dabei wird für jedes Segment der Entscheidungsbaum traversiert und das Resultat bei dem jeweiligen Segment hinterlegt. 
+
+\subsection{Nachbearbeitung}
+\todo{bild nach bearbeitung}
+
+\clearpage
+\section{Zusammenfassung}
+\todo{zusammenfassung processing?}

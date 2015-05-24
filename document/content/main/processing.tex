@@ -1,18 +1,18 @@
 \chapter{Segmentierung und Klassifizierung}
-In diesem Abschnitt wird der Prozess der Klassifizierung eines GPS-Tracks bzw. dessen einzelne Abschnitte erklärt. Dies inkludiert den Segmentierungsvorgang sowie die Entscheidungsbäume als Schlussfolgerungsmodelle und endet mit dem Nachbearbeiten um Anordnungen mit sehr geringer Wahrscheinlichkeit (Kontextfehler) zu verhindern.
+In diesem Abschnitt wird der Prozess der Klassifizierung von einzelnen Segmenten erklärt und inkludiert den Segmentierungsvorgang sowie die Berechnung der Zusatzinformation, welche für die Segmentierung benötigt werden. Weiters wird dargelegt, wie die Entscheidungsvariablen für die Entscheidungsbäume ausgewählt worden sind. 
 
-Unter dem Segmentierungsvorgang versteht man das Aufteile einer GPS-Spur in Abschnitte in welchen mit hoher Wahrscheinlichkeit nur ein Verkehrsmittel benutzt worden ist. Dabei wird versucht die Segmente zu finden in welchen man zu Fuß unterwegs war. Diese werden dann als Geh-Segmente gekennzeichnet. Die anderen Segmente werden als nicht Geh-Segmente klassifiziert. Dadurch, dass nur zwischen 2 temporären Verkehrsmitteln unterschieden wird, vereinfacht sich die  Verkehrsmittelbestimmung drastisch.
+Unter dem Segmentierungsvorgang versteht man das Aufteilen einer GPS-Spur in Abschnitte in welchen mit hoher Wahrscheinlichkeit nur ein Verkehrsmittel benutzt worden ist. Dabei wird versucht die Segmente zu finden in welchen man zu Fuß unterwegs war. Diese werden dann als Geh-Segmente gekennzeichnet. Die anderen Segmente werden als nicht Geh-Segmente klassifiziert. Dadurch, dass hierbei nur zwischen 2 temporären Verkehrsmitteln unterschieden wird, vereinfacht sich die  Verkehrsmittelbestimmung drastisch.
 
-Nach der Segmentierung folgt die konkrete Bestimmung des jeweiligen Verkehrsmittels für die einzelnen Abschnitte welche aus dem Segmentierungsvorgang hervorgegangen sind. In dieser Arbeit wurde die Bestimmung mit Hilfe von Entscheidungsbäumen realisiert. Dabei gibt es einen Entscheidungsbaum für die Klassifizierung mit und einen für die Klassifizierung ohne GIS-Daten. 
+Nach der Segmentierung folgt die konkrete Bestimmung des jeweiligen Verkehrsmittels für die einzelnen Abschnitte, welche aus dem Segmentierungsvorgang hervorgegangen sind. In dieser Arbeit wurde die Bestimmung mit Hilfe von Entscheidungsbäumen realisiert. Dabei gibt es einen Entscheidungsbaum für die Klassifizierung mit und einen für die Klassifizierung ohne GIS-Daten. Für diese Entscheidungsbäume wurden verschiedene Entscheidungsvariablen ausgewählt. Sowohl die Auswahl als auch die Berechnung dieser Werte wird erklärt.
 
 Schlussendlich werden die klassifizierten Abschnitte ein letztes mal auf ihre Wahrscheinlichkeit in dieser Reihenfolge überprüft. Dies bedeutet, dass überprüft wird wie wahrscheinlich es ist, dass man die Abfolge von z.B. ``Auto->zu Fuß->Auto->zu Fuß->Auto`` in einer GPS-Spur vorfindet oder ob es sich doch um einen Fehler der Bestimmung durch den fehlenden Kontext handeln könnte. Diese letzte Überprüfung sieht die einzelnen Abschnitte also im Kontext der anderen und kann daher ein Letztes mal überprüfen ob das Ergebnis plausibel ist.
 \clearpage
 
-\section{Segmentierung}
+\section{Segmentierung eines Tracks}
 \label{segmentierung}
-Bei der Segmentierung geht es in erster Linie darum, den Umfang des Problems der Verkehrsmittelbestimmung zu verkleinern. Dies bedeutet, man versucht das angegebenen GPS-Tracksegment in Geh-Segment und nicht Geh-Segmente aufzuteilen und dadurch statt zwischen mehreren Verkehrsmitteln (Gehen, Bus, Zug, Auto, Fahrrad) nur mehr zwischen zwei Typen unterscheiden muss. Die genauere Unterscheidung kann dann in einem weiteren Schritt folgen in welchem jedoch schon klar ist wo es sich um ein Segment handelt in welchem eine Person zu Fuß unterwegs war oder nicht. 
+Bei der Segmentierung geht es in erster Linie darum, den Umfang des Problems der Verkehrsmittelbestimmung zu verkleinern. Dies bedeutet, man versucht das angegebenen GPS-Tracksegment in Geh-Segment und nicht Geh-Segmente aufzuteilen und dadurch statt zwischen mehreren Verkehrsmitteln (Gehen, Bus, Zug, Auto, Fahrrad) nur mehr zwischen zwei unterscheiden muss. Die genauere Unterscheidung kann dann in einem weiteren Schritt folgen in welchem jedoch schon klar ist, wo es sich um ein Segment handelt in welchem eine Person zu Fuß unterwegs war oder nicht. 
 
-Zheng sagt in diesem Zusammenhang, dass es zwischen jedem Wechsel eines Verkehrsmittels einen Abschnitt gibt bei welchem man zu Fuß unterwegs war, auch wenn dieser Abschnitt sehr klein ist. Ein Wechsel erfolgt nie direkt wie z.B. von einem Zug in den Bus ohne über einen Bahnsteig oder ähnliches gehen zu müssen. Diese Aussage hat sich aus seinen umfangreichen Testdaten ableiten lassen. Dies bedeutet, dass wenn ein Verkehrsmittelwechsel stattgefunden hat, dann gibt es auch Trackpunkte in welchen eine Geschwindigkeit und eine Beschleunigung von nahezu 0 zu erwarten ist. Daraus hat er folgenden Algorithmus bzw Regeln abgeleitet:  \cite{zheng_understanding_2010}
+Zheng sagt in diesem Zusammenhang, dass es zwischen jedem Wechsel eines Verkehrsmittels einen Abschnitt gibt in welchem man zu Fuß unterwegs war und ein Stopp stattgefunden hat, auch wenn dieser Abschnitt sehr klein ist. Ein Wechsel erfolgt nie direkt wie z.B. von einem Zug in den Bus ohne Anzuhalten und über einen Bahnsteig gehen zu müssen. Dies bedeutet, dass wenn ein Verkehrsmittelwechsel stattgefunden hat, dann gibt es neben Geh-Punkten auch Trackpunkte in welchen eine Geschwindigkeit und eine Beschleunigung von nahezu 0 zu erwarten ist ( => Stopp).  Diese Aussage hat sich aus seinen umfangreichen Testdaten ableiten lassen.Daraus hat er folgenden Algorithmus abgeleitet:  \cite{zheng_understanding_2010}
 
 \begin{pitemize}
 \item Finde alle Geh-Punkte und nicht Geh-Punkte des betrachteten Abschnitts oder Tracks anhand von Grenzwerten für Geschwindigkeit und Beschleunigung und fasse die aufeinander folgenden Punkte von selben Typ in Segmente zusammen.
@@ -29,7 +29,7 @@ Für den Prototypen wurde im wesentlichen der durch Biljecki erweiterte Ansatz v
 
 \section{Schlussfolgerungsvariablen}
 \label{schlussfolgerungsvariablen}
-Als Grundlage für die Schlussfolgerung durch die Entscheidungsbäume müssen zuerst Variablen die für die Schlussfolgerung sehr wichtig bzw. möglichst ausschlaggebend für die betrachteten Verkehrsmittel sind, festgelegt werden. Dies Variablen können dabei diverse geschwindigkeitsabhängige Werte wie durchschnittliche und maximale Geschwindigkeit sein oder auch Beschleunigungswerte und  Abstände zu bestimmten Infrastrukturen. Eine Übersicht über die Schlussfolgerungsvariablen in den betrachteten Publikationen ist in der Tabelle \ref{variablenuebersicht} abgebildet. Diese Werte sind nach der Anzahl der Vorkommnisse in den Publikationen gereiht und bildet eine Grundlage für die in dieser Arbeit verwendeten Variablen. 
+Als Grundlage für die Schlussfolgerung durch die Entscheidungsbäume müssen zuerst Variablen die für die Schlussfolgerung möglichst ausschlaggebend für die betrachteten Verkehrsmittel sind, festgelegt werden. Dies Variablen können dabei diverse geschwindigkeitsabhängige Werte wie durchschnittliche und maximale Geschwindigkeit oder auch Beschleunigungswerte und  Abstände zu bestimmten Infrastrukturen sein. Eine Übersicht über die Schlussfolgerungsvariablen in den betrachteten Publikationen ist in der Tabelle \ref{variablenuebersicht} abgebildet. Diese Werte sind nach der Anzahl der Vorkommnisse in den Publikationen gereiht und bildet eine Grundlage für die in dieser Arbeit verwendeten Variablen. 
 
 Aus Gründen der Vollständigkeit muss noch erwähnt werden, dass aufgrund eines anderen Segmentierungsverfahrens nicht alle Variablen von Gonzales  \cite{gonzalez_automating_2010} aufgeführt sind. Außerdem handelt es sich bei der maximalen Geschwindigkeit nicht um das absolute Maximum sondern um 95\% davon bzw. ist es die dritt höchste Geschwindigkeit die gemessen wurde. 
 
@@ -126,21 +126,11 @@ Wie Zheng in \cite{zheng_understanding_2010} beschrieben hat, ist die Geschwindi
 Die Stopprate ist für Zheng in so fern sehr aussagekräftig, da er an spezifischen Verkehrsmitteln auch eine spezifische Stopprate bzw. ein Stoppverhalten festmachen kann. Dies ist Beispielhaft in Abbildung \imgref{stop_rate_zheng} ersichtlich. Dabei stoppt eine Person im Auto (a) wesentlich weniger oft wie zum Beispiel ein Bus (b) da dieser nicht nur bei Kreuzungen sondern auch bei Bushaltestellen anhalten muss. Noch öfter stoppt laut Zheng nur ein Fußgänger (c) \cite{zheng_understanding_2010}. Im Falle des Prototyps ist wird die Erkennung von Stopps bereits beim Segmentieren benötigt und dadurch, dass die anderen Entscheidungsvariablen sehr auf die Geschwindigkeit basieren, wurde die Stopprate als weitere Entscheidungsvariable die nicht abhängig von der Geschwindigkeit ist ausgewählt. Als Stopp gelten dabei eine bestimmte Anzahl von Trackpunkten (z.B. über eine Zeit von 5 Sekunden) bei welchen die Geschwindigkeit unterhalb einem Grenzwert (z.B. unter 2km/h) liegt. Diese Werte können wiederum in der Konfigurtion eingestellt werden.
 
 \img{0.75}{document/graphics/stop_rate_zheng.png}{Stopprate laut Zheng (Quelle: \cite{zheng_understanding_2010})}{stop_rate_zheng}
-
-
 \clearpage
 
 \section{Berechnung der GIS-Entscheidungsvariablen}
 \label{gisdaten}
-%\item durchschnittliche Nähe zu Busstationen
-%\item durchschnittliche Nähe zu Bahnhöfen
-%\item durchschnittliche Nähe zu Gleisen	
-%\item durchschnittliche Nähe zu Autobahnen
-\subsubsection{Durchschnittliche Geschwindigkeit}
-\subsubsection{Maximale Geschwindigkeit}
-\subsubsection{Durchschnittliche Beschleunigung}
-\subsubsection{Maximale Beschleunigung}
 \subsection{Abstand zu Bushaltestellen}
 \subsection{Abstand zu Gleisen}
-
+\subsection{Abstand zur Autobahn}
 \clearpage

@@ -72,16 +72,16 @@ Die Resultate aller vorgenommenen Analysen und Änderungen werden auf dieser Sei
 \todo{bild updaten}
 
 \section{Konfiguration des Prototyps}
-Der Prototyp lässt sich in den verschiedenen Bereichen weitestgehend konfigurieren. Dies Konfiguration kann in einer separaten Datei vorgenommen werden. Die Konfigurationsmöglichkeiten beinhalten sowohl unter anderem:
+Der Prototyp lässt sich in den verschiedenen Bereichen weitestgehend konfigurieren. Dies Konfiguration kann in einer separaten Datei (app/config/config.yml) vorgenommen werden. Die Konfigurationsmöglichkeiten beinhalten unter anderem:
 \begin{pitemize}
-\item Konfiguration des Default Namespaces für das Parsen der GPX-Dateien, wenn keine in der Datei definiert wurde.
-\item Verschiedenste Grenzwerte zum beeinflussen des Filterns von fehlerhaften Ausreißern in den Trackpunkten
+\item Konfiguration des Default Namespaces für das Parsen der GPX-Dateien, wenn keine in der Datei gefunden wurde.
+\item Verschiedenste Grenzwerte zum beeinflussen des Filterns von fehlerhaften Ausreißern in den Trackpunkten.
 \item Diverse Grenzwerte für den Segmentierungsprozess, welcher die einzelne Tracks in Segmente mit nur einem Verkehrsmittel unterteilt.
-\item Definitionsmöglichkeiten für alle Analysemethoden sowie deren Eigenheiten
+\item Definitionsmöglichkeiten für alle Analysemethoden sowie deren Eigenschaften.
 \end{pitemize}
 
 \subsection{Konfiguration des Filters}
-In diesem Konfigurationsbereich (siehe Listing \coderef{filterConfig}) inkludiert sind sowohl eine minimale als auch maximale Distanz in Metern pro Zeiteinheit sowie ein Maximalwert für die Änderung der Höhenmeter. Weiters kann hier definiert werden, wie hoch die minimale Anzahl der Trackpunkte pro Segment sein muss, wie groß die minimale Zeitdifferenz (in Sekunden) zwischen zwei Trackpunkten sein soll und wie viel Punkte am Start übersprungen werden sollen. Schlussendlich kann ein Prozentwert für die Anzahl der validen Trackpunkte im Verhältnis zu allen Trackpunkten eingestellt und definiert werden, was als Stopp gilt. Eine genauere Erklärung zu dem Filterprozess ist im \nameref{anhang1} zu finden.
+In diesem Konfigurationsbereich (siehe Listing \coderef{filterConfig}) inkludiert sind sowohl eine minimale als auch maximale Distanz in Metern pro Zeiteinheit sowie ein Maximalwert für die Änderung der Höhenmeter. Weiters kann hier definiert werden, wie hoch die minimale Anzahl der Trackpunkte pro Segment sein muss, wie groß die minimale Zeitdifferenz (in Sekunden) zwischen zwei Trackpunkten sein soll und wie viel Punkte am Start übersprungen werden sollen. Außerdem kann ein Prozentwert für die Anzahl der validen Trackpunkte im Verhältnis zu allen Trackpunkten eingestellt werden und die Kriterien welche einen Stopp auszeichnen, festgelegt werden. Eine genauere Erklärung zu dem Filterprozess ist im \nameref{anhang1} zu finden.
 
 \begin{code}[]{Filterkonfiguration}{filterConfig}
   filter:
@@ -97,7 +97,7 @@ In diesem Konfigurationsbereich (siehe Listing \coderef{filterConfig}) inkludier
 \end{code}
 
 \subsection{Konfiguration des Segmentierens}
-In dem Abschnitt der Konfiguration der Segmentierung (siehe Listing \coderef{segmentConfig}) kann festgelegt werden, welche Geschwindigkeit (m/s) als auch Beschleunigung (m/s\textsuperscript{2}) als maximaler Wert für einen Fußgänger gilt. Weiters kann festgelegt werden, welches die minimale Zeitspanne (in Sekunden) und die minimale Distanz (in Metern) ist die ein Segment haben muss um nicht mit dem vorangegangenen Segment vereint zu werden. Schlussendlich gibt es 3 Werte, welche zu dem Beenden eines Segments führen können. Darunter ist sowohl ein Stopp, welcher durch eine sehr geringe oder gar keine Bewegung über eine bestimmte Zeitspanne (in Sekunden) definiert wird oder durch eine Zeitspanne (in Sekunden), in welcher keine neuen Trackpunkte gefunden werden. Wofür diese Werte benötigt werden wird im Abschnitt \nameref{segmentierung} detailliert erklärt.
+In dem Abschnitt der Segmentierungskonfiguration (siehe Listing \coderef{segmentConfig}) kann festgelegt werden, bis zu welcher Geschwindigkeit (m/s) und Beschleunigung (m/s\textsuperscript{2}) ein Wegpunkt als Geh-Punkt gilt. Weiters kann festgelegt werden, welches die minimale Zeitspanne (in Sekunden) und die minimale Distanz (in Metern) ist die ein Segment haben muss um nicht mit dem vorangegangenen Segment vereint zu werden. Schlussendlich gibt es 3 Werte, welche zu dem Beenden eines Segments führen können. Darunter ist sowohl ein Stopp, welcher durch eine sehr geringe oder gar keine Bewegung über eine bestimmte Zeitspanne (in Sekunden) definiert wird oder durch eine Zeitspanne (in Sekunden), in welcher keine neuen Trackpunkte gefunden werden. Wofür diese Werte benötigt werden wird im Abschnitt \nameref{segmentierung} detailliert erklärt.
 
 \begin{code}[]{Segmentierungskonfiguration}{segmentConfig}
   segmentation:
@@ -111,7 +111,7 @@ In dem Abschnitt der Konfiguration der Segmentierung (siehe Listing \coderef{seg
 \end{code}
 
 \subsection{Konfiguration der Analysemethoden}
-Für die Analyse können verschiedenste Methoden definiert werden. In Listing \coderef{analyseConfig} ist die Konfiguration für die Analysemethode ohne GIS-Daten abgebildet. Hierbei werden unter einem Namen für die Analysemethode (basic) verschiedene Konfigurationsvariablen angelegt. Darunter zum einen Variablen für die Erstellung des Entscheidungsbaums sowie der Generierung der Datei mit den Trainingsdaten. Die Konfiguration für den Entscheidungsbaum umfasst ein Klassenname (zugleich auch Dateiname), das Verzeichnis in welchem die generierte Entschiedungsbaum-Datei abgelegt werden soll sowie wo die Textdatei mit der Definition des Entscheidungsbaums gefunden wird. Wozu diese Werte benötigt werden wir im Abschnitt \nameref{entscheidungsbaumGenerierungPHP} genauer erklärt. Unter der Konfigurationsvariable csv\_columns verstecken sich die Spalten welche beim Erstellen der Trainingsdatei generiert werden.
+Für die Analyse können verschiedenste Methoden definiert werden. In Listing \coderef{analyseConfig} ist die Konfiguration für die Analysemethode ohne GIS-Daten abgebildet. Hierbei werden unter einem Namen für die Analysemethode (basic) verschiedene Konfigurationsvariablen abgelegt. Darunter zum einen Variablen für die Erstellung des Entscheidungsbaums sowie der Generierung der Datei mit den Trainingsdaten. Die Konfiguration für den Entscheidungsbaum umfasst ein Klassenname (zugleich auch Dateiname), das Verzeichnis in welchem die generierte Entschiedungsbaum-Datei abgelegt werden soll sowie den Pfad wo die Textdatei mit der Definition des Entscheidungsbaums gefunden wird. Wozu diese Werte benötigt werden wir im Abschnitt \nameref{entscheidungsbaumGenerierungPHP} genauer erklärt. Unter der Konfigurationsvariable csv\_columns verstecken sich die Spalten welche beim Erstellen der Trainingsdatendatei verwendet werden.
 
 \begin{code}[]{Analysekonfiguration}{analyseConfig}
     basic:

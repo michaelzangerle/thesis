@@ -1,5 +1,5 @@
 \section{Klassifizierung der Verkehrsmittel}
-Die Klassifizierung der Segmente bzw. das Bestimmen des Verkehrsmittels für ein Segment basiert bei beiden Analysearten (mit und ohne GIS-Daten) auf Entscheidungsbäumen. Wie bereits in Abbildung \imgref{decissiontree} und in Abbildung \imgref{GISdecissiontree} ersichtlich und im Abschnitt \nameref{schlussfolgerungsvariablen} genau beschrieben verwendet der Entscheidungsbaum ohne GIS-Daten ausschließlich Geschwindigkeits- und Beschleunigungswerte sowie die Stopprate als Indikatoren. Der Entscheidungsbaum mit GIS-Daten fügt diesen aber noch einen Wert für die Nahe zu verschieden Infrastrukturen hinzu. Dies bedeutet, dass für jedes Segment bestimmte Entscheidungskriterien abhängig von Analysetyp festgestellt werden müssen bevor der Entscheidungsbaum das Verkehrsmittel bestimmen kann. 
+Die Klassifizierung der Segmente bzw. das Bestimmen des Verkehrsmittels für ein Segment basiert bei beiden Analysearten (mit und ohne GIS-Daten) auf Entscheidungsbäumen. Wie bereits in Abbildung \imgref{decissiontree} und in Abbildung \imgref{GISdecissiontree} ersichtlich und im Abschnitt \nameref{schlussfolgerungsvariablen} genau beschrieben verwendet der Entscheidungsbaum ohne GIS-Daten ausschließlich Geschwindigkeits- und Beschleunigungswerte sowie die Stopprate als Indikatoren. Der Entscheidungsbaum mit GIS-Daten fügt diesen aber noch einen Wert für die Nahe zu verschieden Infrastrukturen hinzu.
 
 \subsubsection{Erstellen der Entscheidungsbäume}
 \label{entscheidungsbaumGenerierungPHP}
@@ -7,9 +7,9 @@ Wie bereits im Abschnitt \nameref{entscheidungsbaumAlsSchlussfolgerungsmodell} b
 
 Ein Ausschnitt des Entscheidungsbaums als Text ist in Listing \coderef{entscheidungsbaumText} zu sehen. Dabei stellt jede Zeile mindestens einen Knoten im Baum dar. Eine Zeile kann mit Indikatoren für die Tiefe des Knotens im Baum beginnen. Dabei steht jedes ``|`` für eine Ebene tiefer im Baum. Jene zwei Zeilen am Beginn ohne Tiefenangabe bilden somit den Wurzelknoten da sie über keine Tiefenangabe verfügen. Außerdem gibt es jeden Knoten der kein Blatt ist zwei Mal in dieser Darstellung. Diese beiden Knoten unterscheiden sich dabei nur durch ihren Vergleichsoperator, denn dieser ist genau das Gegenteil des Anderen. Dadurch können beide Fälle einer Bedingung, abgebildet werden.
 
-Jede Zeile besteht aus dem Namen der Entscheidungsvariable, einem Vergleichsoperator und einem Wert. Hat dieser Knoten nur mehr ein Kind-Knoten mit dem Resultat so folgt hinter dem Wert das Resultat. Das Resultat besteht dabei aus dem bestimmten Verkehrsmittel und einer Übersicht über die Vorkommnisse aller Verkehrsmittel für die getroffenen Entscheidungen aus den Trainingsdaten.
+Jede Zeile besteht aus dem Namen der Entscheidungsvariable, einem Vergleichsoperator und einem Wert. Hat ein Knoten nur mehr einen Kind-Knoten mit dem Resultat so folgt hinter dem Wert das Resultat. Das Resultat besteht dabei aus dem bestimmten Verkehrsmittel und einer Übersicht über die Vorkommnisse aller Verkehrsmittel für die getroffenen Entscheidungen aus den Trainingsdaten.
 
-Die Kind-Knoten sind jeweils dem letzten Knoten auf dem vorherigen Level zuzuordnen.
+Alle Kind-Knoten sind jeweils dem letzten Knoten auf dem vorherigen Level zuzuordnen.
 
 \begin{code}[]{Entscheidungsbaum in Textform}{entscheidungsbaumText}
 meanvelocity > 20.830: train {bike=0, walk=0, car=0, bus=0, train=5}

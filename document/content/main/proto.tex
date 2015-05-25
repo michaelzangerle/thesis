@@ -1,6 +1,6 @@
 \chapter{Der Prototyp}
 
-Im Rahmen dieser Thesis  wurde ein Prototyp für die Erkennung von Verkehrsmitteln aus GPS-Daten entwickelt. In Abstimmung mit den Zielen, dass es im Prinzip jeder Person (mit einem Gerät das GPS-Tracks aufzeichnen kann und Zugang zu einem Computer mit Internetzug) möglich sein soll ihre eigenen Daten mit diesem Prototypen analysieren zu lassen wurde eine Webapplikation entwickelt. Diese Applikation verwendet serverseitig das PHP-Framework Symfony als Grundlage und stellt eine REST-Schnittstelle zur Kommunikation zu Verfügung.
+Im Rahmen dieser Thesis  wurde ein Prototyp für die Erkennung von Verkehrsmitteln aus GPS-Daten entwickelt. In Abstimmung mit den Zielen, dass es im Prinzip jeder Person (welche ein Gerät besitzt welches GPS-Tracks aufzeichnen kann und Zugang zu einem Computer mit Internetzug hat) möglich sein soll ihre eigenen Daten mit diesem Prototypen analysieren zu lassen, wurde eine Webapplikation entwickelt. Diese Applikation verwendet serverseitig das PHP-Framework Symfony als Basis und stellt eine REST-Schnittstelle zur Kommunikation zu Verfügung. Für die Persistierung wurde das Doctrine-ORM in Verbindung mit einer mySQL-Datenbank verwendet.
 
 Der Prototyp bietet neben dem Filtern, Segmentieren und Analysieren der GPS-Daten auch eine Visualisierung der analysierten Daten an. Dies bedeutet, dass das Resultat der Verarbeitung auf einer Karte dargestellt wird. Zusätzlich zu der Darstellung der Karte wird dem Benutzer durch auch die Möglichkeit geboten, die Resultate des Prozesses zu bearbeiten und somit gegebenenfalls das Verkehrsmittel zu korrigieren. 
 
@@ -13,7 +13,7 @@ Der Kern der Webapplikation ist in einer Pipes-and-Filter Architektur aufgebaut.
 Diese Flexibilität, welches es ermöglicht Filter bis zu einem gewissen Grad zu kombinieren und in verschieden Reihenfolgen zu verbinden wurde für den Prototypen benötigt um z.B. beide Analysemethoden möglichst einfach abbilden zu können. Außerdem werden im Falle dieses Prototyps die Trainingsdaten in eine Datei geschrieben und bei einer Anfrage über die Webapplikation, werden die Daten in der Datenbank abgelegt. Hierbei unterscheiden sich nicht nur die Persistierungsarten sondern auch die Darstellung der Daten selbst da in die Datei im CSV-Format geschrieben wird. Durch diesen Ansatz konnten viele Komponenten in anderen Benutzungsfällen wiederverwendet werden.
 
 \subsection{Pipes und Filter-Architektur für Trainingsdaten}
-Die Anordnung der einzelnen Filter für die Verarbeitung der GPS-Daten ist im Falle der Trainingsdaten in Abbildung \imgref{pipesAndFilterTraining} ersichtlich. Hierbei wird das Verzeichnis mit den Trainingsdaten definiert und dem ersten Filter (Filereader) werden nach und nach die einzelnen Dateien übergeben. Nachdem die Daten den Trackpoint-, und Tracksegmentfilter (grün ohne GIS-Daten, orange mit GIS-Daten) durchlaufen haben werden sie schließlich vom letzten Filter (FileWriter) in eine Datei geschrieben.
+Die Anordnung der einzelnen Filter für die Verarbeitung der GPS-Daten ist im Falle der Trainingsdaten in Abbildung \imgref{pipesAndFilterTraining} ersichtlich. Hierbei wird das Verzeichnis mit den Trainingsdaten definiert und dem ersten Filter (FileReader) werden nach und nach die einzelnen Dateien übergeben. Nachdem die Daten den Trackpoint-, und Tracksegmentfilter (grün ohne GIS-Daten, orange mit GIS-Daten) durchlaufen haben werden sie schließlich von der letzten Komponente (FileWriter) in eine Datei geschrieben.
 
 \img{1}{document/graphics/pipes_and_filter_diagram_training.png}{Pipes- und Filter- Struktur für Trainingsdaten}{pipesAndFilterTraining}
 
@@ -27,8 +27,12 @@ Der Trackpoint-Filter ist nicht nur ein Filter im Sinne des Architekturmusters s
 \label{tracksegmentFilter}
 Der Tracksegment-Filter ist einer der wichtigsten Filter in dem Verarbeitungsprozess. Er berechnet für jedes Segment die für die weitere Verarbeitung benötigten Zusatzwerte. Dies bedeutet, dass er die mittlere und maximale Beschleunigung, die mittlere und maximale Geschwindigkeit sowie die Stopprate berechnet. Weitere Informationen über die gewählten Zusatzwerte sowie die Auswahl selbst sind im Abschnitt \nameref{schlussfolgerungsvariablen} zu finden.  Im Falle der Trainingsdaten ergänzt er die Segmentdaten noch mit dem in den Trainingsdaten definierten Verkehrsmitteltyp.
 
-\subsubsection{FileWriter-Filter}
-Der FileWriter-Filter übernimmt das Schreiben der übergebenen Daten in eine Datei. Hierbei werden die vom Tracksegment-Filter übergeben Segment in einer Datei im CSV-Format abgelegt, welche in weiterer Folge im Rapidminer verwendet wird.
+\subsubsection{GISTracksegment-Filter}
+\label{gisTracksegmentFilter}
+Der GISTracksegment-Filter macht im Wesentlichen das Selbe wie der normale Tracksegment-Filter, allerdings berechnet er zusätzlich zu den Geschwindigkeit und Beschleunigungswerten noch die Abstände zu den verschiedenen Infrastrukturen wie Busstationen, Schienen und Autobahnen. Diese Werte werden bei der Analyse mit GIS-Daten benötigt um beim TravelMode-Filter eine genauere Bestimmung zu ermöglichen.
+
+\subsubsection{FileWriter}
+Der FileWriter übernimmt das Schreiben der übergebenen Daten in eine Datei. Hierbei werden die vom Tracksegment-Filter übergeben Segment in einer Datei im CSV-Format abgelegt, welche in weiterer Folge im Rapidminer verwendet wird.
 
 \subsection{Pipes und Filter-Architektur für die Webapplikation}
 Die Anordnung der einzelnen Filter für die Verarbeitung der GPS-Daten die über die Webapplikation verarbeitet werden sollen ist in Abbildung \imgref{pipesAndFilter} ersichtlich. 
@@ -42,10 +46,6 @@ Der Ablauf ist hierbei ähnlich wie jener bei den Trainingsdaten, und es wird wi
 \subsubsection{Segmentation-Filter}
 Der Segmentation-Filter teilt die Tracksegmente der einzelnen Tracks in Teile, welche mit hoher Wahrscheinlichkeit nur mit einem Verkehrsmittel bewältigt wurden. Dazu verwendet dieser ermittelte Geschwindigkeits- sowie Beschleunigungswerte. Dieser Vorgang stützt sich auf die Ergebnisse aus den Publikationen von Zheng \cite{zheng_understanding_2010} und Biljecki \cite{biljecki_transportation_2013}. Der genaue Ablauf dieses Prozesses ist im Abschnitt \nameref{segmentierung} beschrieben.
 
-\subsubsection{GISTracksegment-Filter}
-\label{gisTracksegmentFilter}
-Der GISTracksegment-Filter macht im Wesentlichen das Selbe wie der normale Tracksegment-Filter, allerdings berechnet er zusätzlich zu den Geschwindigkeit und Beschleunigungswerten noch die Abstände zu den verschiedenen Infrastrukturen wie Busstationen, Schienen und Autobahnen. Diese Werte werden im weiteren Verlauf benötigt um beim GISTravelMode-Filter eine genauere Bestimmung zu ermöglichen.
-
 \subsubsection{TravelMode-Filter}
 In diesem Filter wird der eigentliche Verkehrsmitteltyp anhand der berechneten Werte bestimmt. Dies geschieht in beiden Fällen (mit und ohne GIS-Daten) mit Hilfe des Entscheidungsbaumes (siehe Abschnitt \nameref{entscheidungsbaum} und \nameref{entscheidungsbaumGIS}) welcher mit Hilfe der jeweiligen Trainingsdaten generiert worden ist.
 
@@ -54,19 +54,21 @@ Bei diesem Filter geht es darum, dass wenn alle Verkehrsmittel aller Segmente ei
 
 \todo{entfernen des postprocessing weil keine weiteren informationen?}
 
-\subsubsection{Database-Filter}
-Da das Ablegen der ermittelten Ergebnisse in der Datenbank  nur eine Variante (neben z.B. dem Ablegen  in einer Datei) von vielen ist kümmert sich dieser Filter darum, dass die übergebenen Daten für die Datenbank aufbereitet und schlussendlich persistiert werden.
+\subsubsection{DatabaseWriter}
+Da das Ablegen der ermittelten Ergebnisse in der Datenbank  nur eine Variante (neben z.B. dem Ablegen  in einer Datei) von vielen ist kümmert sich diese Komponente darum, dass die übergebenen Daten für die Datenbank aufbereitet und schlussendlich persistiert werden.
 
 \section{Verwendung der Applikation}
 Die Oberfläche der Webapplikation ist sehr einfach gehalten und besteht im wesentlich aus 3 verschiedenen Seiten. Einer Startseite (Home) welche das Projekt kurz vorstellt, einer Seite (Create) auf welcher ein Track analysiert werden kann und einer Seite (Results) auf welcher die Resultate aller Auswertungen angezeigt werden.
 
-\textbf{Create-Seite}
+\subsection{Create-Seite}
 Auf dieser Seite wird einem Benutzer die Möglichkeit geboten einen Track hochzuladen und diesen mit einem von den 2 Varianten (mit und ohne GIS-Daten) analysieren zu lassen. Ist dies geschehen so wird eine Karte angezeigt, auf welche die ausgelesenen Segmente dargestellt werden. Dies Segmente werden je nach ermitteltem Verkehrsmitteltyp in verschiedenen Farben visualisiert. Per Klick auf eines dieser Segmente kann der Verkehrsmitteltyp des Segments korrigiert werden (siehe Abbildung \imgref{webapp1}). Diese Korrektur hat wiederum Einfluss auf die Auswertung der Ergebnisse, welche in Abbildung \imgref{webapp2} ersichtlich sind.
 
 \img{0.75}{document/graphics/webapp1.png}{Korrigieren eines Verkehrsmitteltyps eines analysierten Tracks}{webapp1}
 
-\textbf{Results-Seite}
-Die Resultate aller vorgenommenen Analysen und Änderungen werden auf dieser Seite als Diagramme dargestellt. Dabei zeigt das erste Diagramm, das Verhältnis der analysierten und korrekt erkannten Segmente. Das zweite Diagramm zeigt die Anzahl der korrekt analysierten Segmente und die Gesamtanzahl der Segmente. Alle weiteren Diagramme betreffen ein spezifisches Verkehrsmittel und geben darüber Auskunft, welche Verkehrsmittel eigentlich richtig gewesen wären. Alle Diagramme zeigen dabei die Werte für beide verfügbaren Analysemethode an um einen direkten Vergleich zu ermöglichen. Ein Ausschnitt dieser Seite ist in Abbildung \imgref{webapp2} zu sehen.
+\subsection{Results-Seite}
+Die Resultate aller vorgenommenen Analysen und Änderungen werden auf dieser Seite als Diagramme dargestellt. Dabei zeigt das erste Diagramm, das Verhältnis aller analysierten und der korrekt erkannten Segmente. Das zweite Diagramm zeigt die Anzahl der korrekt analysierten Segmente und die Gesamtanzahl der Segmente je nach Verkehrsmittel. Alle weiteren Diagramme betreffen ein spezifisches Verkehrsmittel und geben darüber Auskunft, welche Verkehrsmittel eigentlich richtig gewesen wären. 
+
+Alle Diagramme zeigen dabei die Werte für beide verfügbaren Analysemethode an um einen direkten Vergleich zu ermöglichen. Ein Ausschnitt dieser Seite ist in Abbildung \imgref{webapp2} zu sehen.
 
 \img{0.75}{document/graphics/webapp2.png}{Ausschnitt zu den Resultaten der analysierten Tracks}{webapp2}
 \todo{bild updaten}
@@ -74,13 +76,13 @@ Die Resultate aller vorgenommenen Analysen und Änderungen werden auf dieser Sei
 \section{Konfiguration des Prototyps}
 Der Prototyp lässt sich in den verschiedenen Bereichen weitestgehend konfigurieren. Diese Konfiguration kann in einer separaten Datei (app/config/config.yml) vorgenommen werden. Die Konfigurationsmöglichkeiten beinhalten unter anderem:
 \begin{pitemize}
-\item Konfiguration des Default Namespaces für das Parsen der GPX-Dateien, wenn keine in der Datei gefunden wurde.
+\item Konfiguration des Default-Namespaces für das Parsen der GPX-Dateien, wenn keiner in der Datei gefunden wurde.
 \item Verschiedenste Grenzwerte zum beeinflussen des Filterns von fehlerhaften Ausreißern in den Trackpunkten.
 \item Diverse Grenzwerte für den Segmentierungsprozess, welcher die einzelnen Tracks in Segmente mit nur einem Verkehrsmittel unterteilt.
 \item Definitionsmöglichkeiten für alle Analysemethoden sowie deren Eigenschaften.
 \end{pitemize}
 
-\subsection{Konfiguration des Filters}
+\subsection{Konfiguration des Filters für fehlerhafte Ausreißer}
 In diesem Konfigurationsbereich (siehe Listing \coderef{filterConfig}) inkludiert sind sowohl eine minimale als auch maximale Distanz in Metern pro Zeiteinheit sowie ein Maximalwert für die Änderung der Höhenmeter. Weiters kann hier definiert werden, wie hoch die minimale Anzahl der Trackpunkte pro Segment sein muss, wie groß die minimale Zeitdifferenz (in Sekunden) zwischen zwei Trackpunkten sein soll und wie viel Punkte am Start übersprungen werden sollen. Außerdem kann ein Prozentwert für die Anzahl der validen Trackpunkte im Verhältnis zu allen Trackpunkten eingestellt werden und die Kriterien welche einen Stopp auszeichnen, festgelegt werden. Eine genauere Erklärung zu dem Filterprozess ist im \nameref{anhang1} zu finden.
 
 \begin{code}[]{Filterkonfiguration}{filterConfig}

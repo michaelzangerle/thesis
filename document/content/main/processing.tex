@@ -1,11 +1,12 @@
 \chapter{Segmentierung und Klassifizierung}
-In diesem Abschnitt wird der Prozess der Klassifizierung von einzelnen Segmenten erklärt und inkludiert den Segmentierungsvorgang sowie die Berechnung der Zusatzinformation, welche für die Segmentierung benötigt werden. Weiters wird dargelegt, wie die Entscheidungsvariablen für die Entscheidungsbäume ausgewählt worden sind. 
+In diesem Abschnitt wird der Prozess der Klassifizierung von einzelnen Segmenten erklärt und er inkludiert den Segmentierungsvorgang sowie die Berechnung der Zusatzinformation, welche für die Segmentierung benötigt werden. Weiters wird dargelegt, wie die Entscheidungsvariablen für die Entscheidungsbäume ausgewählt worden sind. 
 
 Unter dem Segmentierungsvorgang versteht man das Aufteilen einer GPS-Spur in Abschnitte in welchen mit hoher Wahrscheinlichkeit nur ein Verkehrsmittel benutzt worden ist. Dabei wird versucht die Segmente zu finden in welchen man zu Fuß unterwegs war. Diese werden dann als Geh-Segmente gekennzeichnet. Die anderen Segmente werden als nicht Geh-Segmente klassifiziert. Dadurch, dass hierbei nur zwischen 2 temporären Verkehrsmitteln unterschieden wird, vereinfacht sich die  Verkehrsmittelbestimmung drastisch.
 
 Nach der Segmentierung folgt die konkrete Bestimmung des jeweiligen Verkehrsmittels für die einzelnen Abschnitte, welche aus dem Segmentierungsvorgang hervorgegangen sind. In dieser Arbeit wurde die Bestimmung mit Hilfe von Entscheidungsbäumen realisiert. Dabei gibt es einen Entscheidungsbaum für die Klassifizierung mit und einen für die Klassifizierung ohne GIS-Daten. Für diese Entscheidungsbäume wurden verschiedene Entscheidungsvariablen ausgewählt. Sowohl die Auswahl als auch die Berechnung dieser Werte wird erklärt.
 
 Schlussendlich werden die klassifizierten Abschnitte ein letztes mal auf ihre Wahrscheinlichkeit in dieser Reihenfolge überprüft. Dies bedeutet, dass überprüft wird wie wahrscheinlich es ist, dass man die Abfolge von z.B. ``Auto->zu Fuß->Auto->zu Fuß->Auto`` in einer GPS-Spur vorfindet oder ob es sich doch um einen Fehler der Bestimmung durch den fehlenden Kontext handeln könnte. Diese letzte Überprüfung sieht die einzelnen Abschnitte also im Kontext der anderen und kann daher ein Letztes mal überprüfen ob das Ergebnis plausibel ist.
+\todo{postprocessing entfernen?}
 \clearpage
 
 \section{Segmentierung eines Tracks}
@@ -38,7 +39,7 @@ Weiters muss noch erwähnt werden, dass sowohl Zheng  \cite{zheng_understanding_
 Die betrachtet GIS-Werte waren bei Stenneth \cite{stenneth_transportation_2011} der durchschnittliche Abstand zu Gleisen, Bussen und dem Buskandidat (jener Bus in dem sich die Person am ehesten Befand). Biljecki verwendete den Abstand zu Gleisen, Bushaltestellen, Buslinien, U-Bahn und Straßenbahn als Indikatoren für die Schlussfolgerung. Schüssler \cite{nadine_schussler_improving_2011} inkludiert von den möglichen GIS-Werten nur den Abstand zu öffentlichen Verkehrsmitteln aller Art.
 
 \subsection{Reihung der allgemeinen Variablen}
-Die in dieser Arbeit verwendeten Schlussfolgerungsvariablen basieren auf der Reihung welche in Tabelle \ref{variablenuebersicht} ersichtlich ist. Die allgemeine Geschwindigkeit an fünfter Stelle wurden deshalb übersprungen, weil sie bereits zwei Mal vertreten ist und bereits Zheng gesagt hat, dass die Geschwindigkeit allein kein aussagekräftiger Indikator für ein Verkehrsmittel ist \cite{zheng_understanding_2010}. 
+Die in dieser Arbeit verwendeten Schlussfolgerungsvariablen basieren auf der Reihung welche in Tabelle \ref{variablenuebersicht} ersichtlich ist. Die allgemeine Geschwindigkeit an fünfter Stelle wurden deshalb übersprungen, weil sie bereits zwei Mal vertreten ist und bereits Zheng gesagt hat, dass die Geschwindigkeit allein kein aussagekräftiger Indikator für ein Verkehrsmittel ist \cite{zheng_understanding_2010}. Weiters hat Zheng für Auswahl der Stopprate eine interessante Erklärung, welche im Abschnitt \nameref{stopprate} genauer erklärt wird und weshalb die Stopprate auch als fünfte Variable ausgewählt wurde. 
 
 \begin{pitemize}
 \item durchschnittliche Geschwindigkeit
@@ -111,7 +112,7 @@ d &= R * c
 
 \paragraph{Durchschnittliche Geschwindigkeit} Die durchschnittliche Geschwindigkeit wird über alle Geschwindigkeitswerte eines Segments berechnet.
 
-\paragraph{Maximale Geschwindigkeit} Die maximale Geschwindigkeit wird aus allen Geschwindigkeitswerten des Segments ermittelt. Dabei ist aber anzumerken, dass nicht die absolute Geschwindigkeit sondern die 3. höchste Geschwindigkeit verwendet wird um fehlerhaften Ausreißern vorzubeugen.
+\paragraph{Maximale Geschwindigkeit} Die maximale Geschwindigkeit wird aus allen Geschwindigkeitswerten des Segments ermittelt.
 
 \subsection{Beschleunigung}
 Die Beschleunigung ist als Geschwindigkeitsunterschied zwischen zwei Punkten pro Zeiteinheit definiert \cite[S.~51]{douglas_giancoli_physik_2010}. Somit wurde diese auf Basis der ermittelten Geschwindigkeit berechnet und dadurch folgende zwei Entscheidungsvariablen bestimmt.
@@ -121,7 +122,8 @@ Die Beschleunigung ist als Geschwindigkeitsunterschied zwischen zwei Punkten pro
 \paragraph{Maximale Beschleunigung} Die maximal gemessene Beschleunigung für das betrachtete Segment.
 
 \subsubsection{Stopprate}
-Wie Zheng in \cite{zheng_understanding_2010} beschrieben hat, ist die Geschwindigkeit als Basis für Entscheidungsvariablen nur bedingt geeignet, da diese sehr von der aktuellen Verkehrssituation abhängig ist. Deshalb setzt Zheng auf die Kombination von Richtungswechsel, Geschwindigkeitswechsel und der Stopprate. Dieser Aussage widerspricht indirekt die Auswahl der Entscheidungsvariablen von anderen Autoren wie Biljecki  \cite{biljecki_transportation_2013}, Gonzales \cite{gonzalez_automating_2010}, Schüssler \cite{nadine_schussler_improving_2011} und Reddy \cite{reddy_using_2010} (siehe Tabelle \ref{variablenuebersicht}). 
+\label{stopprate}
+Wie Zheng in \cite{zheng_understanding_2010} beschrieben hat, ist die Geschwindigkeit als Basis für Entscheidungsvariablen nur bedingt geeignet, da diese sehr von der aktuellen Verkehrssituation abhängig ist. Deshalb setzt Zheng auf die Kombination von Richtungswechsel, Geschwindigkeitswechsel und der Stopprate. Dieser Aussage widerspricht wiederum indirekt die Auswahl der Entscheidungsvariablen von anderen Autoren wie Biljecki  \cite{biljecki_transportation_2013}, Gonzales \cite{gonzalez_automating_2010}, Schüssler \cite{nadine_schussler_improving_2011} und Reddy \cite{reddy_using_2010} (siehe Tabelle \ref{variablenuebersicht}). 
 
 Die Stopprate ist für Zheng insofern sehr aussagekräftig, da er an spezifischen Verkehrsmitteln auch eine spezifische Stopprate bzw. ein Stoppverhalten festmachen kann. Dies ist Beispielhaft in Abbildung \imgref{stop_rate_zheng} ersichtlich. Dabei stoppt eine Person im Auto (a) wesentlich weniger oft wie zum Beispiel ein Bus (b) da dieser nicht nur bei Kreuzungen sondern auch bei Bushaltestellen anhalten muss. Noch öfter stoppt laut Zheng nur ein Fußgänger (c) \cite{zheng_understanding_2010}. Im Falle des Prototyps ist wird die Erkennung von Stopps bereits beim Segmentieren benötigt und dadurch, dass die anderen Entscheidungsvariablen sehr auf die Geschwindigkeit basieren, wurde die Stopprate als weitere Entscheidungsvariable die nicht abhängig von der Geschwindigkeit ist ausgewählt. Als Stopp gelten dabei eine bestimmte Anzahl von Trackpunkten (z.B. über eine Zeit von 5 Sekunden) bei welchen die Geschwindigkeit unterhalb einem Grenzwert (z.B. unter 2km/h) liegt. Diese Werte können wiederum in der Konfiguration eingestellt werden.
 

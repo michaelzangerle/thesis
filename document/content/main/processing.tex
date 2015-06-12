@@ -1,7 +1,7 @@
 \chapter{Segmentierung und Klassifizierung}
 In diesem Abschnitt wird der Prozess der Klassifizierung von einzelnen Segmenten erklärt und er inkludiert den Segmentierungsvorgang sowie die Berechnung der Zusatzinformation, welche für die Segmentierung benötigt werden. Weiters wird dargelegt, wie die Entscheidungsvariablen für die Entscheidungsbäume ausgewählt worden sind. 
 
-Unter dem Segmentierungsvorgang versteht man das Aufteilen einer GPS-Spur in Abschnitte in welchen mit hoher Wahrscheinlichkeit nur ein Verkehrsmittel benutzt worden ist. Dabei wird versucht die Segmente zu finden in welchen man zu Fuß unterwegs war. Diese werden dann als Geh-Segmente gekennzeichnet. Die anderen Segmente werden als nicht Geh-Segmente klassifiziert. Dadurch, dass hierbei nur zwischen 2 temporären Verkehrsmitteln unterschieden wird, vereinfacht sich die  Verkehrsmittelbestimmung drastisch.
+Unter dem Segmentierungsvorgang versteht man das Aufteilen einer GPS-Spur in Abschnitte, in welchen mit hoher Wahrscheinlichkeit nur ein Verkehrsmittel benutzt worden ist. Dabei wird versucht, die Segmente zu finden, in welchen man zu Fuß unterwegs war. Diese werden dann als Geh-Segmente gekennzeichnet. Die anderen Segmente werden als nicht Geh-Segmente klassifiziert. Dadurch, dass hierbei nur zwischen zwei temporären ``Verkehrsmitteln`` unterschieden wird, vereinfacht sich die  Verkehrsmittelbestimmung drastisch.
 
 Nach der Segmentierung folgt die konkrete Bestimmung des jeweiligen Verkehrsmittels für die einzelnen Abschnitte, welche aus dem Segmentierungsvorgang hervorgegangen sind. In dieser Arbeit wurde die Bestimmung mit Hilfe von Entscheidungsbäumen realisiert. Dabei gibt es einen Entscheidungsbaum für die Klassifizierung mit und einen für die Klassifizierung ohne GIS-Daten. Für diese Entscheidungsbäume wurden verschiedene Entscheidungsvariablen ausgewählt. Sowohl die Auswahl als auch die Berechnung dieser Werte wird erklärt.
 
@@ -10,14 +10,14 @@ Schlussendlich werden die klassifizierten Abschnitte ein letztes mal auf ihre Pl
 
 \section{Segmentierung eines Tracks}
 \label{segmentierung}
-Bei der Segmentierung geht es in erster Linie darum, den Umfang des Problems der Verkehrsmittelbestimmung zu verkleinern. Dies bedeutet, man versucht das angegebene GPX-Tracksegment in Geh-Segment und nicht Geh-Segmente aufzuteilen und dadurch statt zwischen mehreren Verkehrsmitteln (Gehen, Bus, Zug, Auto, Fahrrad) nur mehr zwischen zwei unterscheiden muss. Die genauere Unterscheidung kann dann in einem weiteren Schritt folgen in welchem jedoch schon klar ist, wo es sich um ein Segment handelt in welchem eine Person zu Fuß unterwegs war oder nicht. 
+Bei der Segmentierung geht es in erster Linie darum, den Umfang des Problems der Verkehrsmittelbestimmung zu verkleinern. Dies bedeutet, man versucht das angegebene GPX-Tracksegment in Geh-Segmente und nicht Geh-Segmente aufzuteilen und dadurch statt zwischen mehreren Verkehrsmitteln (Gehen, Bus, Zug, Auto, Fahrrad) nur mehr zwischen zwei unterscheiden muss. Die genauere Unterscheidung kann dann in einem weiteren Schritt folgen, in welchem jedoch schon klar ist, wo es sich um ein Segment handelt in welchem eine Person zu Fuß unterwegs war oder nicht. 
 
-Zheng sagt in diesem Zusammenhang, dass es zwischen jedem Wechsel eines Verkehrsmittels einen Abschnitt gibt in welchem man zu Fuß unterwegs war und ein Stopp stattgefunden hat, auch wenn dieser Abschnitt sehr klein ist. Ein Wechsel erfolgt nie direkt wie z.B. von einem Zug in den Bus ohne Anzuhalten und über einen Bahnsteig gehen zu müssen. Dies bedeutet, dass wenn ein Verkehrsmittelwechsel stattgefunden hat, dann gibt es neben Geh-Punkten auch Trackpunkte in welchen eine Geschwindigkeit und eine Beschleunigung von nahezu 0 zu erwarten ist ( => Stopp).  Diese Aussage hat sich aus seinen umfangreichen Testdaten ableiten lassen. Daraus hat er folgenden Algorithmus abgeleitet:  \cite{zheng_understanding_2010}
+Zheng sagt in diesem Zusammenhang, dass es zwischen jedem Wechsel eines Verkehrsmittels einen Abschnitt gibt in welchem man zu Fuß unterwegs war und ein Stopp stattgefunden hat, auch wenn dieser Abschnitt sehr klein ist. Ein Wechsel erfolgt nie direkt wie z.B. von einem Zug in den Bus ohne Anzuhalten und über einen Bahnsteig gehen zu müssen. Dies bedeutet, dass wenn ein Verkehrsmittelwechsel stattgefunden hat, dann gibt es neben Geh-Punkten auch Trackpunkte, in welchen eine Geschwindigkeit und eine Beschleunigung von nahezu 0 zu erwarten ist ( => Stopp).  Diese Aussage hat sich aus seinen umfangreichen Testdaten ableiten lassen. Daraus hat er folgenden Algorithmus abgeleitet:  \cite{zheng_understanding_2010}
 
 \begin{pitemize}
 \item Finde alle Geh-Punkte und nicht Geh-Punkte des betrachteten Abschnitts oder Tracks anhand von Grenzwerten für Geschwindigkeit und Beschleunigung und fasse die aufeinander folgenden Punkte vom selben Typ in Segmente zusammen.
-\item Liegt die Distanz oder die Zeit eines solchen Segment unterhalb einer definierten Grenze so vereine dieses Segment mit dem Vorherigen.
-\item Überschreitet ein Segment eine bestimmte Länge (200 Meter) ist es ein ``sicheres Segment``. Liegt die Distanz eines Segments jedoch unterhalb dieses Werts so ist es ein ``unsicheres Segment``. Überschreitet die Anzahl der aufeinander folgenden ``unsicheren Segmenten`` einen bestimmten Grenzwert so werden die  aufeinander folgenden ``unsicheren Segmenten`` vereint und als nicht-geh-Segment betrachtet.
+\item Liegt die Distanz oder die Zeit eines solchen Segmente unterhalb einer definierten Grenze so vereine dieses Segment mit dem Vorherigen.
+\item Überschreitet ein Segment eine bestimmte Länge (200 Meter), ist es ein ``sicheres Segment``. Liegt die Distanz eines Segments jedoch unterhalb dieses Werts so ist es ein ``unsicheres Segment``. Überschreitet die Anzahl der aufeinander folgenden ``unsicheren Segmente`` einen bestimmten Grenzwert, so werden die  aufeinander folgenden ``unsicheren Segmente`` vereint und als nicht-geh-Segment betrachtet.
 \end{pitemize}
 
 Biljeki ergänzt diesen Ansatz von Zheng mit seinen Erfahrungen in welchen er feststellte, dass bei einem Wechsel des Verkehrsmittels auch oft das Signal verloren geht. Aus diesem Grund beendet Biljecki ein Segment, wenn die Verbindung verloren wurde und startet ein Neues. Den Verbindungsverlust interpretiert Biljecki so, dass er für mindestens 30 Sekunden keinen weiteren Trackpoint findet. Weiters segmentiert Biljecki dann, wenn er für mehr als 12 Sekunden keine bzw. wenig Bewegung (< 2km/h) feststellen konnte. Diese beiden Änderungen an dem Algorithmus von Zheng begründet Biljecki damit, dass eine Übersegmentierung besser ist als eine Untersegmentierung. Aufeinander folgende Segmente mit demselben Typ kann man immer noch in einem nächsten Schritt zusammenlegen. \cite{biljecki_transportation_2013}
@@ -31,28 +31,31 @@ Für den Prototypen wurde im Wesentlichen der durch Biljecki erweiterte Ansatz v
 
 \section{Schlussfolgerungsvariablen}
 \label{schlussfolgerungsvariablen}
-Als Grundlage für die Schlussfolgerung durch die Entscheidungsbäume müssen zuerst Variablen die für die Schlussfolgerung möglichst ausschlaggebend für die betrachteten Verkehrsmittel sind, festgelegt werden. Dies Variablen können dabei diverse geschwindigkeitsabhängige Werte wie durchschnittliche und maximale Geschwindigkeit oder auch Beschleunigungswerte und  Abstände zu bestimmten Infrastrukturen sein. Eine Übersicht über die Schlussfolgerungsvariablen in den betrachteten Publikationen ist in der Tabelle \ref{variablenuebersicht} abgebildet. Diese Werte sind nach der Anzahl der Vorkommnisse in den Publikationen gereiht und bildet eine Grundlage für die in dieser Arbeit verwendeten Variablen. 
+
+\todo{was sind variablen? in diesem zusammenhang}
+
+Als Grundlage für die Schlussfolgerung durch die Entscheidungsbäume müssen zuerst Variablen, die für die Schlussfolgerung möglichst ausschlaggebend für die betrachteten Verkehrsmittel sind, festgelegt werden. Dies Variablen können dabei diverse geschwindigkeitsabhängige Werte, wie durchschnittliche und maximale Geschwindigkeit oder auch Beschleunigungswerte und  Abstände zu bestimmten Infrastrukturen, sein. Eine Übersicht über die Schlussfolgerungsvariablen in den betrachteten Publikationen ist in der Tabelle \ref{variablenuebersicht} abgebildet. Diese Werte sind nach der Anzahl der Vorkommnisse in den Publikationen gereiht und bildet eine Grundlage für die in dieser Arbeit verwendeten Variablen. 
 
 Aus Gründen der Vollständigkeit muss noch erwähnt werden, dass aufgrund eines anderen Segmentierungsverfahrens nicht alle Variablen von Gonzales  \cite{gonzalez_automating_2010} aufgeführt sind. Außerdem handelt es sich bei der maximalen Geschwindigkeit nicht um das absolute Maximum sondern um 95\% davon bzw. ist es die dritt höchste Geschwindigkeit die gemessen wurde. 
 
-Weiters muss noch erwähnt werden, dass sowohl Zheng  \cite{zheng_understanding_2010} als auch Stenneth \cite{stenneth_transportation_2011} nicht alle Variablen schlussendlich verwendet haben. Sie haben sich allerdings evaluiert, welche Variablen in ihrem Projekt die größte Wirkung zeigen. Dies war bei Zheng \cite{zheng_understanding_2010} die Kombination von der Stopprate, der Geschwindigkeitsänderungsrate und der Richtungsänderungsrate. Fügte er weitere Variablen hinzu konnte eine Verschlechterung der Ergebnisse beobachten. Bei Stenneth \cite{stenneth_transportation_2011} hat die Evaluierung ergeben, dass die durchschnittliche Geschwindigkeit und Beschleunigung kombiniert mit verschiedenen GIS-Werten das beste Ergebnis geliefert. 
+Weiters muss noch erwähnt werden, dass sowohl Zheng  \cite{zheng_understanding_2010} als auch Stenneth \cite{stenneth_transportation_2011} nicht alle Variablen schlussendlich verwendet haben. Sie haben allerdings evaluiert, welche Variablen in ihrem Projekt die größte Wirkung zeigen. Dies war bei Zheng \cite{zheng_understanding_2010} die Kombination von der Stopprate, der Geschwindigkeitsänderungsrate und der Richtungsänderungsrate. Fügte er weitere Variablen hinzu, konnte er eine Verschlechterung der Ergebnisse beobachten. Bei Stenneth \cite{stenneth_transportation_2011} hat die Evaluierung ergeben, dass die durchschnittliche Geschwindigkeit und Beschleunigung kombiniert mit verschiedenen GIS-Werten das beste Ergebnis geliefert. 
 
-Die betrachtet GIS-Werte waren bei Stenneth \cite{stenneth_transportation_2011} der durchschnittliche Abstand zu Gleisen, Bussen und dem Buskandidat (jener Bus in dem sich die Person am ehesten Befand). Biljecki verwendete den Abstand zu Gleisen, Bushaltestellen, Buslinien, U-Bahn und Straßenbahn als Indikatoren für die Schlussfolgerung. Schüssler \cite{nadine_schussler_improving_2011} inkludiert von den möglichen GIS-Werten nur den Abstand zu öffentlichen Verkehrsmitteln aller Art.
+Die betrachteten GIS-Werte waren bei Stenneth \cite{stenneth_transportation_2011} der durchschnittliche Abstand zu Gleisen, Bussen und dem Buskandidat (jener Bus in dem sich die Person am ehesten Befand). Biljecki verwendete den Abstand zu Gleisen, Bushaltestellen, Buslinien, U-Bahn und Straßenbahn als Indikatoren für die Schlussfolgerung. Schüssler \cite{nadine_schussler_improving_2011} inkludiert von den möglichen GIS-Werten nur den Abstand zu öffentlichen Verkehrsmitteln aller Art.
 
 \subsection{Reihung der allgemeinen Variablen}
-Die in dieser Arbeit verwendeten Schlussfolgerungsvariablen basieren auf der Reihung welche in Tabelle \ref{variablenuebersicht} ersichtlich ist. Die allgemeine Geschwindigkeit an fünfter Stelle wurden deshalb übersprungen, weil sie bereits zwei Mal vertreten ist und bereits Zheng gesagt hat, dass die Geschwindigkeit allein kein aussagekräftiger Indikator für ein Verkehrsmittel ist \cite{zheng_understanding_2010}. Weiters hat Zheng für Auswahl der Stopprate eine interessante Erklärung, welche im Abschnitt \nameref{stopprate} genauer erklärt wird und weshalb die Stopprate auch als fünfte Variable ausgewählt wurde. 
+Die in dieser Arbeit verwendeten Schlussfolgerungsvariablen basieren auf der Reihung welche in Tabelle \ref{variablenuebersicht} ersichtlich ist. Die allgemeine Geschwindigkeit an fünfter Stelle wurde deshalb übersprungen, weil sie bereits zwei Mal vertreten ist und bereits Zheng gesagt hat, dass die Geschwindigkeit allein kein aussagekräftiger Indikator für ein Verkehrsmittel ist \cite{zheng_understanding_2010}. Weiters hat Zheng für die Auswahl der Stopprate eine interessante Erklärung, welche im Abschnitt ``\ref{stopprate} \nameref{stopprate}`` genauer erklärt wird und weshalb die Stopprate auch als fünfte Variable ausgewählt wurde. 
 
-\begin{pitemize}
+\begin{enumerate}
 \item durchschnittliche Geschwindigkeit
 \item maximale Geschwindigkeit
 \item durchschnittliche Beschleunigung
 \item maximale Beschleunigung
 \item Stopprate
-\end{pitemize}
+\end{enumerate}
 
 
 \subsection{Reihung der GIS-Variablen}
-Bei der Auswahl der GIS-Variablen fallen jene mit U-Bahn und Straßenbahn weg, da es diese im Raum Vorarlberg nicht gibt. Jene Variablen die spezifische GPS-Daten von einzelnen Verkehrsmitteln benötigen, konnten auch Aufgrund von fehlenden Schnittstellen nicht verwendet werden. Somit wurden folgende Variablen für die GIS-gestützte Analyse verwendet:
+Bei der Auswahl der GIS-Variablen fallen jene mit U-Bahn und Straßenbahn weg, da es diese im Raum Vorarlberg nicht gibt. Jene Variablen, die spezifische GPS-Daten von einzelnen Verkehrsmitteln benötigen, konnten auch Aufgrund von fehlenden Schnittstellen zu den Daten der öffentlichen Verkehrsbetriebe nicht verwendet werden. Somit wurden folgende Variablen für die GIS-gestützte Analyse verwendet:
 
 \begin{pitemize}
 \item durchschnittliche Nähe zu Busstationen und Bahnhöfen
@@ -91,16 +94,16 @@ Varianz d. Geschwindigkeit & x &  &  &  &  &  & \textbf{1} \\ \hline
 \end{landscape}
 
 \section{Berechnung der allgemeinen Entscheidungsvariablen}
-Das Hinzufügen und Berechnen der Entscheidungsvariablen ohne GIS-Daten, wird von dem Tracksegment-Filter (siehe Abschnitt \nameref{tracksegmentFilter}), realisiert. Dabei ist die Berechnung der grundlegenden Geschwindigkeit zwischen zwei GPS-Punkten essentiell da alle weiteren Entscheidungsvariablen darauf aufbauen. 
+Das Hinzufügen und Berechnen (z.B. Geschwindigkeit aus Weg und Zeit) der Entscheidungsvariablen ohne GIS-Daten, wird von dem Tracksegment-Filter (siehe Abschnitt \nameref{tracksegmentFilter}), realisiert. Dabei ist die Berechnung der grundlegenden Geschwindigkeit zwischen zwei GPS-Punkten essentiell, da alle weiteren Entscheidungsvariablen darauf aufbauen. 
 
 \subsection{Geschwindigkeit}
-Berechnet wurde die Geschwindigkeit (v) als Durchschnittsgeschwindigkeit, die als Verhältnis vom zurückgelegten Weg (s) zu der Zeit (t) ausdrückt wird, wie es z.B. im Buch ``Physik`` von Douglas Giancoli definiert wird \cite[S.~27]{douglas_giancoli_physik_2010} und in \ref{geschwindigkeitsformel} ersichtlich ist. 
+Berechnet wurde die Geschwindigkeit (v) als Durchschnittsgeschwindigkeit, die als Verhältnis vom zurückgelegten Weg (s) zu der Zeit (t) ausgedrückt wird, wie es z.B. im Buch ``Physik`` von Douglas Giancoli definiert wird \cite[S.~27]{douglas_giancoli_physik_2010} und in \ref{geschwindigkeitsformel} ersichtlich ist. 
 \begin{equation}
 v = \frac{s}{t}
 \label{geschwindigkeitsformel}
 \end{equation}
 
-Die Zeit ist dabei die Differenz zwischen den Zeitstempeln von zwei GPS-Trackpunkten und der Weg die Differenz zwischen den zwei Koordinaten. Zur Berechnung des Weges (der Luftlinienentfernung) zwischen zwei Koordinaten gibt es laut \cite{movable_type_ltd_calculate_2015} mehrere Möglichkeiten. Welche man verwendet hängt von den Längen der betrachteten Strecken, der gewünschten Genauigkeit sowie der gewünschten Zeit ab. Da es sich bei den hier betrachteten Distanzen immer um sehr kleine Distanzen im Verhältnis zur Erde selbst handelt aber diese aufgrund ihrer weiteren Verwendung zur Berechnung der Geschwindigkeit möglichst genau sein soll wird in diesem Prototyp die Haversine-Formel (siehe die Gleichungen \ref{haversineformel}) verwendet. Dabei sind $\varphi$ die Breitengrade, $\lambda$ die Längengrade, R der Erdradius und $\triangle\varphi$ bzw. $\triangle \lambda$ die Differenz der Breiten- bzw. Längengrade.\cite{movable_type_ltd_calculate_2015}
+Die Zeit ist dabei die Differenz zwischen den Zeitstempeln von zwei GPS-Trackpunkten und der Weg die Differenz zwischen den zwei Koordinaten. Zur Berechnung des Weges (der Luftlinienentfernung) zwischen zwei Koordinaten gibt es laut \cite{movable_type_ltd_calculate_2015} mehrere Möglichkeiten. Welche man verwendet hängt von den Längen der betrachteten Strecken, der gewünschten Genauigkeit sowie der benötigten Performanz ab (schnell aber ungenau vs. langsam aber genau). Da es sich bei den hier betrachteten Distanzen immer um sehr kleine Distanzen im Verhältnis zur Erde selbst handelt, aber diese aufgrund ihrer weiteren Verwendung zur Berechnung der Geschwindigkeit möglichst genau sein soll wird in diesem Prototyp die Haversine-Formel (siehe die Gleichungen \ref{haversineformel}) verwendet. Dabei sind $\varphi$ die Breitengrade, $\lambda$ die Längengrade, R der Erdradius und $\triangle\varphi$ bzw. $\triangle \lambda$ die Differenz der Breiten- bzw. Längengrade.\cite{movable_type_ltd_calculate_2015}
 
 \begin{equation}
 \label{haversineformel}
@@ -118,22 +121,23 @@ d &= R * c
 \subsection{Beschleunigung}
 Die Beschleunigung ist als Geschwindigkeitsunterschied zwischen zwei Punkten pro Zeiteinheit definiert \cite[S.~51]{douglas_giancoli_physik_2010}. Somit wurde diese auf Basis der ermittelten Geschwindigkeit berechnet und dadurch folgende zwei Entscheidungsvariablen bestimmt.
 
-\paragraph{Durchschnittliche Beschleunigung} Die durchschnittliche Beschleunigung für das betrachtete Segment. 
+\begin{pitemize}
+\item \textbf{Durchschnittliche Beschleunigung} Die durchschnittliche Beschleunigung für das betrachtete Segment. 
+\item \textbf{Maximale Beschleunigung} Die maximal gemessene Beschleunigung für das betrachtete Segment.
+\end{pitemize}
 
-\paragraph{Maximale Beschleunigung} Die maximal gemessene Beschleunigung für das betrachtete Segment.
-
-\subsubsection{Stopprate}
+\subsection{Stopprate}
 \label{stopprate}
 Wie Zheng in \cite{zheng_understanding_2010} beschrieben hat, ist die Geschwindigkeit als Basis für Entscheidungsvariablen nur bedingt geeignet, da diese sehr von der aktuellen Verkehrssituation abhängig ist. Deshalb setzt Zheng auf die Kombination von Richtungswechsel, Geschwindigkeitswechsel und der Stopprate. Dieser Aussage widerspricht wiederum indirekt die Auswahl der Entscheidungsvariablen von anderen Autoren wie Biljecki  \cite{biljecki_transportation_2013}, Gonzales \cite{gonzalez_automating_2010}, Schüssler \cite{nadine_schussler_improving_2011} und Reddy \cite{reddy_using_2010} (siehe Tabelle \ref{variablenuebersicht}). 
 
-Die Stopprate ist für Zheng insofern sehr aussagekräftig, da er an spezifischen Verkehrsmitteln auch eine spezifische Stopprate bzw. ein Stoppverhalten festmachen kann. Dies ist Beispielhaft in Abbildung \imgref{stop_rate_zheng} ersichtlich. Dabei stoppt eine Person im Auto (a) wesentlich weniger oft wie zum Beispiel ein Bus (b) da dieser nicht nur bei Kreuzungen sondern auch bei Bushaltestellen anhalten muss. Noch öfter stoppt laut Zheng nur ein Fußgänger (c) \cite{zheng_understanding_2010}. Im Falle des Prototyps ist wird die Erkennung von Stopps bereits beim Segmentieren benötigt und dadurch, dass die anderen Entscheidungsvariablen sehr auf die Geschwindigkeit basieren, wurde die Stopprate als weitere Entscheidungsvariable die nicht abhängig von der Geschwindigkeit ist ausgewählt. Als Stopp gelten dabei eine bestimmte Anzahl von Trackpunkten (z.B. über eine Zeit von 5 Sekunden) bei welchen die Geschwindigkeit unterhalb einem Grenzwert (z.B. unter 2km/h) liegt. Diese Werte können wiederum in der Konfiguration eingestellt werden.
+Die Stopprate ist für Zheng insofern sehr aussagekräftig, da er an spezifischen Verkehrsmitteln auch eine spezifische Stopprate bzw. ein Stoppverhalten festmachen kann. Dies ist Beispielhaft in Abbildung \imgref{stop_rate_zheng} ersichtlich. Dabei stoppt eine Person im Auto (a) wesentlich weniger oft wie zum Beispiel ein Bus (b) da dieser nicht nur bei Kreuzungen sondern auch bei Bushaltestellen anhalten muss. Noch öfter stoppt laut Zheng nur ein Fußgänger (c) \cite{zheng_understanding_2010}. Im Falle des Prototyps wird die Erkennung von Stopps bereits beim Segmentieren benötigt und dadurch, dass die anderen Entscheidungsvariablen sehr auf der Geschwindigkeit basieren, wurde die Stopprate als weitere Entscheidungsvariable, die nicht abhängig von der Geschwindigkeit ist ausgewählt. Als Stopp gelten dabei eine bestimmte Anzahl von Trackpunkten (z.B. über eine Zeit von 5 Sekunden), bei welchen die Geschwindigkeit unterhalb einem Grenzwert (z.B. unter 2km/h) liegt. Diese Werte können wiederum in der Konfiguration eingestellt werden.
 
 \img{0.75}{document/graphics/stop_rate_zheng.png}{Stopprate laut Zheng (Quelle: \cite{zheng_understanding_2010})}{stop_rate_zheng}
 \clearpage
 
 \section{Berechnung der GIS-Entscheidungsvariablen}
 \label{gisdaten}
-Das Hinzufügen und Berechnen der Entscheidungsvariablen mit GIS-Daten, wird von dem GISTracksegment-Filter (siehe Abschnitt \nameref{gisTracksegmentFilter}), realisiert. Dabei erweiter der GISTracksegment-Filter den Tracksegment-Filter und ergänzt diesen um die folgenden weiteren GIS-Werte. Bei allen GIS-Werten wird eine Bounding-Box berechnet und auf die zuvor in die Datenbank importierten GIS-Daten zugegriffen. Der Radius der Boundingbox lässt sich in der Konfigurtion festlegen.
+Das Hinzufügen und Berechnen der Entscheidungsvariablen mit GIS-Daten, wird von dem GISTracksegment-Filter (siehe Abschnitt ``\ref{gisTracksegmentFilter} \nameref{gisTracksegmentFilter}``), realisiert. Dabei erweiter der GISTracksegment-Filter den Tracksegment-Filter und ergänzt diesen um die folgenden weiteren GIS-Werte. Bei allen GIS-Werten wird eine Bounding-Box berechnet und auf die zuvor in die Datenbank importierten GIS-Daten zugegriffen. Der Radius der Boundingbox lässt sich in der Konfiguration festlegen.
 
 \subsection{Abstand zu Bushaltestellen}
 Da der Beginn und das Ende eines Segments immer ein Stopp ist, wird hierbei auch überprüft ob sich eine Bushaltestelle in der Nähe befindet. Wird eine Bushaltestelle gefunden, so wird diese in den GIS-Wert für die Bestimmung des Verkehrsmittels miteinbezogen. Ist sowohl Beginn als auch Ende eines Segments in der Nähe einer Bushaltestelle so wird dies höher gewichtet. 
@@ -141,4 +145,3 @@ Innerhalb eines Segments können sich weitere kürzere Stopps befinden. Diese we
 
 \subsection{Abstand zu Gleisen und zur Autobahn}
 Ähnlich wie bei den Bushaltestellen werden auch die GIS-Werte für die Nähe zu Gleisen und der Autobahn am Beginn und am Ende eines jeden Segments berechnet. Allerdings wird für die Überprüfung innerhalb eines Segments ein konfigurierbarer Zeitwert verwendet. Im Prototypen wird alle 20 Sekunden überprüft ob sich ein Punkt in der Nähe eines Gleises oder der Autobahn befindet.
-\clearpage

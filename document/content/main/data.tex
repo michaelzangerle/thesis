@@ -20,17 +20,17 @@ Einen groben Überblick über die gesammelten Trainingsdaten bietet die Tabelle 
 \hline
 \textbf{Typ} & \textbf{Anzahl} & \textbf{Distanz (km)}\\ 
 \hline
-Auto &	72 & 736,91\\
+Auto & 73 & 752,33\\
 \hline
-Fußgänger &	55 & 72,32\\
+Fußgänger &	53 & 71,73\\
 \hline
-Fahrrad	& 37 & 805,37\\
+Fahrrad	& 41 & 1.120,93\\
 \hline
-Zug & 8 & 240,26\\
+Zug & 8 & 239,04\\
 \hline
-Bus	& 15 & 66,81\\
+Bus	& 16 & 66,03\\
 \hline
-\textbf{Gesamt} & \textbf{187} & \textbf{1.921,67}\\
+\textbf{Gesamt} & \textbf{190} & \textbf{2.250,07}\\
 \hline
 \end{tabular}
 \caption{Trainingsdatenübersicht}
@@ -49,7 +49,6 @@ Ein Track kann aus einem oder mehreren Tracksegmenten bestehen. Die Tracksegment
 \paragraph{Trackpoint (trkpt)}
 Ein Trackpoint entspricht einem Punkt des aufgezeichneten Tracks und enthält Koordinate (Längen- und Breitengrad) sowie einen Zeitstempel und die Höhenmeter. Es gibt aber auch Fälle, in welchen bei einem Trackpoint auch die Geschwindigkeits- oder Beschleunigungsdaten abgelegt werden.
  
-
 \begin{code}[xml]{GPX-Datei}{gpxfile}
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <gpx xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.topografix.com/GPX/1/1" ...>
@@ -73,6 +72,7 @@ Ein Trackpoint entspricht einem Punkt des aufgezeichneten Tracks und enthält Ko
     </trk>
 </gpx>
 \end{code}
+\clearpage
 
 \subsection{Entscheidungsbaum als Schlussfolgerungsmodell}
 \label{entscheidungsbaumAlsSchlussfolgerungsmodell}
@@ -88,20 +88,25 @@ Schlussendlich wurden aus den eingebundenen Daten Entscheidungsbäume für die V
 Beim Erstellen von Entscheidungsbäumen wie auch bei anderen von Trainingsdaten lernenden Algorithmen muss beachtet werden, dass das Ergebnis nicht zu sehr auf die Trainingsdaten zugeschnitten ist. Dies bedeutet man möchte, dass mit Hilfe der Trainingsdaten ein Modell generiert wird, welches auch für Nichttrainingsdaten ein akzeptables Resultat liefert und nicht zu sehr auf die Gegebenheiten / Ungenauigkeiten in den Trainingsdaten spezialisiert ist. Ist dies jedoch der Fall so spricht man von einer Überanpassung (Overfitting) des Modells auf die Daten.  \cite{tom_dietterich_overfitting_1995}
 
 \subsubsection{Zurückschneiden (Pruning)}
-Ist ein Entscheidungsbaum zu sehr angepasst auf die Trainingsdaten so muss dieser wieder zurückgeschnitten werden. Dies bedeutet, dass einzelne Blätter oder auch Teilbäume wieder entfernt werden um ein bestmögliches Resultat (geringe Anzahl an Fehlern) für Nichttrainingsdaten zu erhalten. Für diese Aufgabe wurden verschiedene Algorithmen Entwickelt, welche unter anderem in der Publikation ``Pruning Decision Trees with Misclassification Costs`` von Jeffrey Bradford beschrieben werden. \cite{jeffrey_p._bradford_pruning_1998}
+Ist ein Entscheidungsbaum zu sehr angepasst auf die Trainingsdaten so muss dieser wieder zurückgeschnitten werden. Dies bedeutet, dass einzelne Blätter oder auch Teilbäume wieder entfernt werden um ein bestmögliches Resultat (geringe Anzahl an Fehlern) für Nichttrainingsdaten zu erhalten. Für diese Aufgabe wurden verschiedene Algorithmen entwickelt, welche unter anderem in der Publikation ``Pruning Decision Trees with Misclassification Costs`` von Jeffrey Bradford beschrieben werden. \cite{jeffrey_p._bradford_pruning_1998}
+
+\subsubsection{Konfigurationsmöglichkeiten für die Generierung der Entscheidungsbäume}
+Rapidminer bietet sowohl die Möglichkeit Einfluss auf das Zurückschneiden als auch auf das Überanpassen von Entscheidungsbäumen zu nehmen. Grundsätzlich kann ein Entscheidungsbaum mit verschiedenen Parametern beeinflusst werden (siehe Abbildung \imgref{decissiontree-config}). Die für diese Arbeit relevanten Parameter waren jedoch die maximale Tiefe des Baumes sowie der minimale Informationsgewinn mit jedem neuen Knoten und, dass das Zurückschneiden angewandt wird. 
+
+\img{0.68}{document/graphics/decision-tree-config.png}{Konfigurationsmöglichkeiten für Entscheidungsbäume}{decissiontree-config}
 
 \subsubsection{Entscheidungsbaum ohne GIS-Daten}
 \label{entscheidungsbaum}
-Der Entscheidungsbaum ohne GIS-Daten ist in Abbildung \imgref{decissiontree} zu sehen. Bei diesem Entscheidungsbaum wurden mittlere und maximale Geschwindigkeit, Stopprate sowie mittlere und maximale Beschleunigung als Indikatoren für den Entscheidungsprozess gewählt. Wie diese Werte berechnet und ergänzt werden wird im Abschnitt \nameref{schlussfolgerungsvariablen}, erklärt. 
+Der Entscheidungsbaum ohne GIS-Daten ist in Abbildung \imgref{decisiontree} zu sehen. Bei diesem Entscheidungsbaum wurden mittlere und maximale Geschwindigkeit, Stopprate sowie mittlere und maximale Beschleunigung als Indikatoren für den Entscheidungsprozess gewählt. Wie diese Werte berechnet und ergänzt werden wird im Abschnitt \nameref{schlussfolgerungsvariablen}, erklärt. 
 
-\img{0.68}{document/graphics/decission-tree-stoprate.png}{Entscheidungsbaum ohne GIS-Daten}{decissiontree}
+\img{0.68}{document/graphics/decision-tree.png}{Entscheidungsbaum ohne GIS-Daten}{decisiontree}
 \clearpage
 
 \subsubsection{Entscheidungsbaum mit GIS-Daten}
 \label{entscheidungsbaumGIS}
-\todo{entscheidungsbaum mit gis daten}
-\todo{entscheidungsbaum mit gis daten bild}
-\img{0.68}{document/graphics/decission-tree-stoprate.png}{Entscheidungsbaum mit GIS-Daten}{GISdecissiontree}
+Der Entscheidungsbaum mit GIS-Daten ist in Abbildung \imgref{decisiontree-gis} zu sehen. Bei diesem Entscheidungsbaum wurde zusätzlich zu den Geschwindigkeits-, Beschleunigungs- und Stoppwerten auch Werte für die verwendeten GIS-Daten gesammelt. Die zusätzlichen Werte beinhalten einen Wert (ptscloseness) welcher die Stopps in der Nähe von Bushaltestellen und Bahnhöfen wiederspiegelt, sowie zwei Werte für die Nähe zur Autobahn (highwaycloseness) und zu Gleisen (railcloseness). Wie diese Werte berechnet und ergänzt werden, wird im Abschnitt \nameref{schlussfolgerungsvariablen}, erklärt.
+
+\img{0.68}{document/graphics/decision-tree-gis.png}{Entscheidungsbaum mit GIS-Daten}{decisiontree-gis}
 \clearpage
 
 

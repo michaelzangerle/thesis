@@ -39,8 +39,6 @@ Die Anordnung der einzelnen Filter für die Verarbeitung der GPS-Daten die über
 
 Der Ablauf ist hierbei ähnlich wie jener bei den Trainingsdaten, und es wird wiederum zwischen den zwei Modi mit GIS-Daten (orange) oder ohne GIS-Daten (grün) unterschieden. Ausgehend vom FileReader- und Trackpoint-Filter kommen die Daten in den Segmentation-Filter. Von dort kommen sie je nach Analyse-Art in dem Tracksegment-Filter oder in dem GISTracksegment-Filter. Das Ergebnis dieser Filter kommt danach in den TravelModel-Filter wo die eigentlichen Verkehrsmittel bestimmt werden. Anschließend werden die Ergebnisse dem Postprocess-Filter übergeben welche die bestimmten Verkehrsmitteln ein letztes Mal überprüft um schlussendlich an den Database-Filter übergeben zu werden, welcher die Ergebnisse für die Datenbank aufbereitet in dieser ablegt.
 
-\todo{postprocessing entfernen?}
-
 \img{0.85}{document/graphics/pipes_and_filter_diagram.png}{Pipes- und Filter- Struktur der Webapplikation}{pipesAndFilter}
 
 \subsubsection{Segmentation-Filter}
@@ -50,9 +48,7 @@ Der Segmentation-Filter teilt die Tracksegmente der einzelnen Tracks in Teile, w
 In diesem Filter wird der eigentliche Verkehrsmitteltyp anhand der berechneten Werte bestimmt. Dies geschieht in beiden Fällen (mit und ohne GIS-Daten) mit Hilfe des Entscheidungsbaumes (siehe Abschnitt \nameref{entscheidungsbaum} und \nameref{entscheidungsbaumGIS}) welcher mit Hilfe der jeweiligen Trainingsdaten generiert worden ist.
 
 \subsubsection{Postprocessing-Filter}
-Bei diesem Filter geht es darum, dass wenn alle Verkehrsmittel aller Segmente eines Tracks bestimmt worden sind, die Wahrscheinlichkeit der Wechsel nochmals überprüft wird. Diese letzte Überprüfung der Resultate der Entscheidungsbäume basiert auf Zheng \cite{zheng_understanding_2010} und soll verhindern, dass sehr unwahrscheinliche Verkehrsmittelwechsels wie zum Beispiel ``Auto->zu Fuß->Auto->zu Fuß->Auto`` entstehen. Zheng trifft diese letzte Entscheidung über den Verkehrsmitteltyp in weiterer Folge aber nicht nur auf Grund von Wahrscheinlichkeiten sondern auch durch jenen Graph den er während des Analysierens der Trainingsdaten aufgebaut hat. In diesem Postprocessing-Filter wurde der Wahrscheinlichkeiten-basierte Ansatz implementiert, welcher in der Evaluierung von Zheng einen Anstieg der korrekten Erkennungsrate um 2\% zur Folge hatte.
-
-\todo{entfernen des postprocessing weil keine weiteren informationen?}
+Bei diesem Filter geht es darum, dass wenn alle Verkehrsmittel aller Segmente eines Tracks bestimmt worden sind, die Plausibilität der Wechsel nochmals überprüft wird. Diese letzte Überprüfung der Resultate der Entscheidungsbäume basiert auf Zheng \cite{zheng_understanding_2010} und soll verhindern, dass sehr unwahrscheinliche Verkehrsmittelwechsels wie zum Beispiel ``Auto->Bus->Auto->Bus->Auto`` entstehen. Basierend auf der Aussage von Zheng \cite{zheng_understanding_2010}, dass sich zwischen allen Verkehrsmittelwechsel ein kleines Segment vom Typ "zu Fuß" befinden muss, können Wechsel wie im obigen Beispiel verhindert werden. Somit wird das Resultat von ``Auto->Bus->Auto->Bus->Auto`` zu ``Auto->Auto->Auto->Auto->Auto`` korrigiert.
 
 \subsubsection{DatabaseWriter}
 Da das Ablegen der ermittelten Ergebnisse in der Datenbank  nur eine Variante (neben z.B. dem Ablegen  in einer Datei) von vielen ist kümmert sich diese Komponente darum, dass die übergebenen Daten für die Datenbank aufbereitet und schlussendlich persistiert werden.
@@ -83,19 +79,17 @@ Der Prototyp lässt sich in den verschiedenen Bereichen weitestgehend konfigurie
 \end{pitemize}
 
 \subsection{Konfiguration des Filters für fehlerhafte Ausreißer}
-In diesem Konfigurationsbereich (siehe Listing \coderef{filterConfig}) inkludiert sind sowohl eine minimale als auch maximale Distanz in Metern pro Zeiteinheit sowie ein Maximalwert für die Änderung der Höhenmeter. Weiters kann hier definiert werden, wie hoch die minimale Anzahl der Trackpunkte pro Segment sein muss, wie groß die minimale Zeitdifferenz (in Sekunden) zwischen zwei Trackpunkten sein soll und wie viel Punkte am Start übersprungen werden sollen. Außerdem kann ein Prozentwert für die Anzahl der validen Trackpunkte im Verhältnis zu allen Trackpunkten eingestellt werden und die Kriterien welche einen Stopp auszeichnen, festgelegt werden. Eine genauere Erklärung zu dem Filterprozess ist im \nameref{anhang1} zu finden.
+In diesem Konfigurationsbereich (siehe Listing \coderef{filterConfig}) inkludiert sind sowohl eine minimale als auch maximale Distanz in Metern pro Zeiteinheit sowie ein Maximalwert für die Änderung der Höhenmeter. Weiters kann hier definiert werden, wie hoch die minimale Anzahl der Trackpunkte pro Segment sein muss, wie groß die minimale Zeitdifferenz (in Sekunden) zwischen zwei Trackpunkten sein soll und wie viel Punkte am Start übersprungen werden sollen. Außerdem kann ein Prozentwert für die Anzahl der validen Trackpunkte im Verhältnis zu allen Trackpunkten eingestellt werden. Eine genauere Erklärung zu dem Filterprozess ist im \nameref{anhang1} zu finden.
 
 \begin{code}[]{Filterkonfiguration}{filterConfig}
   filter:
-    max_distance: 50
     min_distance: 0.1
+    max_distance: 50
     max_altitude_change: 25
     min_trackpoints_per_segment: 2
     min_time_difference: 2
     points_to_skip_from_start: 2
     min_valid_points_ratio: 0
-    max_velocity_for_nearly_stoppoints: 0.55
-    max_time_without_movement: 5
 \end{code}
 
 \subsection{Konfiguration des Segmentierens}
@@ -113,7 +107,7 @@ In dem Abschnitt der Segmentierungskonfiguration (siehe Listing \coderef{segment
 \end{code}
 
 \subsection{Konfiguration der Analysemethoden}
-Für die Analyse können verschiedenste Methoden definiert werden. In Listing \coderef{analyseConfig} ist die Konfiguration für die Analysemethoden ohne GIS-Daten abgebildet. Hierbei werden unter einem Namen für die Analysemethode (basic) verschiedene Konfigurationsvariablen abgelegt. Darunter zum einen Variablen für die Erstellung des Entscheidungsbaums sowie der Generierung der Datei mit den Trainingsdaten. Die Konfiguration für den Entscheidungsbaum umfasst ein Klassenname (zugleich auch Dateiname), das Verzeichnis in welchem die generierte Entscheidungsbaum-Datei abgelegt werden soll sowie den Pfad wo die Textdatei mit der Definition des Entscheidungsbaums gefunden wird. Wozu diese Werte benötigt werden wir im Abschnitt \nameref{entscheidungsbaumGenerierungPHP} genauer erklärt. Unter der Konfigurationsvariable csv\_columns verstecken sich die Spalten welche beim Erstellen der Trainingsdatendatei verwendet werden.
+Für die Analyse können verschiedenste Methoden definiert werden. In Listing \coderef{analyseConfig} ist die Konfiguration für die Analysemethoden ohne GIS-Daten abgebildet. Hierbei werden unter einem Namen für die Analysemethode (basic) verschiedene Konfigurationsvariablen abgelegt. Darunter zum einen Variablen für die Erstellung des Entscheidungsbaums sowie der Generierung der Datei mit den Trainingsdaten. Die Konfiguration für den Entscheidungsbaum umfasst ein Klassenname (zugleich auch Dateiname), das Verzeichnis in welchem die generierte Entscheidungsbaum-Datei abgelegt werden soll sowie den Pfad wo die Textdatei mit der Definition des Entscheidungsbaums gefunden wird. Wozu diese Werte benötigt werden wird im Abschnitt \nameref{entscheidungsbaumGenerierungPHP} genauer erklärt. Hinter der Konfigurationsvariable csv\_columns verstecken sich die Spalten welche beim Erstellen der Trainingsdatendatei verwendet werden.
 
 \begin{code}[]{Analysekonfiguration}{analyseConfig}
     basic:

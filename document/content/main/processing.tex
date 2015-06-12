@@ -5,8 +5,7 @@ Unter dem Segmentierungsvorgang versteht man das Aufteilen einer GPS-Spur in Abs
 
 Nach der Segmentierung folgt die konkrete Bestimmung des jeweiligen Verkehrsmittels für die einzelnen Abschnitte, welche aus dem Segmentierungsvorgang hervorgegangen sind. In dieser Arbeit wurde die Bestimmung mit Hilfe von Entscheidungsbäumen realisiert. Dabei gibt es einen Entscheidungsbaum für die Klassifizierung mit und einen für die Klassifizierung ohne GIS-Daten. Für diese Entscheidungsbäume wurden verschiedene Entscheidungsvariablen ausgewählt. Sowohl die Auswahl als auch die Berechnung dieser Werte wird erklärt.
 
-Schlussendlich werden die klassifizierten Abschnitte ein letztes mal auf ihre Wahrscheinlichkeit in dieser Reihenfolge überprüft. Dies bedeutet, dass überprüft wird wie wahrscheinlich es ist, dass man die Abfolge von z.B. ``Auto->zu Fuß->Auto->zu Fuß->Auto`` in einer GPS-Spur vorfindet oder ob es sich doch um einen Fehler der Bestimmung durch den fehlenden Kontext handeln könnte. Diese letzte Überprüfung sieht die einzelnen Abschnitte also im Kontext der anderen und kann daher ein Letztes mal überprüfen ob das Ergebnis plausibel ist.
-\todo{postprocessing entfernen?}
+Schlussendlich werden die klassifizierten Abschnitte ein letztes mal auf ihre Plausibilität in dieser Reihenfolge überprüft. Dabei stützt sich dieser Prozess auf die Aussage von Zheng \cite{zheng_understanding_2010}, nach welcher sich immer - wenn mit unter auch kurze - Geh-Segmente zwischen Verkehrswechsel befinden müssen und man nicht von einem in ein anderes Verkehrsmittel wechseln kann ohne eine kurz Strecke zu Fuß bewegen zu müssen. Durch miteinbeziehen des Kontexts lassen sich Abfolgen wie z.B. ``Auto->Bus->Auto->Bus->Auto`` verhindern.  
 \clearpage
 
 \section{Segmentierung eines Tracks}
@@ -24,6 +23,8 @@ Zheng sagt in diesem Zusammenhang, dass es zwischen jedem Wechsel eines Verkehrs
 Biljeki ergänzt diesen Ansatz von Zheng mit seinen Erfahrungen in welchen er feststellte, dass bei einem Wechsel des Verkehrsmittels auch oft das Signal verloren geht. Aus diesem Grund beendet Biljecki ein Segment, wenn die Verbindung verloren wurde und startet ein Neues. Den Verbindungsverlust interpretiert Biljecki so, dass er für mindestens 30 Sekunden keinen weiteren Trackpoint findet. Weiters segmentiert Biljecki dann, wenn er für mehr als 12 Sekunden keine bzw. wenig Bewegung (< 2km/h) feststellen konnte. Diese beiden Änderungen an dem Algorithmus von Zheng begründet Biljecki damit, dass eine Übersegmentierung besser ist als eine Untersegmentierung. Aufeinander folgende Segmente mit demselben Typ kann man immer noch in einem nächsten Schritt zusammenlegen. \cite{biljecki_transportation_2013}
 
 Für den Prototypen wurde im Wesentlichen der durch Biljecki erweiterte Ansatz von Zheng gewählt mit der Einschränkung, dass die Klassifizierung in ``sichere`` und ``unsichere`` Segmente nicht übernommen wurde. Dies wurde mit der Aussage von Biljecki begründet, dass eine Übersegmentierung besser ist als eine Untersegmentierung. Das Resultat eines Segmentierungsvorgangs kann man in Abbildung \imgref{segmentierung} sehen. Jeder Kreis auf der eingezeichneten Route zeigt den Start bzw. das Ende eines Segments. Auf Basis dieser ersten Aufteilung kann nun die genauere Bestimmung des Verkehrsmittels erfolgen.
+
+\todo{certain / uncertain segments}
 
 \img{0.75}{document/graphics/segmentierung.png}{Grundlegende Segmentierung}{segmentierung}
 \clearpage
@@ -132,7 +133,15 @@ Die Stopprate ist für Zheng insofern sehr aussagekräftig, da er an spezifische
 
 \section{Berechnung der GIS-Entscheidungsvariablen}
 \label{gisdaten}
+Das Hinzufügen und Berechnen der Entscheidungsvariablen mit GIS-Daten, wird von dem GISTracksegment-Filter (siehe Abschnitt \nameref{gisTracksegmentFilter}), realisiert. Dabei erweiter der GISTracksegment-Filter den Tracksegment-Filter und ergänzt diesen um die folgenden weiteren GIS-Werte. Bei allen GIS-Werten wird eine Bounding-Box berechnet und auf die zuvor in die Datenbank importierten GIS-Daten zugegriffen. Der Radius der Boundingbox lässt sich in der Konfigurtion festlegen.
+
 \subsection{Abstand zu Bushaltestellen}
-\subsection{Abstand zu Gleisen}
-\subsection{Abstand zur Autobahn}
+Da der Beginn und das Ende eines Segments immer ein Stopp ist, wird hierbei auch überprüft ob sich eine Bushaltestelle in der Nähe befindet. Wird eine Bushaltestelle gefunden, so wird diese in den GIS-Wert für die Bestimmung des Verkehrsmittels miteinbezogen. Ist sowohl Beginn als auch Ende eines Segments in der Nähe einer Bushaltestelle so wird dies höher gewichtet. 
+Innerhalb eines Segments können sich weitere kürzere Stopps befinden. Diese werden zusätzlich verwendet um festzustellen ob Bushaltestellen in der Nähe sind, und es sich im Endeffekt um einen Bus handelt er von Station zu Station fährt. Im Gegensatz zu den Haltestellen am Beginn und am Ende werden diese, allerdings nicht höher gewichtet, da sich Bushaltestellen oft in der Nähe von Ampeln oder Kreuzungen befinden. Dies stellte auch Biljecki \cite{biljecki_transportation_2013} schon fest.
+
+\subsection{Abstand zu Gleisen und zur Autobahn}
+Ähnlich wie bei den Bushaltestellen werden auch die GIS-Werte für die Nähe zu Gleisen und der Autobahn am Beginn und am Ende eines jeden Segments berechnet. Allerdings wird für die Überprüfung innerhalb eines Segments ein konfigurierbarer Zeitwert verwendet. Im Prototypen wird alle 20 Sekunden überprüft ob sich ein Punkt in der Nähe eines Gleises oder der Autobahn befindet.
+
+
+
 \clearpage

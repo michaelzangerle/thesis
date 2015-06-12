@@ -73,12 +73,12 @@ Ein postitives Resultat der angewandten Filter auf die GPS Daten sind in Abbildu
 \label{anhang2}
 \addcontentsline{toc}{chapter}{Anhang 2}
 
-Im folgenden Abschnitt werden zwei Vorgänge beschrieben die für das Hinzufügen von weiteren Analysemethoden (neben der Basis- und GIS-Variante) oder das Erstellen von Entscheidungsbäumen anhand neuer Daten essentiell sind. Der erste Abschnitt beschreibt dabei, welche Schritte auszuführen sind um mit Hilfe neuer/geänderter Rohdaten neue Trainingsdaten zu erstellen. Der zweite Abschnitt geht dann auf die Erstellung eines Entscheidungsbaums auf Basis der Trainingsdaten, ein. 
+Im folgenden Abschnitt werden zwei Vorgänge beschrieben die für das Hinzufügen von weiteren Analysemethoden (neben der Basis- und GIS-Variante) oder das Erstellen von Entscheidungsbäumen anhand neuer Daten essentiell sind. Der erste Abschnitt beschreibt dabei, welche Schritte auszuführen sind um mit Hilfe neuer/geänderter Rohdaten neue Trainingsdaten zu erstellen. Der zweite Abschnitt geht dann auf die Erstellung eines Entscheidungsbaums mit RapidMiner und auf Basis der Trainingsdaten, ein. 
 
 \section*{Ermittlung der Trainingsdaten}
-Grundsätzlich unterscheiden sich Trainingsdaten im Sinne von GPX-Dateien nicht wesentlich von den Rohdaten die man von dem GPX-Gerät bekommt. Da für die anschließende Erstellung eines Entscheidungsbaums auf Basis dieser Daten gemacht werden soll, wird allerdings eine Information über das tatsächlich verwendete Verkehrsmittel für das jeweilige Segment benötigt. Dies bedeutet, dass jede GPX-Trainingsdatei den selben Aufbau wie eine normale Datei hat, aber bei jedem Tracksegment (trkseg) ein Verkehrsmitteltyp mitangegeben werden muss (sieh Listing \coderef{gpxfile-trainingdata}).
+Grundsätzlich unterscheiden sich Trainingsdaten im Sinne von GPX-Dateien nicht wesentlich von den Rohdaten die man von dem GPX-Gerät bekommt. Da die anschließende Erstellung eines Entscheidungsbaums auf Basis dieser Daten geschieht, wird  eine zusätzliche Information über das tatsächlich verwendete Verkehrsmittel für das jeweilige Segment benötigt. Dies bedeutet, dass jede GPX-Trainingsdatei den selben Aufbau wie eine normale Datei hat, aber bei jedem Tracksegment (trkseg) ein Verkehrsmitteltyp mitangegeben werden muss (siehe Listing \coderef{gpxfile-trainingdata}).
 
-Dies bedeutet, dass bei all jenen Dateien die als Trainingsdaten verwendet werden sollen, die Tracksegment korrekt gesetzt werden müssen und das Verkehrsmittel im Attribut ``type`` hinzugefügt werden muss.
+Dies bedeutet, dass bei all jenen Dateien die als Trainingsdaten verwendet werden sollen, die Tracksegmente korrekt gesetzt werden müssen und das Verkehrsmittel im Attribut ``type`` hinzugefügt werden muss.
 
 \begin{code}[xml]{GPX-Datei für Trainingsdaten}{gpxfile-trainingdata}
 ...
@@ -96,7 +96,7 @@ Dies bedeutet, dass bei all jenen Dateien die als Trainingsdaten verwendet werde
 ...
 \end{code}
 
-Auf Basis dieser Trainingsdaten kann dann mit folgendem Kommando in Listing \coderef{generateTrainingdata} eine CSV-Datei generiert werden. Dieses Kommando muss im Wurzelverzeichnis des Projekts ausgeführt werden akzeptiert drei Argumente in folgender Reihenfolge:
+Auf Basis dieser Trainingsdaten kann dann mit folgendem Kommando (siehe Listing \coderef{generateTrainingdata}) eine CSV-Datei generiert werden. Dieses Kommando muss im Wurzelverzeichnis des Projekts ausgeführt werden und akzeptiert drei Argumente in folgender Reihenfolge:
 \begin{pitemize}
 \item Der \textbf{Verzeichnisname} bzw. Pfad zu dem Verzeichnis mit den Trainingsdaten
 \item Der \textbf{Dateiname} für die generierte Datei
@@ -108,7 +108,7 @@ app/console tmd:generate:trainingdata
 \end{code}
 
 \section*{Generierung des Entscheidungsbaums}
-Die im vorherigen Abschnitt generierte CSV-Datei mit den Trainingsdaten kann nun in RapidMiner importiert und schlussendlich mit folgenden Schritten ein Entscheidungsbaum daraus generiert werden. 
+Die im vorherigen Abschnitt generierte CSV-Datei mit den Trainingsdaten kann nun in RapidMiner importiert werden. Aus diesen kann dann schlussendlich mit folgenden Schritten ein Entscheidungsbaum generiert werden: 
 
 \begin{enumerate}
 \item Nachdem das Programm geöffnet worden ist kann über das Hauptmenü File -> Import Data -> Import CSV File die generierte Trainingsdaten-Datei als Datenresource importiert werden. 
@@ -117,9 +117,9 @@ Die im vorherigen Abschnitt generierte CSV-Datei mit den Trainingsdaten kann nun
 \item Im nächsten Schritt kann man diese importierten Dateien zur Verwendung in RapidMiner unter dem gewünschten Namen ablegen.
 \item Für die Generierung des Entscheidungsbaums wird als erstes ein neuer Prozess benötigt. Diesen kann man bequem über das Hauptmenü anlegen (File -> New Process).
 \item Als nächstes kann man die zuvor importieren Daten aus dem Repository-Bereich (links unten) zu dem neuen Prozess per Drag-and-Drop hinzufügen. 
-\item Im nächsten Schritt zieht man den "Decision-Tree"-Operator aus dem Operatoren-Bereich (links oben) in den Prozess. Diesen Verknüpft man nun mit den Daten (out/tra) sowie mit dem Ende des Prozesses (mod/res).
+\item Im nächsten Schritt zieht man den ``Decision-Tree``-Operator aus dem Operatoren-Bereich (links oben) in den Prozess. Diesen Verknüpft man nun mit den Daten (out/tra) sowie mit dem Ende des Prozesses (mod/res).
 \end{enumerate}
 
-Jetzt kann man mit Hilfe des "Run"-Buttons unterhab des Hauptmenüs, den Prozess ausführen und bekommt den Entscheidungsbaum sowohl in grafischer als auch textueller Darstellung zu sehen. Eine etwas ausführlichere Anleitung ist auch auf Youtube unter \url{https://www.youtube.com/watch?v=Vf6G1HNdBoI} zu finden.
+Jetzt kann man mit Hilfe des ``Run``-Buttons (blaues Dreick) unterhab des Hauptmenüs, den Prozess ausführen und bekommt den Entscheidungsbaum sowohl in grafischer als auch textueller Darstellung zu sehen. Eine etwas ausführlichere Anleitung ist auch auf Youtube unter \url{https://www.youtube.com/watch?v=Vf6G1HNdBoI} zu finden.
 
 Der Entscheidungsbaum in Textform kann nunmehr in die in der Konfiguration des Projekts festgelegten Datei abgelegt werden. Beim nächsten Analyseprozess wird erkannt, dass es sich um eine geänderte/neue Datei handelt und automatisch eine neue PHP-Datei mit dem Baum als PHP-Code dafür generiert.

@@ -2,9 +2,9 @@
 
 Im Rahmen dieser Thesis  wurde ein Prototyp für die Erkennung von Verkehrsmitteln aus GPS-Daten entwickelt. In Abstimmung mit den Zielen, dass es im Prinzip jeder Person (welche ein Gerät besitzt, welches GPS-Tracks aufzeichnen kann und Zugang zu einem Computer mit Internetzug hat) möglich sein soll, ihre eigenen Daten mit diesem Prototypen analysieren zu lassen, wurde eine Webapplikation entwickelt. Diese Applikation verwendet serverseitig das PHP-Framework Symfony als Basis und stellt eine REST-Schnittstelle zur Kommunikation zu Verfügung. Für die Persistierung wurde das Doctrine-ORM in Verbindung mit einer mySQL-Datenbank verwendet.
 
-Der Prototyp bietet neben dem Filtern, Segmentieren und Analysieren der GPS-Daten auch eine Visualisierung der analysierten Daten an. Dies bedeutet, dass das Resultat der Verarbeitung auf einer Karte dargestellt wird. Zusätzlich zu der Darstellung der Karte wird dem Benutzer durch auch die Möglichkeit geboten, die Resultate des Prozesses zu bearbeiten und somit gegebenenfalls das Verkehrsmittel zu korrigieren. 
+Der Prototyp bietet neben dem Filtern, Segmentieren und Analysieren der GPS-Daten auch eine Visualisierung der analysierten Daten an. Dies bedeutet, dass das Resultat der Verarbeitung auf einer Karte dargestellt wird. Zusätzlich zu der Darstellung der Karte wird dem Benutzer/den Benutzerinnen durch auch die Möglichkeit geboten, die Resultate des Prozesses zu bearbeiten und somit gegebenenfalls das Verkehrsmittel zu korrigieren. 
 
-Sowohl der vom System bestimmte als auch der vom Benutzer  korrigierte Verkehrsmitteltyp wird in der Datenbank abgelegt, um Aussagen über die Genauigkeit beider Verfahren (mit und ohne GIS-Daten) treffen zu können. Diese Auswertungen werden wiederum durch verschiedene Diagramme und Statistiken visualisiert.
+Sowohl der vom System bestimmte als auch der vom Benutzer/von der Benutzerin korrigierte Verkehrsmitteltyp wird in der Datenbank abgelegt, um Aussagen über die Genauigkeit beider Verfahren (mit und ohne GIS-Daten) treffen zu können. Diese Auswertungen werden wiederum durch verschiedene Diagramme und Statistiken visualisiert.
 \clearpage
 
 \section{Aufbau und Architektur}
@@ -57,7 +57,7 @@ Da das Ablegen der ermittelten Ergebnisse in der Datenbank  nur eine Variante (n
 Die Oberfläche der Webapplikation ist sehr einfach gehalten und besteht im wesentlich aus drei verschiedenen Seiten. Einer Startseite (Home), welche das Projekt kurz vorstellt, einer Seite (Create) auf welcher ein Track analysiert werden kann und einer Seite (Results), auf welcher die Resultate aller Auswertungen angezeigt werden.
 
 \subsection{Create-Seite}
-Auf dieser Seite wird einem Benutzer die Möglichkeit geboten, einen Track hochzuladen und diesen mit einem von den zwei Varianten (mit und ohne GIS-Daten) analysieren zu lassen. Ist dies geschehen, so wird eine Karte angezeigt, auf welche die ausgelesenen Segmente dargestellt werden. Diese Segmente werden, je nach ermitteltem Verkehrsmitteltyp, in verschiedenen Farben visualisiert. Per Klick auf eines dieser Segmente kann der Verkehrsmitteltyp des Segments korrigiert werden (siehe Abbildung \imgref{webapp1}). Diese Korrektur hat wiederum Einfluss auf die Auswertung der Ergebnisse, welche in Abbildung \imgref{webapp2} ersichtlich sind.
+Auf dieser Seite wird dem Benutzer/der Benutzerin die Möglichkeit geboten, einen Track hochzuladen und diesen mit einem von den zwei Varianten (mit und ohne GIS-Daten) analysieren zu lassen. Ist dies geschehen, so wird eine Karte angezeigt, auf welche die ausgelesenen Segmente dargestellt werden. Diese Segmente werden, je nach ermitteltem Verkehrsmitteltyp, in verschiedenen Farben visualisiert. Per Klick auf eines dieser Segmente kann der Verkehrsmitteltyp des Segments korrigiert werden (siehe Abbildung \imgref{webapp1}). Diese Korrektur hat wiederum Einfluss auf die Auswertung der Ergebnisse, welche in Abbildung \imgref{webapp2} ersichtlich sind.
 
 \img{0.75}{document/graphics/webapp1.png}{Korrigieren eines Verkehrsmitteltyps eines analysierten Tracks}{webapp1}
 

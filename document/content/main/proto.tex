@@ -93,17 +93,22 @@ In diesem Konfigurationsbereich (siehe Listing \coderef{filterConfig}) inkludier
 \end{code}
 
 \subsection{Konfiguration des Segmentierens}
-In dem Abschnitt der Segmentierungskonfiguration (siehe Listing \coderef{segmentConfig}) kann festgelegt werden, bis zu welcher Geschwindigkeit (m/s) und Beschleunigung (m/s\textsuperscript{2}) ein Wegpunkt als Geh-Punkt gilt. Weiters kann festgelegt werden, welches die minimale Zeitspanne (in Sekunden) und die minimale Distanz (in Metern) ist, die ein Segment haben muss, um nicht mit dem vorangegangenen Segment vereint zu werden. Schlussendlich gibt es drei Werte, welche zu dem Beenden eines Segments führen können. Darunter ist sowohl ein Stopp, welcher durch eine sehr geringe oder gar keine Bewegung über eine bestimmte Zeitspanne (in Sekunden) definiert wird oder durch eine Zeitspanne (in Sekunden), in welcher keine neuen Trackpunkte gefunden werden. Wofür diese Werte benötigt werden, wird im Abschnitt ``\ref{segmentierung} \nameref{segmentierung}`` detailliert erklärt.
+In dem Abschnitt der Segmentierungskonfiguration (siehe Listing \coderef{segmentConfig}) kann festgelegt werden, bis zu welcher Geschwindigkeit (m/s) und Beschleunigung (m/s\textsuperscript{2}) ein Wegpunkt als Geh-Punkt gilt. Weiters kann festgelegt werden, welches die minimale Zeitspanne (in Sekunden) und die minimale Distanz (in Metern) ist, die ein Segment haben muss, um nicht mit dem vorangegangenen Segment vereint zu werden. Schlussendlich gibt es drei Werte, welche zu dem Beenden eines Segments führen können. Darunter ist sowohl ein Stopp, welcher durch eine sehr geringe oder gar keine Bewegung über eine bestimmte Zeitspanne (in Sekunden) definiert wird oder durch eine Zeitspanne (in Sekunden), in welcher keine neuen Trackpunkte gefunden werden. Wofür diese Werte benötigt werden, wird im Abschnitt ``\ref{segmentierung} \nameref{segmentierung}`` detailliert erklärt. Die letzten zwei Konfigurationsvariablen beschreiben die minimale Zeit und Distanz die ein Segment haben muss um vom Status eines ungewissen Segments in den Status eines sicheren übergehen zu können.
 
 \begin{code}[]{Segmentierungskonfiguration}{segmentConfig}
-  segmentation:
-    max_walk_velocity: 2.5
+  segmentation:   
+    max_walk_velocity: 2.78
     max_walk_acceleration: 1.5
+    
     min_segment_time: 20
     min_segment_distance: 50
-    max_time_without_movement: 12
-    max_velocity_for_nearly_stoppoints: 0.55
     max_time_difference: 30
+    
+    max_time_without_movement: 10
+    max_velocity_for_nearly_stoppoints: 0.55
+    
+    certain_segments_min_time: 60
+    certain_segments_min_distance: 100
 \end{code}
 
 \subsection{Konfiguration der Analysemethoden}

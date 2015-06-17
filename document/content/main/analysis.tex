@@ -24,6 +24,7 @@ meanvelocity <= 20.830
 \end{code}
 
 \textbf{Parsen und Cachen der Entscheidungsbäume} \\
+\label{parsenCachenEntscheidungsbaum}
 Die von Rapidminer gelieferten Entscheidungsbäume wurden im Prototypen als Teil der Konfiguration hinterlegt. Damit die Entscheidungsbäume nicht für jeden Anfrage geparst und erstellt werden müssen, bietet das Framework Symfony die Möglichkeit, die aus Konfigurationsdateien entstandenen Resultate zu cachen. Dies bedeutet in diesem Fall, dass die Entscheidungsbäume eingelesen sowie geparst werden und danach mit Hilfe des Resultats eine PHP-Datei erstellt wird. Darin wird die Initialisierung des Entscheidungsbaums als Code abgelegt (siehe Listing \coderef{entscheidungsbaumPHP}). Dadurch muss der Entscheidungsbaum nicht jedes mal neu geparst sondern nur ein Objekt mit genau diesem Baum instanziiert werden. 
 
 \begin{code}[PHP]{Ausschnitt des generierten Entscheidungsbaums als PHP-Klasse}{entscheidungsbaumPHP}

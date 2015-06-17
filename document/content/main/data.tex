@@ -91,6 +91,7 @@ Beim Erstellen von Entscheidungsbäumen wie auch bei anderen von Trainingsdaten 
 Ist ein Entscheidungsbaum zu sehr  auf die Trainingsdaten angepasst, so muss dieser wieder zurückgeschnitten werden. Dies bedeutet, dass einzelne Blätter oder auch Teilbäume wieder entfernt werden, um ein bestmögliches Resultat (geringe Anzahl an Fehlern) für Nichttrainingsdaten zu erhalten. Für diese Aufgabe wurden verschiedene Algorithmen entwickelt, welche unter anderem in der Publikation ``Pruning Decision Trees with Misclassification Costs`` von Jeffrey Bradford beschrieben werden. \cite{jeffrey_p._bradford_pruning_1998}
 
 \subsubsection{Generierung eines Entscheidungsbaumes}
+\label{entscheidungsbaumAlgorithmen}
 Um einen Entscheidungsbaum generieren zu können gibt es verschiedene Algorithmen und Ansätze die im folgenden Abschnitt kurz erklärt werden. Die betrachteten Algorithmen sind:
 \begin{pitemize}
 \item ID3
@@ -165,7 +166,6 @@ Der Entscheidungsbaum mit GIS-Daten ist in Abbildung \imgref{decisiontree-gis} z
 
 \img{0.68}{document/graphics/decision-tree-gis.png}{Entscheidungsbaum mit GIS-Daten}{decisiontree-gis}
 \clearpage
-
 
 \section{Neue Aufzeichnungen}
 Wie bereits im Abschnitt ``\ref{sec:trainingdata} \nameref{sec:trainingdata}`` erwähnt, wurden die neuen Daten mit zwei Smartphones (Samsung Galaxy S und einem LG Nexus 5) und der App ``MyTrack`` (sieh Abbildung \imgref{myTrack}) aufgezeichnet. Neben der einfachen Handhabung bietet diese App auch an nur Punkte mit einer Mindestgenauigkeit aufzuzeichnen was in Folge beim Filtern ein wenig Arbeit abnimmt. Diese neuen Daten werden hauptsächlich zum Testen verwendet werden und nur ein Teil davon ist in die Trainingsdaten eingeflossen. Weiters kann man zwar ein Fortbewegungsmittel pro Aufzeichnung angeben, aber dies hat keinerlei Einfluss auf die Aufzeichnung selbst oder die Daten - es dient lediglich der visuellen Darstellung/Unterscheidung der einzelnen Aufzeichnungen.

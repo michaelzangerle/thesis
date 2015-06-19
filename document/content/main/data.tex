@@ -129,7 +129,7 @@ Der C4.5 Algorithmus ist eine Erweiterung des ID3 Algorithmus, welche versucht u
 \end{pitemize}
 
 \textbf{CART} \\
-Der CART-Algorithmus benutzt im Gegensatz zu C4.5 und ID3 den Gini-Index als Entscheidungskriterium zur Bestimmung des nächsten Attributs. \cite{rapidminer_rapidminer_2015} Der Gini-Index ist ein weiteres statistisches Maß für Angabe der Reinheit. Information-gain und der Gini-Index unterscheiden sich in der Berechnung aber liefern laut Laura Raileanu in nur zwei Prozent der Fälle tatsächlich ein unterschiedliches Ergebnis.  \cite{laura_raileanu_2004}
+Der CART-Algorithmus benutzt im Gegensatz zu C4.5 und ID3 den Gini-Index als Entscheidungskriterium zur Bestimmung des nächsten Attributs. \cite{rapidminer_rapidminer_2015} Der Gini-Index ist ein weiteres statistisches Maß für Angabe der Reinheit. ``information-gain`` und der ``gini``-Index unterscheiden sich in der Berechnung aber liefern laut Laura Raileanu in nur zwei Prozent der Fälle tatsächlich ein unterschiedliches Ergebnis.  \cite{laura_raileanu_2004}
 
 Der Algorithmus wählt die Attribute auch nach dem Kriterium der Reinheit für die daraus folgenden Knoten. Das bedeutet, dass er die Daten so aufzuteilen versucht, dass möglichst reine Ergebnisse in den neuen Knoten sind. An dieser Stelle stopp der Algorithmus jedoch nicht, sondern er wählt jenes Attribut welches die Reinheit maximiert und erzeugt  eine Reihe weiterer Teilbäume. Diese Teilbäume werden dann bis zur Wurzel zurückgeschnitten. Dabei wird abgeschätzt wie hoch die Kosten für eine falsche Klassifizierung sind und jener Teilbaum mit den geringsten Kosten wird gewählt. \cite{wei-yin_loh_classification_2008}
 

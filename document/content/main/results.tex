@@ -1,13 +1,167 @@
 \chapter{Auswertung}
 \label{auswertung}
 
-\todo{zu wenig (trainings) daten und zu wenig personen - gut wäre unterschiedliche personen für sehr unterschlieliche daten um nicht zu spezifisch bei der generierung der entschiedungsbäume zu werden}
+Zur Auswertung der Ergebnisse der zwei Analysemethoden wurden, wie bereits in Abschnitt \ref{results-seite}  \nameref{results-seite} erwähnt, mehrere Schnittstellen und schlussendlich auch Diagramme erstellt. Diese geben einen grundlegenden Überblick über die Resultate der verschiedenen Analysemethoden. Dabei wird zwischen den Gesamtwerten sowie einzelnen Verkehrsmitteln unterschieden. Durch die Werte zu den einzelnen Verkehrsmitteln lassen sich Tendenzen erkennen. 
+ 
+Zusätzlich zu diesen zwei Analysemethoden wurde auch mit der Auswahl der Zusatzwerte für die GIS-Analysemethode experimentiert. Damit ist gemeint, dass überprüft wurde, welche Zusatzwerte welche Auswirkungen auf die Verkehrsmittelerkennung haben. 
 
-\todo{mtb track bringen unter umständen mehr irrtümer ins modell}
-
-
-
+Darüber hinaus wurde untersucht, welche Erkennungsraten mit Hilfe der unterschiedlichen Algorithmen zur Erstellung eines Entscheidungsbaums bzw. zur Findung des nächsten Attributs zur Erstellung eines Entscheidungsbaums, erreicht werden können. Dies wurde in erster Instanz in RapidMiner und in zweiter Instanz mit dem Prototypen analysiert.
 \clearpage
 
-\section{Genauigkeit ohne GIS-Daten}
-\section{Genauigkeit mit GIS-Daten}
+\section{Erstellung des Entscheidungsbaums}
+\label{rapidMinerResultat}
+Bei der Erstellung eines Entscheidungsbaums bzw. zur Bestimmung des nächsten Attributs bei der Erstellung eine Entscheidungsbaums kann in RapidMiner auf verschiedene Algorithmen bzw. Berechnungsarten zurückgegriffen werden. Darunter befinden sich der Informationsgewinn, der Gini-Index und die Zugewinn-Rate. Es wurde in weiterer Folge verschiedene Entscheidungsbäume mit verschiedenen Varianten der Testdaten und mit den unterschiedlichen Algorithmen generiert. Die Varianten der Testdaten unterschieden sich hinsichtlich der verwendeten Zusatzvariablen und sind im Hinblick auf die weitere Analyse generiert worden. Neben den Entscheidungsbäume wurde mit Hilfe von RapidMiner auch berechnet, welche Erkennungsrate für diese Trainingsdaten zu erwarten ist. Dabei stützt sich dieser Wert nur auf die verarbeiteten Trainingsdaten. Die Resultate sind in Tabelle \ref{dt-calculation-methods} zu sehen und geben Auskunft über die zu erwartende Erkennungsraten. 
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|c|c|c|}
+\hline
+ & {\bf Informationsgewinn} & {\bf Zugewinn-Rate} & {\bf Gini-Index} \\ \hline
+Ohne GIS-Daten & 61,40 & 66,67 & 71,93 \\ \hline
+Mit GIS-Daten & 64,91 & 64,91 & 73,68 \\ \hline
+Mit GIS-Daten ohne max. Beschl. & 64,91 & 59,65 & 73,68 \\ \hline
+Mit GIS-Daten ohne max. Geschw. & 64,91 & 64,91 & 73,68 \\ \hline
+Mit GIS-Daten ohne max. Werte & 68,42 & 61,40 & 73,68 \\ \hline
+Mit GIS-Daten ohne mittl. Beschl. & 71,93 & 64,91 & 71,93 \\ \hline
+Mit GIS-Daten ohne mittl. Geschw. & 61,40 & 63,16 & 68,42 \\ \hline
+Mit GIS-Daten ohne Mittelwerte & 61,40 & 57,89 & 57,89 \\ \hline
+Mit GIS-Daten ohne Geschw. & 61,40 & 61,40 & 68,42 \\ \hline
+Mit GIS-Daten ohne Beschl. & 70,18 & 59,65 & 71,93 \\ \hline
+Mit GIS-Daten ohne Gleis & 64,91 & 63,16 & 68,42 \\ \hline
+Mit GIS-Daten ohne Autobahn & 66,67 & 61,40 & 70,18 \\ \hline
+Mit GIS-Daten ohne Bushaltest. & 64,91 & 61,40 & 70,18 \\ \hline
+\end{tabular}
+\caption{Genauigkeit von Entscheidungsbäumen mit verschiedenen Algorithmen und Trainingsdatenvarianten}
+\label{dt-calculation-methods}
+\end{table}
+
+Was die Tabelle \ref{dt-calculation-methods} zeigt, ist dass sich die zu erwartende Erkennungsrate zwischen 61\% und fast 74\% befindet. Dabei wird mit dem Gini-Index das beste Ergebnis (70,31\% im Schnitt) und mit der Zugewinn-Rate (im Schnitt 62,35\%) das Schlechteste erzielt. Der Informationsgewinn liegt mit 65,18\% im Mittelfeld.
+
+Was sich weiters erkennen lässt, ist dass die unterschieldlichen Zusatzwerte unterschielich viel Einfluss auf die allgemeine Erkennung haben. So fällt die Erkennungsrate mit Gini-Index von 73,68\% auf 57,89\% wenn man die berechneten Mittelwerte für Geschwindigkeit und Beschleunigung nicht miteinbezieht. Die maximalen Werte für Beschleunigung und Geschwindigkeit machen sowohl zusammen als auch getrennt wenig bis keinen Unterschied für die Erkennung,  wenn man den Gini-Index verwendet. 
+
+Bei den Werten für die Berechnung mittels Informationsgewinn lässt sich noch hervorheben, dass die Testdatenvarianten ohne Beschleunigungswerte bzw. ohne mittlere Beschleunigung Erkennungsraten über 70\% berechnet wurden. 
+
+Erkennen lässt sich weiters, dass zwischen der Variante mit und ohne GIS-Daten nur 2\% Prozent liegen und diese im Falle der Zugewinn-Rate sogar für die Variante ohne GIS-Daten sprechen. Diese Werte sind jedoch nur auf Basis der Testdaten errechnet und müssen nicht mit der tatsächlichen Erkennungsrate übereinstimmen. Deshalb werden im nächsten Abschnitt die Resultate des Prototyps genauer beleuchtet. In weiterer Folgen wurden auf Grund ihres guten Abschneidens die Entscheidungsbäume, welche mit dem Gini-Index generiert wurden, verwendet.
+
+\section{Analyse mit dem Prototyp}
+Für die Analyse mit Hilfe des Prototyps wurde neben den zwei Analysemethoden mit und ohne GIS-Daten noch drei weitere Entscheidungsbäume ausgewählt. Die ausgewählten Entscheidungsbäume wurden auf Grund ihres Abschneidens in Abschnitt \ref{rapidMinerResultat} \nameref{rapidMinerResultat} ausgewählt und sind folgende:
+\begin{pitemize}
+\item mit GIS-Daten ohne Maximalwerte-
+\item mit GIS-Daten ohne Mittelwerte
+\item mit GIS-Daten jedoch ohne Gleise
+\end{pitemize}
+
+\subsection{Gesamtresultate}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|c|c|}
+\hline
+ & \# & \% \\ \hline
+Gesamt & 1.347 & 100,00 \\ \hline
+Ohne GIS-Daten & 893 & 66,30 \\ \hline
+Mit GIS-Daten & 926 & 68,75 \\ \hline
+Mit GIS-Daten ohne Beschl. & 953 & 70,75 \\ \hline
+Mit GIS-Daten ohne Geschw. & 1.004 & 74,54 \\ \hline
+Mit GIS-Daten ohne Gleise & 912 & 67,71 \\ \hline
+\end{tabular}
+\caption{Gesamtresultate im Überblick}
+\label{my-label}
+\end{table}
+
+\subsection{Detailresultate}
+Die Detailresultate sind spezifisch auf ein Verkehrsmittel ausgerichtet und betrachten die richtig klassifizierten Segmente dieses Verkehrsmittels. Ihnen gegenüber stehen die falsch als der jeweilige Verkehrsmitteltyp klassifizierhten Segmente aufgeteilt auf die eigentlich richtigen Verkehrsmittel.
+
+\textbf{Bus} \\
+Für die Segmente die laut Prototyp mit einem Bus bewältigt worden sind kann festgestellt werden, dass ein paar wenige eigentlich Fahrrad- oder Auto-Segmente gewesen sind. Speziell im Falle des Entscheidungsbaums ohne Maximalwerte ist die Anzahl der Segmente die eigentlich vom Typ Fahrrad gewesen wären, leicht erhöht. Weiters wurden ohne GIS-Daten oder ohne Mittelwerte deutlich weniger Bussegmente erkannt wie mit den anderen Entscheidungsbäumen. Ein Auszug der Statistik über die richtig erkannten Bus-Segmente ist in Tabelle \ref{result-bus} zu sehen.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|c|}
+\hline
+ & \% \\ \hline
+Ohne GIS-Daten & 21,90 \\ \hline
+Mit GIS-Daten & 36,19 \\ \hline
+Mit GIS-Daten ohne Beschl. & 38,10 \\ \hline
+Mit GIS-Daten ohne Geschw. & 18,10 \\ \hline
+Mit GIS-Daten ohne Gleise & 35,24 \\ \hline
+\end{tabular}
+\caption{Richtig erkannte Bus-Segmente}
+\label{result-bus}
+\end{table}
+
+\textbf{Auto} \\
+Bei den Segmenten, welche als Auto-Segmente klassifiziert worden sind kann festgestellt werden, dass die Erkennungsrate ungleich höher ist und zwischen fast 78 und 86 Prozent liegt. Die meisten falsch als Auto klassifizierten Segmente sind dabei Bus- und Fahrrad-Segmente. Die Ähnlichkeiten zwischen Bus und Auto war bereits bekannt und nicht weiter überraschend. Die häufige Missklassifizierung von Fahrrad-Segmenten als Auto-Segmente führt jedoch zu der Überlegung, dass einige Fahrrad-Segmente in den Trainingsdaten sind, welche über eine hohe Geschwindigkeit verfügen. Ein Auszug der Statistik über die richtig erkannten Auto-Segmente ist in Tabelle \ref{result-drive} zu sehen.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|c|}
+\hline
+ & \% \\ \hline
+Ohne GIS-Daten & 77,83 \\ \hline
+Mit GIS-Daten & 82,22 \\ \hline
+Mit GIS-Daten ohne Beschl. & 86,14 \\ \hline
+Mit GIS-Daten ohne Geschw. & 83,14 \\ \hline
+Mit GIS-Daten ohne Gleise & 78,75 \\ \hline
+\end{tabular}
+\caption{Richtig erkannte Auto-Segmente}
+\label{result-drive}
+\end{table}
+
+\textbf{Fahrrad} \\
+Ein Auszug der Statistik über die richtig erkannten Fahrrad-Segmente ist in Tabelle \ref{result-bike} zu sehen.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|c|}
+\hline
+ & \% \\ \hline
+Ohne GIS-Daten & 52,49 \\ \hline
+Mit GIS-Daten & 46,68 \\ \hline
+Mit GIS-Daten ohne Beschl. & 47,72 \\ \hline
+Mit GIS-Daten ohne Geschw. & 64,52 \\ \hline
+Mit GIS-Daten ohne Gleise & 52,70 \\ \hline
+\end{tabular}
+\caption{Richtig erkannte Fahrrad-Segmente}
+\label{result-bike}
+\end{table}
+
+\textbf{Zu Fuß} \\
+Ein Auszug der Statistik über die richtig erkannten ``zu Fuß``-Segmente ist in Tabelle \ref{result-foot} zu sehen.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|c|}
+\hline
+ & \% \\ \hline
+Ohne GIS-Daten & 93,93 \\ \hline
+Mit GIS-Daten & 93,93 \\ \hline
+Mit GIS-Daten ohne Beschl. & 94,64 \\ \hline
+Mit GIS-Daten ohne Geschw. & 96,43 \\ \hline
+Mit GIS-Daten ohne Gleise & 93,93 \\ \hline
+\end{tabular}
+\caption{Richtig erkannte ``zu Fuß``-Segmente}
+\label{resultat-foot}
+\end{table}
+
+\textbf{Zug} \\
+Ein Auszug der Statistik über die richtig erkannten Zug-Segmente ist in Tabelle \ref{result-train} zu sehen.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|c|}
+\hline
+ & \% \\ \hline
+Ohne GIS-Daten & 35,42 \\ \hline
+Mit GIS-Daten & 91,67 \\ \hline
+Mit GIS-Daten ohne Beschl. & 93,75 \\ \hline
+Mit GIS-Daten ohne Geschw. & 91,67 \\ \hline
+Mit GIS-Daten ohne Gleise & 35,42 \\ \hline
+\end{tabular}
+\caption{Richtig erkannte Zug-Segmente}
+\label{result-train}
+\end{table}
+
+\section{Zusammenfassung}
+busstationen --> baustellen
+fahrrad segmente --> rennrad

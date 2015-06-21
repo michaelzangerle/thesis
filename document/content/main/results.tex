@@ -30,25 +30,27 @@ Mit GIS-Daten ohne Beschl. & 70,18 & 59,65 & 71,93 \\ \hline
 Mit GIS-Daten ohne Gleis & 64,91 & 63,16 & 68,42 \\ \hline
 Mit GIS-Daten ohne Autobahn & 66,67 & 61,40 & 70,18 \\ \hline
 Mit GIS-Daten ohne Bushaltest. & 64,91 & 61,40 & 70,18 \\ \hline
+Mit GIS-Daten ohne Stoprate & 71,93 & 64,91 & 75,44 \\ \hline
 \end{tabular}
 \caption{Genauigkeit von Entscheidungsbäumen mit verschiedenen Algorithmen und Trainingsdatenvarianten}
 \label{dt-calculation-methods}
 \end{table}
 
-Was die Tabelle \ref{dt-calculation-methods} zeigt, ist dass sich die zu erwartende Erkennungsrate zwischen 61\% und fast 74\% befindet. Dabei wird mit dem Gini-Index das beste Ergebnis (70,31\% im Schnitt) und mit der Zugewinn-Rate (im Schnitt 62,35\%) das Schlechteste erzielt. Der Informationsgewinn liegt mit 65,18\% im Mittelfeld.
+Was die Tabelle \ref{dt-calculation-methods} zeigt, ist dass sich die zu erwartende Erkennungsrate zwischen 61\% und fast 74\% befindet. Dabei wird mit dem Gini-Index das beste Ergebnis (70,68\% im Schnitt) und mit der Zugewinn-Rate (im Schnitt 62,53\%) das Schlechteste erzielt. Der Informationsgewinn liegt mit 65,66\% im Mittelfeld.
 
-Was sich weiters erkennen lässt, ist dass die unterschieldlichen Zusatzwerte unterschielich viel Einfluss auf die allgemeine Erkennung haben. So fällt die Erkennungsrate mit Gini-Index von 73,68\% auf 57,89\% wenn man die berechneten Mittelwerte für Geschwindigkeit und Beschleunigung nicht miteinbezieht. Die maximalen Werte für Beschleunigung und Geschwindigkeit machen sowohl zusammen als auch getrennt wenig bis keinen Unterschied für die Erkennung,  wenn man den Gini-Index verwendet. 
+Was sich weiters erkennen lässt, ist dass die unterschieldlichen Zusatzwerte unterschielich viel Einfluss auf die allgemeine Erkennung haben. So fällt die Erkennungsrate mit Gini-Index von 73,68\% auf 57,89\% wenn man die berechneten Mittelwerte für Geschwindigkeit und Beschleunigung nicht miteinbezieht. Die maximalen Werte für Beschleunigung und Geschwindigkeit machen sowohl zusammen als auch getrennt wenig bis keinen Unterschied für die Erkennung,  wenn man den Gini-Index verwendet. Interessant ist hingegen, dass die GIS-Methode ohne Stoprate auf 75,44\% kommt.
 
 Bei den Werten für die Berechnung mittels Informationsgewinn lässt sich noch hervorheben, dass die Testdatenvarianten ohne Beschleunigungswerte bzw. ohne mittlere Beschleunigung Erkennungsraten über 70\% berechnet wurden. 
 
 Erkennen lässt sich weiters, dass zwischen der Variante mit und ohne GIS-Daten nur 2\% Prozent liegen und diese im Falle der Zugewinn-Rate sogar für die Variante ohne GIS-Daten sprechen. Diese Werte sind jedoch nur auf Basis der Testdaten errechnet und müssen nicht mit der tatsächlichen Erkennungsrate übereinstimmen. Deshalb werden im nächsten Abschnitt die Resultate des Prototyps genauer beleuchtet. In weiterer Folgen wurden auf Grund ihres guten Abschneidens die Entscheidungsbäume, welche mit dem Gini-Index generiert wurden, verwendet.
 
 \section{Analyse mit dem Prototyp}
-Für die Analyse mit Hilfe des Prototyps wurde neben den zwei Analysemethoden mit und ohne GIS-Daten noch drei weitere Entscheidungsbäume ausgewählt. Die ausgewählten Entscheidungsbäume wurden auf Grund ihres Abschneidens in Abschnitt \ref{rapidMinerResultat} \nameref{rapidMinerResultat} ausgewählt und sind folgende:
+Für die Analyse mit Hilfe des Prototyps wurde neben den zwei Analysemethoden mit und ohne GIS-Daten noch vier weitere Entscheidungsbäume ausgewählt. Die ausgewählten Entscheidungsbäume wurden auf Grund ihres Abschneidens in Abschnitt \ref{rapidMinerResultat} \nameref{rapidMinerResultat} ausgewählt und sind folgende:
 \begin{pitemize}
 \item mit GIS-Daten ohne Maximalwerte-
 \item mit GIS-Daten ohne Mittelwerte
-\item mit GIS-Daten jedoch ohne Gleise
+\item mit GIS-Daten ohne Gleise
+\item mit GIS-Daten ohne Stopprate
 \end{pitemize}
 
 \subsection{Gesamtresultate}
@@ -64,6 +66,7 @@ Mit GIS-Daten & 926 & 68,75 \\ \hline
 Mit GIS-Daten ohne Beschl. & 953 & 70,75 \\ \hline
 Mit GIS-Daten ohne Geschw. & 1.004 & 74,54 \\ \hline
 Mit GIS-Daten ohne Gleise & 912 & 67,71 \\ \hline
+Mit GIS-Daten ohne Stopprate & 997 & 74,02 \\ \hline
 \end{tabular}
 \caption{Gesamtresultate im Überblick}
 \label{my-label}
@@ -85,6 +88,7 @@ Mit GIS-Daten & 36,19 \\ \hline
 Mit GIS-Daten ohne Beschl. & 38,10 \\ \hline
 Mit GIS-Daten ohne Geschw. & 18,10 \\ \hline
 Mit GIS-Daten ohne Gleise & 35,24 \\ \hline
+Mit GIS-Daten ohne Stoprate & 14,29 \\ \hline
 \end{tabular}
 \caption{Richtig erkannte Bus-Segmente}
 \label{result-bus}
@@ -103,6 +107,7 @@ Mit GIS-Daten & 82,22 \\ \hline
 Mit GIS-Daten ohne Beschl. & 86,14 \\ \hline
 Mit GIS-Daten ohne Geschw. & 83,14 \\ \hline
 Mit GIS-Daten ohne Gleise & 78,75 \\ \hline
+Mit GIS-Daten ohne Gleise & 75,52 \\ \hline
 \end{tabular}
 \caption{Richtig erkannte Auto-Segmente}
 \label{result-drive}
@@ -121,6 +126,7 @@ Mit GIS-Daten & 46,68 \\ \hline
 Mit GIS-Daten ohne Beschl. & 47,72 \\ \hline
 Mit GIS-Daten ohne Geschw. & 64,52 \\ \hline
 Mit GIS-Daten ohne Gleise & 52,70 \\ \hline
+Mit GIS-Daten ohne Gleise & 70,33 \\ \hline
 \end{tabular}
 \caption{Richtig erkannte Fahrrad-Segmente}
 \label{result-bike}
@@ -139,6 +145,7 @@ Mit GIS-Daten & 93,93 \\ \hline
 Mit GIS-Daten ohne Beschl. & 94,64 \\ \hline
 Mit GIS-Daten ohne Geschw. & 96,43 \\ \hline
 Mit GIS-Daten ohne Gleise & 93,93 \\ \hline
+Mit GIS-Daten ohne Gleise & 97,14 \\ \hline
 \end{tabular}
 \caption{Richtig erkannte ``zu Fuß``-Segmente}
 \label{resultat-foot}
@@ -157,6 +164,7 @@ Mit GIS-Daten & 91,67 \\ \hline
 Mit GIS-Daten ohne Beschl. & 93,75 \\ \hline
 Mit GIS-Daten ohne Geschw. & 91,67 \\ \hline
 Mit GIS-Daten ohne Gleise & 35,42 \\ \hline
+Mit GIS-Daten ohne Gleise & 91,67 \\ \hline
 \end{tabular}
 \caption{Richtig erkannte Zug-Segmente}
 \label{result-train}

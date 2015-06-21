@@ -29,10 +29,10 @@ Der Tracksegment-Filter ist einer der wichtigsten Filter in dem Verarbeitungspro
 
 \subsubsection{GISTracksegment-Filter}
 \label{gisTracksegmentFilter}
-Der GISTracksegment-Filter macht im Wesentlichen das Selbe wie der normale Trackseg- ment-Filter, allerdings berechnet er zusätzlich zu den Geschwindigkeits- und Beschleunigungswerten noch die Abstände zu den verschiedenen Infrastrukturen wie Busstationen, Schienen und Autobahnen. Diese Werte werden bei der Analyse mit GIS-Daten benötigt um beim TravelMode-Filter eine genauere Bestimmung zu ermöglichen.
+Der GISTracksegment-Filter macht im Wesentlichen dasselbe wie der normale Trackseg- ment-Filter, allerdings berechnet er zusätzlich zu den Geschwindigkeits- und Beschleunigungswerten noch die Abstände zu den verschiedenen Infrastrukturen wie Busstationen, Schienen und Autobahnen. Diese Werte werden bei der Analyse mit GIS-Daten benötigt um beim TravelMode-Filter eine genauere Bestimmung zu ermöglichen.
 
 \subsubsection{FileWriter}
-Der FileWriter übernimmt das Schreiben der übergebenen Daten in eine Datei. Hierbei werden die vom Tracksegment-Filter übergeben Segment in einer Datei im CSV-Format abgelegt, welche in weiterer Folge im Rapidminer verwendet wird.
+Der FileWriter übernimmt das Schreiben der übergebenen Daten in eine Datei. Hierbei werden die vom Tracksegment-Filter übergeben Segment in einer Datei im CSV-Format abgelegt, welche in weiterer Folge im RapidMiner verwendet wird.
 
 \subsection{Pipes und Filter-Architektur für die Webapplikation}
 Die Anordnung der einzelnen Filter für die Verarbeitung der GPS-Daten, die über die Webapplikation verarbeitet werden sollen, ist in Abbildung \imgref{pipesAndFilter} ersichtlich. 
@@ -42,7 +42,7 @@ Der Ablauf ist hierbei ähnlich wie jener bei den Trainingsdaten, und es wird wi
 \img{0.85}{document/graphics/pipes_and_filter_diagram.png}{Pipes- und Filter- Struktur der Webapplikation}{pipesAndFilter}
 
 \subsubsection{Segmentation-Filter}
-Der Segmentation-Filter teilt die Tracksegmente der einzelnen Tracks in Teile, welche mit hoher Wahrscheinlichkeit nur mit einem Verkehrsmittel bewältigt wurden. Dazu verwendet dieser ermittelte Geschwindigkeits- sowie Beschleunigungswerte. Dieser Vorgang stützt sich auf die Ergebnisse aus den Publikationen von Zheng \cite{zheng_understanding_2010} und Biljecki \cite{biljecki_transportation_2013}. Der genaue Ablauf dieses Prozesses ist im Abschnitt \ref{segmentierung} \nameref{segmentierung} beschrieben.
+Der Segmentation-Filter teilt die Tracksegmente der einzelnen Tracks in Teile, welche mit hoher Wahrscheinlichkeit nur mit einem Verkehrsmittel bewältigt wurden. Dazu verwendet dieser ermittelte Geschwindigkeits- sowie Beschleunigungswerte. Dieser Vorgang stützt sich auf die Ergebnisse aus den Publikationen von Zheng \cite{zheng_understanding_2010} und Biljecki \cite{biljecki_transportation_2013}. Der genaue Ablauf dieses Prozesses ist im Abschnitt ``\ref{segmentierung} \nameref{segmentierung}`` beschrieben.
 
 \subsubsection{TravelMode-Filter}
 In diesem Filter wird der eigentliche Verkehrsmitteltyp anhand der berechneten Werte bestimmt. Dies geschieht in beiden Fällen (mit und ohne GIS-Daten), mit Hilfe des Entscheidungsbaumes (siehe Abschnitt ``\ref{entscheidungsbaum} \nameref{entscheidungsbaum}`` und  ``\ref{entscheidungsbaumGIS} \nameref{entscheidungsbaumGIS}``) welcher mit Hilfe der jeweiligen Trainingsdaten generiert worden ist. Der genaue Ablauf dieses Prozesses ist im Abschnitt ``\ref{entscheidungsbaum_verwendung} \nameref{entscheidungsbaum_verwendung}`` beschrieben.

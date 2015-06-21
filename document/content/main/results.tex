@@ -5,12 +5,12 @@ Zur Auswertung der Ergebnisse der zwei Analysemethoden wurden, wie bereits in Ab
  
 Zusätzlich zu diesen zwei Analysemethoden wurde auch mit der Auswahl der Zusatzwerte für die GIS-Analysemethode experimentiert. Damit ist gemeint, dass überprüft wurde, welche Zusatzwerte welche Auswirkungen auf die Verkehrsmittelerkennung haben. 
 
-Darüber hinaus wurde untersucht, welche Erkennungsraten mit Hilfe der unterschiedlichen Algorithmen zur Erstellung eines Entscheidungsbaums bzw. zur Findung des nächsten Attributs zur Erstellung eines Entscheidungsbaums, erreicht werden können. Dies wurde in erster Instanz in RapidMiner und in zweiter Instanz mit dem Prototypen analysiert.
+Darüber hinaus wurde untersucht, welche Erkennungsraten mit Hilfe der unterschiedlichen Algorithmen zur Erstellung eines Entscheidungsbaums bzw. zur Findung des nächsten Attributs zur Erstellung eines Entscheidungsbaums, erreicht werden können. Dies wurde in erster Instanz in RapidMiner und in zweiter Instanz mit dem Prototyp analysiert.
 \clearpage
 
 \section{Erstellung des Entscheidungsbaums}
 \label{rapidMinerResultat}
-Bei der Erstellung eines Entscheidungsbaums bzw. zur Bestimmung des nächsten Attributs bei der Erstellung eine Entscheidungsbaums kann in RapidMiner auf verschiedene Algorithmen bzw. Berechnungsarten zurückgegriffen werden. Darunter befinden sich der Informationsgewinn, der Gini-Index und die Zugewinn-Rate. Es wurde in weiterer Folge verschiedene Entscheidungsbäume mit verschiedenen Varianten der Testdaten und mit den unterschiedlichen Algorithmen generiert. Die Varianten der Testdaten unterschieden sich hinsichtlich der verwendeten Zusatzvariablen und sind im Hinblick auf die weitere Analyse generiert worden. Neben den Entscheidungsbäume wurde mit Hilfe von RapidMiner auch berechnet, welche Erkennungsrate für diese Trainingsdaten zu erwarten ist. Dabei stützt sich dieser Wert nur auf die verarbeiteten Trainingsdaten. Die Resultate sind in Tabelle \ref{dt-calculation-methods} zu sehen und geben Auskunft über die zu erwartende Erkennungsraten. 
+Bei der Erstellung eines Entscheidungsbaums bzw. zur Bestimmung des nächsten Attributs bei der Erstellung eine Entscheidungsbaums kann in RapidMiner auf verschiedene Algorithmen bzw. Berechnungsarten zurückgegriffen werden. Darunter befinden sich der Informationsgewinn, der Gini-Index und die Zugewinn-Rate. Es wurde in weiterer Folge verschiedene Entscheidungsbäume mit verschiedenen Varianten der Testdaten und mit den unterschiedlichen Algorithmen generiert. Die Varianten der Testdaten unterschieden sich hinsichtlich der verwendeten Zusatzvariablen und sind im Hinblick auf die weitere Analyse generiert worden. Neben den Entscheidungsbäumen wurde mit Hilfe von RapidMiner auch berechnet, welche Erkennungsrate für diese Trainingsdaten zu erwarten ist. Dabei stützt sich dieser Wert nur auf die verarbeiteten Trainingsdaten. Die Resultate sind in Tabelle \ref{dt-calculation-methods} zu sehen und geben Auskunft über die zu erwartende Erkennungsraten. 
 
 \begin{table}[h]
 \centering
@@ -38,14 +38,15 @@ Mit GIS-Daten ohne Stoprate & 71,93 & 64,91 & 75,44 \\ \hline
 
 Was die Tabelle \ref{dt-calculation-methods} zeigt, ist dass sich die zu erwartende Erkennungsrate zwischen 61\% und fast 74\% befindet. Dabei wird mit dem Gini-Index das beste Ergebnis (70,68\% im Schnitt) und mit der Zugewinn-Rate (im Schnitt 62,53\%) das Schlechteste erzielt. Der Informationsgewinn liegt mit 65,66\% im Mittelfeld.
 
-Was sich weiters erkennen lässt, ist dass die unterschieldlichen Zusatzwerte unterschielich viel Einfluss auf die allgemeine Erkennung haben. So fällt die Erkennungsrate mit Gini-Index von 73,68\% auf 57,89\% wenn man die berechneten Mittelwerte für Geschwindigkeit und Beschleunigung nicht miteinbezieht. Die maximalen Werte für Beschleunigung und Geschwindigkeit machen sowohl zusammen als auch getrennt wenig bis keinen Unterschied für die Erkennung,  wenn man den Gini-Index verwendet. Interessant ist hingegen, dass die GIS-Methode ohne Stoprate auf 75,44\% kommt.
+Was sich weiters erkennen lässt, ist dass die unterschiedlichen Zusatzwerte unterschiedlich viel Einfluss auf die allgemeine Erkennung haben. So fällt die Erkennungsrate mit Gini-Index von 73,68\% auf 57,89\% wenn man die berechneten Mittelwerte für Geschwindigkeit und Beschleunigung nicht miteinbezieht. Die maximalen Werte für Beschleunigung und Geschwindigkeit machen sowohl zusammen als auch getrennt wenig bis keinen Unterschied für die Erkennung,  wenn man den Gini-Index verwendet. Interessant ist hingegen, dass die GIS-Methode ohne Stoprate auf 75,44\% kommt.
 
 Bei den Werten für die Berechnung mittels Informationsgewinn lässt sich noch hervorheben, dass die Testdatenvarianten ohne Beschleunigungswerte bzw. ohne mittlere Beschleunigung Erkennungsraten über 70\% berechnet wurden. 
 
-Erkennen lässt sich weiters, dass zwischen der Variante mit und ohne GIS-Daten nur 2\% Prozent liegen und diese im Falle der Zugewinn-Rate sogar für die Variante ohne GIS-Daten sprechen. Diese Werte sind jedoch nur auf Basis der Testdaten errechnet und müssen nicht mit der tatsächlichen Erkennungsrate übereinstimmen. Deshalb werden im nächsten Abschnitt die Resultate des Prototyps genauer beleuchtet. In weiterer Folgen wurden auf Grund ihres guten Abschneidens die Entscheidungsbäume, welche mit dem Gini-Index generiert wurden, verwendet.
+Erkennen lässt sich weiters, dass zwischen der Variante mit und ohne GIS-Daten nur 2\% Prozent liegen und diese im Falle der Zugewinn-Rate sogar für die Variante ohne GIS-Daten sprechen. Diese Werte sind jedoch nur auf Basis der Testdaten errechnet und müssen nicht mit der tatsächlichen Erkennungsrate übereinstimmen. Deshalb werden im nächsten Abschnitt die Resultate des Prototyps genauer beleuchtet. In weiterer Folge wurden auf Grund ihres guten Abschneidens die Entscheidungsbäume, welche mit dem Gini-Index generiert wurden, verwendet.
 
 \section{Analyse mit dem Prototyp}
-Für die Analyse mit Hilfe des Prototyps wurde neben den zwei Analysemethoden mit und ohne GIS-Daten noch vier weitere Entscheidungsbäume ausgewählt. Die ausgewählten Entscheidungsbäume wurden auf Grund ihres Abschneidens in Abschnitt \ref{rapidMinerResultat} \nameref{rapidMinerResultat} ausgewählt und sind folgende:
+Für die Analyse mit Hilfe des Prototyps wurden neben den zwei Analysemethoden mit und ohne GIS-Daten noch drei weitere Entscheidungsbäume ausgewählt. Die ausgewählten Entscheidungsbäume wurden auf Grund ihres Abschneidens in Abschnitt ``\ref{rapidMinerResultat} \nameref{rapidMinerResultat}`` ausgewählt und sind folgende:
+
 \begin{pitemize}
 \item mit GIS-Daten ohne Maximalwerte-
 \item mit GIS-Daten ohne Mittelwerte
@@ -73,7 +74,7 @@ Mit GIS-Daten ohne Stopprate & 997 & 74,02 \\ \hline
 \end{table}
 
 \subsection{Detailresultate}
-Die Detailresultate sind spezifisch auf ein Verkehrsmittel ausgerichtet und betrachten die richtig klassifizierten Segmente dieses Verkehrsmittels. Ihnen gegenüber stehen die falsch als der jeweilige Verkehrsmitteltyp klassifizierhten Segmente aufgeteilt auf die eigentlich richtigen Verkehrsmittel.
+Die Detailresultate sind spezifisch auf ein Verkehrsmittel ausgerichtet und betrachten die richtig klassifizierten Segmente dieses Verkehrsmittels. Ihnen gegenüber stehen die falsch als der jeweilige Verkehrsmitteltyp klassifizierten Segmente aufgeteilt auf die eigentlich richtigen Verkehrsmittel.
 
 \textbf{Bus} \\
 Für die Segmente die laut Prototyp mit einem Bus bewältigt worden sind kann festgestellt werden, dass ein paar wenige eigentlich Fahrrad- oder Auto-Segmente gewesen sind. Speziell im Falle des Entscheidungsbaums ohne Maximalwerte ist die Anzahl der Segmente die eigentlich vom Typ Fahrrad gewesen wären, leicht erhöht. Weiters wurden ohne GIS-Daten oder ohne Mittelwerte deutlich weniger Bussegmente erkannt wie mit den anderen Entscheidungsbäumen. Ein Auszug der Statistik über die richtig erkannten Bus-Segmente ist in Tabelle \ref{result-bus} zu sehen und zeigt, dass Bus-Segmente mit einer Wahrscheinlichkeit von 36,19\% mit der GIS-Analyse erkannt werden.
@@ -95,7 +96,7 @@ Mit GIS-Daten ohne Stoprate & 14,29 \\ \hline
 \end{table}
 
 \textbf{Auto} \\
-Bei den Segmenten, welche als Auto-Segmente klassifiziert worden sind kann festgestellt werden, dass die Erkennungsrate ungleich höher ist und zwischen fast 78 und 86 Prozent liegt. Die meisten falsch als Auto klassifizierten Segmente sind dabei Bus- und Fahrrad-Segmente. Die Ähnlichkeiten zwischen Bus und Auto war bereits bekannt und nicht weiter überraschend. Die häufige Missklassifizierung von Fahrrad-Segmenten als Auto-Segmente führt jedoch zu der Überlegung, dass einige Fahrrad-Segmente in den Trainingsdaten sind, welche über eine hohe Geschwindigkeit verfügen. Ein Auszug der Statistik über die richtig erkannten Auto-Segmente ist in Tabelle \ref{result-drive} zu sehen und zeigt, dass die Erkennung von Auto-Segmenten für die GIS-Analyse bei 82,22\% liegt. Die Analyse-Methoden ohne Beschleunigung liefert für diesen Fall die besten Werte.
+Bei den Segmenten, welche als Auto-Segmente klassifiziert worden sind kann festgestellt werden, dass die Erkennungsrate ungleich höher ist und zwischen fast 78 und 86 Prozent liegt. Die meisten falsch als Auto klassifizierten Segmente sind dabei Bus- und Fahrrad-Segmente. Die Ähnlichkeiten zwischen Bus und Auto war bereits bekannt und nicht weiter überraschend. Die häufige Missklassifizierung von Fahrrad-Segmenten als Auto-Segmente führt jedoch zu der Überlegung, dass einige Fahrrad-Segmente in den Trainingsdaten sind, welche über eine hohe Geschwindigkeit verfügen. Ein Auszug der Statistik über die richtig erkannten Auto-Segmente ist in Tabelle \ref{result-drive} zu sehen und zeigt, dass die Erkennung von Auto-Segmenten für die GIS-Analyse bei 82,22\% liegt. Die Analyse-Methoden ohne Beschleunigung lieferen für diesen Fall die besten Werte.
 
 \begin{table}[h]
 \centering
@@ -114,7 +115,7 @@ Mit GIS-Daten ohne Gleise & 75,52 \\ \hline
 \end{table}
 
 \textbf{Fahrrad} \\
-Die Resultate für die Fahrrad-Segmente zeigen, dass sich die Fehlklassifizierungen großteils in den Segmenten vom Typ ``zu Fuß`` und Auto befinden. Der Grund für die falschen Klassifizierungen als Auto-Segment ist der selbe wie bei den Resultaten zum Typ Auto. Sehr schnelle Radsegmente die z.B. durch einen Rennradfahrer entstanden sind, können nicht gut von langsamen Autofahrten z.B. in der Stadt unterschieden werden. Weiters ist es auch schwierig eine sehr langsame Radfahrt z.B. wenn es bergauf geht von einem Spaziergang zu unterscheiden. Ein Auszug der Statistik über die richtig erkannten Fahrrad-Segmente ist in Tabelle \ref{result-bike} zu sehen und zeigt, dass 46,68\% der Fahrradsegmente mit Hilfe der GIS-Analyse erkannt konnten werden. Alle anderen Analysen liefern in diesem Fall bessere Ergebnisse.
+Die Resultate für die Fahrrad-Segmente zeigen, dass sich die Fehlklassifizierungen großteils in den Segmenten vom Typ ``zu Fuß`` und Auto befinden. Der Grund für die falschen Klassifizierungen als Auto-Segment ist derselbe wie bei den Resultaten zum Typ Auto. Sehr schnelle Radsegmente die z.B. durch einen Rennradfahrer entstanden sind, können nicht gut von langsamen Autofahrten z.B. in der Stadt unterschieden werden. Weiters ist es auch schwierig eine sehr langsame Radfahrt z.B. wenn es bergauf geht von einem Spaziergang zu unterscheiden. Ein Auszug der Statistik über die richtig erkannten Fahrrad-Segmente ist in Tabelle \ref{result-bike} zu sehen und zeigt, dass 46,68\% der Fahrradsegmente mit Hilfe der GIS-Analyse erkannt konnten werden. Alle anderen Analysen liefern in diesem Fall bessere Ergebnisse.
 
 \begin{table}[h]
 \centering
@@ -133,7 +134,7 @@ Mit GIS-Daten ohne Gleise & 70,33 \\ \hline
 \end{table}
 
 \textbf{Zu Fuß} \\
-Die Ergebnisse für die ``zu Fuß``-Segmente sind sehr eindeutig und liegen für alle Analyse-Methode über 93\%.  Aber auch hier liefern die GIS-Analyse-Methode mit weniger Zusatzvariablen bessere Ergebnisse. Die falschen Klassifizierungen liegen hauptsächlich im Bereich der Fahrrad-Segmente und Auto-Segmente. Dies lässt beiden Fällen auf eine sehr langsame Fortbewegungsgeschwindigkeit schließen. Bei den Fahrrad-Segmenten konnte dies nach stichprobenartiger Untersuchungen auch belegt werden, denn dabei handelt es ich um Mountainbike-Touren die Bergaufwärts naturgemäß langsamere Geschwindigkeiten haben. Ein Auszug der Statistik über die richtig erkannten ``zu Fuß``-Segmente ist in Tabelle \ref{result-foot} zu sehen.
+Die Ergebnisse für die ``zu Fuß``-Segmente sind sehr eindeutig und liegen für alle Analyse-Methode über 93\%.  Aber auch hier liefern die GIS-Analyse-Methode mit weniger Zusatzvariablen bessere Ergebnisse. Die falschen Klassifizierungen liegen hauptsächlich im Bereich der Fahrrad-Segmente und Auto-Segmente. Dies lässt beiden Fällen auf eine sehr langsame Fortbewegungsgeschwindigkeit schließen. Bei den Fahrrad-Segmenten konnte dies nach stichprobenartigen Untersuchungen auch belegt werden, denn dabei handelt es ich um Mountainbike-Touren die Bergaufwärts naturgemäß langsamere Geschwindigkeiten haben. Ein Auszug der Statistik über die richtig erkannten ``zu Fuß``-Segmente ist in Tabelle \ref{result-foot} zu sehen.
 
 \begin{table}[h]
 \centering
@@ -152,7 +153,7 @@ Mit GIS-Daten ohne Gleise & 97,14 \\ \hline
 \end{table}
 
 \textbf{Zug} \\
-Bei den Resultaten der Zug-Segmente konnten die GIS-Daten ihre Stärke voll ausspielen und im Gegensatz zu den Analse-Methoden ohne GIS-Informationen von Gleisen die eine ca. 35\%ige Erkennungsrate haben. Mit Hilfe der GIS-Daten über Gleise konnte die Erkennung auf über 91\% gesteigert werden. Außerdem konnten auch die Missklassifizierungen als Auto-Segmente eliminiert werden. Ein Auszug der Statistik über die richtig erkannten Zug-Segmente ist in Tabelle \ref{result-train} zu sehen.
+Bei den Resultaten der Zug-Segmente konnten die GIS-Daten ihre Stärke voll ausspielen und im Gegensatz zu den Anal^yse-Methoden ohne GIS-Informationen von Gleisen die eine ca. 35\%ige Erkennungsrate haben. Mit Hilfe der GIS-Daten über Gleise konnte die Erkennung auf über 91\% gesteigert werden. Außerdem konnten auch die Missklassifizierungen als Auto-Segmente eliminiert werden. Ein Auszug der Statistik über die richtig erkannten Zug-Segmente ist in Tabelle \ref{result-train} zu sehen.
 
 \begin{table}[h]
 \centering
@@ -173,8 +174,8 @@ Mit GIS-Daten ohne Gleise & 91,67 \\ \hline
 \section{Zusammenfassung}
 Wird das Gesamtergebnis betrachtet, so kann festgestellt werden, dass für Segmente vom Typ Auto, Zug und ``zu Fuß`` recht gute Erkennungsraten (82-86\%, 91-93\%, 93-96\%) gefunden worden sind. Diese Verkehrsmittel können also recht gut erkannt werden. Wo es Verbesserungsbedarf gibt sind eindeutig die Bus- und Fahrrad-Segmente.  
 
-Die Fahrrad-Segmente haben zum Teil recht schlecht abgeschnitten, weil sich die Trainings- und Testdaten für die Fahrrad-Segmente großteils von Sportlern stammen. Zum einen ist damit gemeint, dass im Flachen (Rennrad) und abwärts sehr hohe Geschwindigkeiten gemessen worden sind. Dies erklärt die Missklassifizierungen der Fahrrad-Segmente als Auto-Segmente. Zum Anderen wurden bei Fahrrad-Segmenten auch sehr langsame Geschwindigkeiten gemessen. Dies ist dann vorgekommen, wenn es bergaufwärts ging. Dabei waren diese Abschnitte meistens nicht so kurz und dadurch haben die Charakteristiken eher zu Geh-Segmenten gepasst wie zu einem Fahrrad-Segment.
+Die Fahrrad-Segmente haben zum Teil recht schlecht abgeschnitten, weil sich die Trainings- und Testdaten für die Fahrrad-Segmente großteils von Sportlern stammen. Zum einen ist damit gemeint, dass im Flachen (Rennrad) und abwärts sehr hohe Geschwindigkeiten gemessen worden sind. Dies erklärt die Missklassifizierungen der Fahrrad-Segmente als Auto-Segmente. Zum anderen wurden bei Fahrrad-Segmenten auch sehr langsame Geschwindigkeiten gemessen. Dies ist dann vorgekommen, wenn es bergaufwärts ging. Dabei waren diese Abschnitte meistens nicht so kurz und dadurch haben die Charakteristiken eher zu Geh-Segmenten gepasst wie zu einem Fahrrad-Segment.
 
-Weiters konnte beobachtet und schlussendlich auch bestätigt werden, dass zu viel Zusatzvariablen das Ergebniss verschlechtern können und dass mit weniger Variablen unter Umständen eine bessere Erkennungsrate gegeben ist. Dies bekräftigt auch die Aussagen von Zheng \cite{zheng_understanding_2010} und Stenneth \cite{stenneth_transportation_2011}, welche die verwendeten Zusatzvariablen evaluiert haben. 
+Weiters konnte beobachtet und schlussendlich auch bestätigt werden, dass zu viel Zusatzvariablen das Ergebnis verschlechtern können und dass mit weniger Variablen unter Umständen eine bessere Erkennungsrate gegeben ist. Dies bekräftigt auch die Aussagen von Zheng \cite{zheng_understanding_2010} und Stenneth \cite{stenneth_transportation_2011}, welche die verwendeten Zusatzvariablen evaluiert haben. 
 
 Bei der Betrachtung der Ergebnisse muss schlussendlich noch hervorgehoben werden, dass es sich bei den verwendeten Trainings- und Testdaten um überschaubare Datenmengen handelt und dass sich mit einer größeren Datenmenge wahrscheinlich bessere Erkennungsraten erzielen lassen werden. Dies kann damit begründet werden, dass bei kleinen Datenmengen wenige spezielle Testdaten wie z.B. sehr langsame Fahrradsegmente (aufwärts) oder sehr schnelle Fahrradsegmente (abwärts, Rennradfahrer) wesentlich größeren Einfluss auf den Entscheidungsbaum und im Endeffekt auf die Erkennung haben. 

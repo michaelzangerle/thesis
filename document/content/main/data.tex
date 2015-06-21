@@ -80,7 +80,7 @@ Aufgrund des guten Abschneidens des Entscheidungsbaums in verschiedenen Arbeiten
 
 Deshalb wurde für diese Trainingsdaten ein Teil der gesammelten GPS-Daten manuell segmentiert und mit dem benutzten Verkehrsmittel ergänzt. Mit Hilfe des Prototyps wurden die Trainingsdaten eingelesen, gefiltert und mit zusätzlichen Informationen bereichert. Diese zusätzlichen Informationen sind bei der Variante ohne GIS-Daten zum Beispiel Geschwindigkeit und Beschleunigung. Bei der Variante mit GIS-Daten wird unter anderem die Nähe zu Bushaltestellen oder zu Schienen ergänzt. Danach wurde für alle eingelesenen Segmente die berechneten Werte und das dazugehörige Verkehrsmittel in einer Datei im CSV-Format abgelegt. 
 
-Für die konkrete Generierung der Entscheidungsbäume wurde das Tool Rapidminer verwendet. Dabei handelt es sich um eine Open-Source Datamining Software, welche sowohl verschiedenste Datenquellen unterstützt (Datenbanken und auch einzelne Dateien in unterschiedlichen Dateiformaten) als auch die Generierung von Entscheidungsbäumen über eine komfortable grafische BenutzerInnenoberfläche erlaubt. In der freien Version ist jedoch nur der CSV-Import verfügbar. Deshalb wurde vom Prototypen auch eine CSV-Datei generiert, welche in der Folge einfach in Rapidminer eingebunden und ausgewertet werden konnte. 
+Für die konkrete Generierung der Entscheidungsbäume wurde das Tool RapidMiner verwendet. Dabei handelt es sich um eine Open-Source Datamining Software, welche sowohl verschiedenste Datenquellen unterstützt (Datenbanken und auch einzelne Dateien in unterschiedlichen Dateiformaten) als auch die Generierung von Entscheidungsbäumen über eine komfortable grafische BenutzerInnenoberfläche erlaubt. In der freien Version ist jedoch nur der CSV-Import verfügbar. Deshalb wurde vom Prototypen auch eine CSV-Datei generiert, welche in der Folge einfach in RapidMiner eingebunden und ausgewertet werden konnte. 
 
 Schlussendlich wurden aus den eingebundenen Daten Entscheidungsbäume für die Variante mit GIS-Daten und ohne generiert. Diese können sowohl als Bilder als auch in Textform exportiert werden. In weiterer Folge wurde aus diesen Entscheidungsbäumen in Textform PHP-Klassen generiert (siehe Abschnitt ``\ref{entscheidungsbaumGenerierungPHP} \nameref{entscheidungsbaumGenerierungPHP}``).
 
@@ -101,7 +101,7 @@ Um einen Entscheidungsbaum generieren zu können gibt es verschiedene Algorithme
 \end{pitemize}
 
 \textbf{ID3} \\
-Der ID3 Algorithmus (Iterative Dichotomiser 3) wurde von John Ross Quinlan in 1986 entwickelt und ist der Vorgänger C4.5. ID3 wurde entworfen um nicht alle möglichen Entscheidungsbäume generieren zu müssen, wenn man nur einen möglichst guten Entscheidungsbaum für die gegebenen Daten benötigt. Im Allgemeinen generiert ID3 einfache Entscheidungsbäume, aber es kann nicht garantiert werden, dass es keine bessere Entscheidungsbäume gibt. Der allgemeine Algorithmus ist iterativ und geht dabei wie folgt vor: \cite{john_ross_quinlan_1986}
+Der ID3 Algorithmus (Iterative Dichotomiser 3) wurde von John Ross Quinlan in 1986 entwickelt und ist der Vorgänger C4.5. ID3 wurde entworfen um nicht alle möglichen Entscheidungsbäume generieren zu müssen, wenn man nur einen möglichst guten Entscheidungsbaum für die gegebenen Daten benötigt. Im Allgemeinen generiert ID3 einfache Entscheidungsbäume, aber es kann nicht garantiert werden, dass es keine besseren Entscheidungsbäume gibt. Der allgemeine Algorithmus ist iterativ und geht dabei wie folgt vor: \cite{john_ross_quinlan_1986}
 
 \begin{pitemize}
 \item Es wird eine Teilmenge der Trainingsdaten per Zufall ausgewählt (Window) und für dieses ein Entscheidungsbaum generiert. Dieser Entscheidungsbaum ist für alle Elemente innerhalb der Teilmenge gültig und kann diese korrekt klassifizieren. 
@@ -122,7 +122,7 @@ Der C4.5 Algorithmus ist eine Erweiterung des ID3 Algorithmus, welche versucht u
 \begin{pitemize}
 \item Überanpassen der Entscheidungsbaums an die Daten
 \item Vermeiden von fehlerhaften Zurückschneiden
-\item Verbesserung de Effektivität der Berechnung
+\item Verbesserung der Effektivität der Berechnung
 \item Handhabung von nicht diskreten Werten durch Umformen der Bedingung für das Attribut auf  größer oder einen kleiner gleich
 \item Handhabung von Trainingsdaten mit fehlenden Attributen
 \item Nachträgliches Zurückschneiden von Teilbäumen und ersetzen dieser durch Blätter-Knoten
@@ -142,16 +142,16 @@ RapidMiner bietet verschieden Operatoren für die verschieden Algorithmen an. Da
 
 Das Klassifizierungskriterium ``gain-ratio`` bedeutet in diesem Zusammenhang, dass möglichst reine Knoten generiert werden sollen, aber nicht zu viele. \cite{rapidminer_rapidminer_2015} 
 
-Neben den erwähnten Algorithmen gibt es noch den C5.0 und MARS-Algorithmus, welche aber nicht in Rapidminer verfügbar sind und deshalb auch nicht weiter betrachtet werden.
+Neben den erwähnten Algorithmen gibt es noch den C5.0 und MARS-Algorithmus, welche aber nicht in RapidMiner verfügbar sind und deshalb auch nicht weiter betrachtet werden.
 
 \subsubsection{Konfigurationsmöglichkeiten für die Generierung der Entscheidungsbäume}
-Rapidminer bietet sowohl die Möglichkeit Einfluss auf das Zurückschneiden als auch auf das Überanpassen von Entscheidungsbäumen zu nehmen. Grundsätzlich kann ein Entscheidungsbaum mit verschiedenen Parametern beeinflusst werden (siehe Abbildung \imgref{decissiontree-config}). Als Kriterium für das Wachsen des Baumes wurde der Informationsgewinn gewählt. Die für diese Arbeit interessanten Parameter waren die maximale Tiefe des Baumes, der Zuversichtswert und, die Option welche das Zurückschneiden angewendet.
+RapidMiner bietet sowohl die Möglichkeit Einfluss auf das Zurückschneiden als auch auf das Überanpassen von Entscheidungsbäumen zu nehmen. Grundsätzlich kann ein Entscheidungsbaum mit verschiedenen Parametern beeinflusst werden (siehe Abbildung \imgref{decissiontree-config}). Als Kriterium für das Wachsen des Baumes wurde der Informationsgewinn gewählt. Die für diese Arbeit interessanten Parameter waren die maximale Tiefe des Baumes, der Zuversichtswert und, die Option welche das Zurückschneiden angewendet.
 
 Die allerdings relevanteste und interessanteste Option ist das Feld Kriterium (criterion). In diesem Feld kann man auswählen mit welcher Methodik / Berechnung entschieden wird welches Attribut beim Aufbau eines Entscheidungsbaums als nächstes verwendet wird. RapidMiner bietet dabei mehrere Optionen an wobei die interessantesten folgende sind:
 
 \begin{pitemize}
 \item \textbf{Informationsgewinn (information\_gain)} Der Informationsgewinn wird über die Entropie (die Reinheit bzw. Verunreinigung) der entstehenden Teilresultate in diesem potentiellen neuen Knoten berechnet und wird von dem ID3 und C4.5 Algorithmus verwendet.
-\item \textbf{Informationsgewinnrate (gain\_ratio)} Die Informationsgewinnrate berechnet für alle Attribute eine Gewichtung auf Basis der Anzahl und der Größe der entstehenden Teilbäume. Um so höher das Gewicht um so wichtiger ist das Attribut. Dadurch versucht man die Nachteile die durch den reinen Informationsgewinn entstehen können, zu verhindern. Ein Beispiel wäre bei Kundendaten der hohe Informationsgewinn durch die Kreditkartennummer da diese einen Kunden eindeutig identifiziert. Aber ein solches Attribut ist nicht zwangsläufig jenes welches eine so hohe Relevanz im Entscheidungsbaum haben soll. Dies versucht man durch eine Gewichtung von Attributen durch Informationsgewinnrate zu verhindern. \cite{rapidminer_rapidminer_2015} \cite{johannes_furnkranz_decision-tree_2008}
+\item \textbf{Informationsgewinnrate (gain\_ratio)} Die Informationsgewinnrate berechnet für alle Attribute eine Gewichtung auf Basis der Anzahl und der Größe der entstehenden Teilbäume. Umso höher das Gewicht umso wichtiger ist das Attribut. Dadurch versucht man die Nachteile die durch den reinen Informationsgewinn entstehen können, zu verhindern. Ein Beispiel wäre bei Kundendaten der hohe Informationsgewinn durch die Kreditkartennummer da diese einen Kunden eindeutig identifiziert. Aber ein solches Attribut ist nicht zwangsläufig jenes welches eine so hohe Relevanz im Entscheidungsbaum haben soll. Dies versucht man durch eine Gewichtung von Attributen durch Informationsgewinnrate zu verhindern. \cite{rapidminer_rapidminer_2015} \cite{johannes_furnkranz_decision-tree_2008}
 \item \textbf{Gini-Index (gini\_index)} Der Gini-Index ist ein statistisches Maß wie der Informationsgewinn und wird von dem CART-Algorithmus verwendet.
 \end{pitemize}
 
@@ -184,7 +184,7 @@ Wie bereits im Abschnitt ``\ref{sec:trainingdata} \nameref{sec:trainingdata}`` e
 Als relevante GIS-Daten kommt laut den erwähnten Publikationen zum Thema Verkehrsmittelerkennung einiges in Frage wie z.B. Parkplätze, Busstationen, Gleise, Bahnhöfe und das gesamte Straßennetz. All diese Daten mögen zwar relevant sein, aber es handelt sich auch um sehr viele Daten was wiederum bedeutet, dass die Bearbeitungszeit einer Aufzeichnung rasch ansteigt. Da der Prototyp auch für konkrete EndbenutzerInnen interessant sein soll, wird auf die Verwendung des gesamten Straßennetzes und der Parkplätze verzichtet, um die Bearbeitungszeit möglichst gering zu halten. Deshalb wird auf die Verwendung von Busstationen und der Gleise gesetzt da dies schon in der Arbeit von Stenneth \cite{stenneth_transportation_2011} zu guten Resultaten geführt hat. Dieser Ansatz wird ergänzt mit den GIS-Daten des Autobahnnetzes, da in diesen viel Potential vermutet wird und es sich um eine überschaubare Menge an Daten handelt.
 
 \textbf{Akquirierung}\\
-Allgemein sind GIS-Daten z.B. via OpenStreetMaps oder Google-Maps verfügbar, aber in einzelnen Stichproben hat sich herausgestellt, dass die Zusatzinformation in OpenStreetMaps wesentlich detaillierter und einfacher zum Extrahieren sind. Dafür wurde in Kauf genommen, dass diese Daten nicht standardisiert eingetragen wurden.
+Allgemein sind GIS-Daten z.B. via OpenStreetMaps oder Google-Maps verfügbar, aber in einzelnen Stichproben hat sich herausgestellt, dass die Zusatzinformationen in OpenStreetMaps wesentlich detaillierter und einfacher zum Extrahieren sind. Dafür wurde in Kauf genommen, dass diese Daten nicht standardisiert eingetragen wurden.
 
 Die Österreich-Daten von OpenStreetMaps wurden als Archiv heruntergeladen und mit Hilfen von JOSM auf den relevanten Bereich eingegrenzt. JOSM ist ein Tool mit welchem die Daten von OpenStreetMaps gepflegt werden können (zu finden unter \url{https://josm.openstreetmap.de/}). Nachdem der Bereich auf Vorarlberg eingegrenzt worden ist, konnte dieser mit Hilfe von osmosis (weiteres Tool der OpenStreetMaps-Community \url{http://wiki.openstreetmap.org/wiki/Osmosis#Downloading}) nach bestimmten Punkten und Verbindungen gefiltert werden. Dadurch war es möglich, das Schienennetz von Vorarlberg sowie die Busstationen und das Autobahnnetz von Vorarlberg als XML-Datei zu exportieren. Diese XML-Dateien für Busstationen, das Autobahnnetz und das Schienennetz wurden anschließend eingelesen und in die Datenbank importiert. 
 

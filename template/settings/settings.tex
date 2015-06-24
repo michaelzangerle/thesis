@@ -72,7 +72,7 @@
 \newcommand{\myaddtol}{true} % table of listings
 \newcommand{\myaddtof}{true} % table of figures
 \newcommand{\myaddtot}{true} % table of tables
-\newcommand{\myaddlistoftodos}{true}
+\newcommand{\myaddlistoftodos}{false}
 \newcommand{\myaddreferences}{true}
 \newcommand{\myaddattachment}{true}
 \newcommand{\myaddstatutorydeclaration}{true}
@@ -106,3 +106,9 @@
   \setlength{\parskip}{0pt}
   \setlength{\parsep}{0pt}
 }{\end{itemize}}
+
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}

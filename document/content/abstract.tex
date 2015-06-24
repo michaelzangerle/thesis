@@ -1,12 +1,20 @@
 \section*{Zusammenfassung}
 
-Die zentrale Fragestellung dieser Arbeit ist die Suche nach einer Methode um GPS-Tracks  aus dem Großraum Vorarlberg hinsichtlich der verwendeten Verkehrsmitteln zu analysieren. Dafür sollen die Tracks selbst über keine zusätzlichen Informationen verfügen und auch keine zusätzlichen Sensoren verwendet werden.
+Die vorliegende Arbeit beschäftigt sich mit der Suche nach einer Methode um GPS-Tracks  aus dem Großraum Vorarlberg hinsichtlich der verwendeten Verkehrsmitteln zu analysieren. Dafür sollen die Tracks selbst über keine zusätzlichen Informationen verfügen und auch keine zusätzlichen Sensoren verwendet werden.
 
 Für die eigentliche Analyse wurde eine grundlegende Filterlogik implementiert um fehlerhafte Ausreißer aus den Rohdaten zu entfernen. Anschließend wurden die verbleibenden Wegpunkte segmentiert um sie in Folge in Segmente zu Gruppieren die mit nur einem Verkehrsmittel bewältigt worden sind. Für diese Segmente wurden Zusatzwerte (z.B. Stopprate, Geschwindigkeit, ...) berechnet um darüber das Verkehrsmittel bestimmen zu können. Für die Bestimmung wird auf Entscheidungsbäume als Schlussfolgerungsmodell gesetzt da mit diesem in verschiedenen ähnlichen Publikationen gute Ergebnisse erzielt worden sind. Schlussendlich werden die Resultate ein letztes Mal mit Hilfe des Kontexts auf Plausibilität und Sinnhaftigkeit untersucht und gegebenenfalls angepasst.
 
-Das Resultat dieser Arbeit ist der Prototyp einer Webapplikation welche GPS-Spuren auf die verwendeten Verkehrsmittel untersucht und diese anhand von verschiedenen Analysemethode bestimmt. Für diesen Prototyp wurde eine Analysemethode basierend auf Geschwindigkeits- und Beschleunigungswerten und eine zweite Analysemethode die zusätzlich GIS-Daten verwendet, implementiert. Es konnte eine Erkennungsrate von bis zu 66\% bzw. 75\% erreicht werden. Jedoch muss hinzugefügt werden, dass nur wenig Trainingsdaten zur Verfügung standen. Eines der wichtigsten Dinge sind aber diese Daten. So sollten Test- und Trainingsdaten in ausreichender Quantität als auch Qualität vorhanden sein um eine maximale Aussagekraft und eine bestmögliche Erkennungsrate zu erreichen. Dies gilt sowohl für das Trainieren des Schlussfolgerungsmodells als auch für die schlussendliche Erkennung.
-\clearpage
+Das Resultat dieser Arbeit ist der Prototyp einer Webapplikation welche GPS-Spuren auf die verwendeten Verkehrsmittel untersucht und diese anhand von verschiedenen Analysemethode bestimmt. Für diesen Prototyp wurde eine Analysemethode basierend auf berechneten Werten und eine zweite Analysemethode die zusätzlich GIS-Daten verwendet, implementiert. Es konnte eine Erkennungsrate von bis zu 66\% bzw. 75\% erreicht werden. Jedoch muss hinzugefügt werden, dass nur wenig Trainingsdaten zur Verfügung standen. Eines der wichtigsten Dinge sind aber diese Daten. So sollten Test- und Trainingsdaten in ausreichender Quantität als auch Qualität vorhanden sein um eine maximale Aussagekraft und eine bestmögliche Erkennungsrate zu erreichen. Dies gilt sowohl für das Trainieren des Schlussfolgerungsmodells als auch für die schlussendliche Erkennung.
+\afterpage{\blankpage}
+\newpage
 
 \section*{Abstract}
 
-\todo{Abstract ergänzen}
+The present thesis main subject is the search for a method to indetify transport modes from gps tracks in Vorarlberg. Therefore the tracks itself should not contain any additional information and no additional sensor should be used.
+
+For the analysation process a basic filter to remove the noise on recorded gps track was implemented and the remaining trackpoints segmented to get segments with one transport mode only. For these segments additional values have been calculated like e.g. a stop rate, velocity or accerleration. With these values the type of transport should be identified by using a decision tree as decision support tool. The decision tree was chosen because of it's good results in other publications. Finally all results will be anlaysed a last time but in this case with taking context into account to correct segments with transport type that are not plausible or do not make sense.
+
+The result of this thesis is a webapplikation prototype which is able to proceess and identify a GPS track with different analyse methods. For the prototype a analyse method based on calculated values and another analyse method base on the calculated values and GIS data was implemented. The accuracy of the classification achieved by these methods is 66\% and 75\%. But it has to be mentioned that very little training and testdata was available and this data ist one of the most important things for such a project. Therefor the test and training data should be available adequate quantity and quality. This is a must to train a decision tree properly as well as reach a sattisfying result when identifying gps tracks.
+
+\afterpage{\blankpage}
+\newpage

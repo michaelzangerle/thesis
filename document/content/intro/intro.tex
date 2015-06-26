@@ -1,7 +1,7 @@
 \chapter{Einleitung}
 Der Mensch produziert täglich eine extrem große Menge an Daten. Allein auf Youtube werden pro Minute 300 Stunden Video-Material veröffentlicht und täglich hunderte Millionen Stunden Videos konsumiert.  \cite{youtube_statistics_2015} Hochgerechnet auf das gesamte Internet und die gesamte Bevölkerung ergibt dies eine unvorstellbar große Menge an Daten, die bewusst oder auch unbewusst generiert werden. 
 
-Sehr viel an Daten wird auch durch diverse Fitnessgadgets, Smartwatches, Smartphones sowie Navigations-Geräten und Ähnlichem generiert. Abseits von Fitnesswerten sind viele dieser Geräte im Regelfall in der Lage GPS-Spuren aufzuzeichnen. Dies bedeutet, dass man genau nachvollziehen kann, wann man wo unterwegs war. Mit ein wenig Rechenarbeit kann man auch die Geschwindigkeit und viele andere Werte berechnen, sofern dies die Geräte nicht schon selbst machen. 
+Sehr viel an Daten wird auch durch diverse Fitnessgadgets, Smartwatches, Smartphones sowie Navigations-Geräten und Ähnlichem generiert. Abseits von Fitnesswerten sind viele dieser Geräte im Regelfall in der Lage GPS-Spuren aufzuzeichnen. Dies bedeutet, dass man genau nachvollziehen kann, wann man wo unterwegs war. Mit ein wenig Rechenarbeit kann auch die Geschwindigkeit und viele andere Werte berechnet werden, sofern dies die Geräte nicht schon selbst machen. 
 
 Genau auf diesen GPS-Daten basiert diese Arbeit. Dabei ist es nicht wichtig, von welcher Person diese Daten stammen, sondern dass sich mit Hilfe dieser aufgezeichneten Daten feststellen lässt, wann ein Individuum sich auf welcher Strecke mit welchem Verkehrsmittel fortbewegt hat.
 
@@ -20,11 +20,11 @@ Die in dieser Arbeit berücksichtigten Verkehrsmittel sind in folgender Auflistu
 \item Zug
 \end{pitemize}
 
-Es soll weiters, für jede Person, die ein Gerät besitzt, das in der Lage ist, eine GPS-Spur im GPX-Format aufzuzeichnen, möglich sein, diese Spur analysieren zu lassen. Dies bedeutet, dass keine speziellen Geräte oder andere Sensoren benötigt werden und dass sich dieser Prototyp mit möglichst geringen Anpassungen (Trainingsdaten, GIS-Daten und Konfigurationsparameter) auch auf andere Regionen anwenden lässt. Zum Aufzeichnen der in dieser Arbeit verwendeten GPS-Spuren, wurden mehrere Smartphones mit der App ``MyTrack`` sowie mehrere GPS-Geräte benutzt.
+Es soll weiters, für jede Person, die ein Gerät besitzt, das in der Lage ist, eine GPS-Spur im GPX-Format aufzuzeichnen, möglich sein, diese Spur analysieren zu lassen. Dies bedeutet, dass keine speziellen Geräte oder andere Sensoren benötigt werden und dass sich dieser Prototyp mit möglichst geringen Anpassungen (Trainingsdaten, GIS-Daten und Konfigurationsparameter) auch auf andere Regionen anwenden lässt.
 
 Im Zuge dieser Arbeit wird auch untersucht, welcher Grad an Genauigkeit sowohl mit als auch ohne geografische Zusatzinformationen im Raum Vorarlberg erreicht werden kann. Dabei soll es nach der Analyse die Möglichkeit geben, die automatisch bestimmten Verkehrsmittel manuell zu korrigieren, sollten diese nicht mit der Realität übereinstimmen. Weiters sollen diese manuellen Änderungen in die Auswertung mit einfließen. 
 
-Schlussendlich soll mit Hilfe der Auswertungen auch eine Aussage über die erzielte Genauigkeit mit und ohne den verwendeten Zusatzinformationen gemacht werden. Außerdem soll erklärt werden, ob weitere Informationen (wie z.B. GPS-Daten der öffentlichen Verkehrsmittel) für eine noch genauere Bestimmung benötigt werden und welche Informationen dies sein könnten. 
+Schlussendlich soll mit Hilfe der Auswertungen auch eine Aussage über die erzielte Genauigkeit mit und ohne den verwendeten Zusatzinformationen gemacht werden und untersucht werden, welche Zusatzwerte die Erkennungsrate wie beeinflussen. Außerdem soll erklärt werden, ob weitere Informationen (wie z.B. GPS-Daten der öffentlichen Verkehrsmittel) für eine noch genauere Bestimmung benötigt werden und welche Informationen dies sein könnten. 
 
 \subsubsection{Nichtziele}
 
@@ -52,8 +52,8 @@ Der zweite Abschnitt behandelt den entwickelten Prototypen, der die übergebenen
 
 Der dritte Abschnitt befasst sich sowohl mit dem Einbinden der GIS-Daten als auch dem Aufbereiten der GPS-Daten sowie dem Bestimmen der Verkehrsmittel. Mit Aufbereiten der Daten ist gemeint, dass zusätzliche Werte zu GPS-Punkten für die spätere Analyse berechnet werden. Beispiele für diese Werte sind sowohl die Geschwindigkeit, Beschleunigung und Distanz als auch der Abstand zu der nächsten Bushaltestelle. 
 
-Außerdem wird im dritten Abschnitt auch der Prozess des Aufteilens von GPS-Spuren in Teile (Segmente), in denen nur ein Verkehrsmittel verwendet wird, beschrieben. Diesem Schritt vorangegangen ist das in \nameref{anhang1} beschriebene Filtern der GPS-Daten. Dies bedeutet in diesem Zusammenhang, dass ein Teil der fehlerhaften Ausreißer aus den GSP-Spuren entfernt wurden.
+Außerdem wird im dritten Abschnitt auch der Prozess des Aufteilens von GPS-Spuren in Teile (Segmente), in denen nur ein Verkehrsmittel verwendet wird, beschrieben. Diesem Schritt vorangegangen ist das in Anhang 1 beschriebene Filtern der GPS-Daten. Filtern bedeutet in diesem Zusammenhang, dass ein Teil der fehlerhaften Ausreißer aus den GSP-Spuren entfernt werden.
 
 Aufbauend auf den Segmenten wird schließlich der Prozess der tatsächlichen Erkennung der Verkehrsmittel mit Hilfe eines Entscheidungsbaums und der berechneten Werte erklärt. Die aus dem Entscheidungsbaum gewonnenen Erkenntnisse werden schlussendlich ein letztes Mal überprüft, um sinnfreie bzw. sehr unwahrscheinliche Wechsel zwischen Verkehrsmitteln zu verhindern. 
 
-Der vierten und letzte Abschnitt des Hauptteils befasst sich mit der Auswertung der gewonnenen Erkenntnisse aus den vorhergehenden Abschnitten sowie den Testläufen mit neuen GPS-Spuren mit und ohne zusätzliche GIS-Informationen.
+Der vierten und letzte Abschnitt des Hauptteils befasst sich mit der Auswertung der gewonnenen Erkenntnisse aus den vorhergehenden Abschnitten sowie den Testläufen mit neuen GPS-Spuren mit und ohne zusätzliche GIS-Informationen. Dabei wird auch untersucht wie sich die verschiedenen Zusatzinformationen wie z.B. die Geschwindigkeit oder die Stopprate auf die tatsächlichen Erkennung auswirken.

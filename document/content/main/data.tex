@@ -12,7 +12,7 @@ Für das Training der Entscheidungsbäume konnten GPS-Aufzeichnungen aus einem P
 
 Weiters wurden zum Training auch neue Datensätze verwendet, die mit zwei verschiedenen Smartphones und mit Hilfe der App ``MyTrack`` aufgezeichnet wurden. Diese App wurde ausgewählt, da sie sich sehr einfach handhaben lässt und die einzelnen Aufzeichnungen komfortabel exportiert werden können. 
 
-Einen groben Überblick über die verwendeten Trainingsdaten bietet die Tabelle \ref{datenuebsicht}. Die erste Spalte enthält den Verkehrsmitteltyp, die Zweite die Anzahl der Segmente  und die dritte Spalte enthält die Gesamtdistanz in Kilometern von dem jeweiligen Typ. Insgesamt beinhalten die Trainingsdaten 190 Segmente der verschiedenen Transportmittel und erstrecken sich über 2.250 Kilometer.
+Einen groben Überblick über die verwendeten Trainingsdaten bietet die Tabelle \ref{datenuebsicht}. Die erste Spalte enthält den Verkehrsmitteltyp, die Zweite die Anzahl der Segmente  und die dritte Spalte enthält die Gesamtdistanz in Kilometern von dem jeweiligen Typ. Insgesamt beinhalten die Trainingsdaten 191 Segmente der verschiedenen Transportmittel und erstrecken sich über 2.250 Kilometer.
 
 \begin{table}
 \centering
@@ -30,7 +30,7 @@ Zug & 8 & 239,04\\
 \hline
 Bus	& 16 & 66,03\\
 \hline
-\textbf{Gesamt} & \textbf{190} & \textbf{2.250,07}\\
+\textbf{Gesamt} & \textbf{191} & \textbf{2.250,06}\\
 \hline
 \end{tabular}
 \caption{Trainingsdatenübersicht}
@@ -41,13 +41,13 @@ Bus	& 16 & 66,03\\
 Die Training- und Testsdaten sind in einzelnen Dateien als XML abgelegt und entsprechen dem gängigen GPX-Format, wie es im Listing \coderef{gpxfile} ersichtlich ist. Die Spezifikation für GPX kann auf der Webseite von Topografix unter \url{ http://www.topografix.com/GPX/1/1/} gefunden werden. Ein zugehöriges XML-Schema findet man hier \url{http://www.topografix.com/GPX/1/1/gpx.xsd}. \cite{topografix_gpx_2004} 
 
 \paragraph{Track (trk)}
-Üblicherweise beginnt eine solche Datei mit einem gpx-Element, welches wiederum einen Track enthält. Ein Track repräsentiert eine Aufzeichnung oder Spur und enthält eine Folge aller aufgezeichneten Trackpoints. Diese sind aber wiederum in ein oder mehrere Tracksegmente gegliedert.
+Üblicherweise beginnt eine solche Datei mit einem gpx-Element, welches wiederum einen Track enthält. Ein Track repräsentiert eine Aufzeichnung oder Spur und enthält eine Folge aller aufgezeichneten Trackpoints. Diese sind aber wiederum in ein oder mehrere Tracksegmente gegliedert. \cite{topografix_gpx_2004}
 
 \paragraph{Tracksegment (trkseg)}
-Ein Track kann aus einem oder mehreren Tracksegmenten bestehen. Die Tracksegmente enthalten wiederum beliebig viele aufeinander folgende Trackpoints. Mit diesen Segmenten kann ein Track in logische Abschnitte unterteilt werden. Außerdem kann ein neues Segment begonnen werden, wenn zum Beispiel die Verbindung verloren oder der GPS-Empfänger aus- und wieder eingeschaltet wurde.
+Ein Track kann aus einem oder mehreren Tracksegmenten bestehen. Die Tracksegmente enthalten wiederum beliebig viele aufeinander folgende Trackpoints. Mit diesen Segmenten kann ein Track in logische Abschnitte unterteilt werden. Außerdem kann ein neues Segment begonnen werden, wenn zum Beispiel die Verbindung verloren oder der GPS-Empfänger aus- und wieder eingeschaltet wurde. \cite{topografix_gpx_2004}
 
 \paragraph{Trackpoint (trkpt)}
-Ein Trackpoint entspricht einem Punkt des aufgezeichneten Tracks und enthält eine Koordinate (Längen- und Breitengrad) sowie einen Zeitstempel und die Höhenmeter. Es gibt aber auch Fälle, in welchen bei einem Trackpoint auch die Geschwindig- keits- oder Beschleunigungsdaten abgelegt werden.
+Ein Trackpoint entspricht einem Punkt des aufgezeichneten Tracks und enthält eine Koordinate (Längen- und Breitengrad) sowie einen Zeitstempel und die Höhenmeter. Es gibt aber auch Varianten bei denen Geschwindigkeits- und Beschleunigungswerte zu einem Trackpoint abgelegt werden. \cite{topografix_gpx_2004}
  
 \begin{code}[xml]{GPX-Datei}{gpxfile}
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -80,7 +80,7 @@ Aufgrund des guten Abschneidens des Entscheidungsbaums in verschiedenen Arbeiten
 
 Deshalb wurde für diese Trainingsdaten ein Teil der gesammelten GPS-Daten manuell segmentiert und mit dem benutzten Verkehrsmittel ergänzt. Mit Hilfe des Prototyps wurden die Trainingsdaten eingelesen, gefiltert und mit zusätzlichen Informationen bereichert. Diese zusätzlichen Informationen sind bei der Variante ohne GIS-Daten zum Beispiel Geschwindigkeit und Beschleunigung. Bei der Variante mit GIS-Daten wird unter anderem die Nähe zu Bushaltestellen oder zu Schienen ergänzt. Danach wurde für alle eingelesenen Segmente die berechneten Werte und das dazugehörige Verkehrsmittel in einer Datei im CSV-Format abgelegt. 
 
-Für die konkrete Generierung der Entscheidungsbäume wurde das Tool RapidMiner verwendet. Dabei handelt es sich um eine Open-Source Datamining Software, welche sowohl verschiedenste Datenquellen unterstützt (Datenbanken und auch einzelne Dateien in unterschiedlichen Dateiformaten) als auch die Generierung von Entscheidungsbäumen über eine komfortable grafische BenutzerInnenoberfläche erlaubt. In der freien Version ist jedoch nur der CSV-Import verfügbar. Deshalb wurde vom Prototypen auch eine CSV-Datei generiert, welche in der Folge einfach in RapidMiner eingebunden und ausgewertet werden konnte. 
+Für die konkrete Generierung der Entscheidungsbäume wurde das Tool RapidMiner verwendet. Dabei handelt es sich um eine Datamining Software, welche sowohl verschiedenste Datenquellen unterstützt (Datenbanken und auch einzelne Dateien in unterschiedlichen Dateiformaten) als auch die Generierung von Entscheidungsbäumen über eine komfortable grafische BenutzerInnenoberfläche erlaubt. In der freien Version ist jedoch nur der CSV-Import verfügbar. Deshalb wurde vom Prototypen auch eine CSV-Datei generiert, welche in der Folge einfach in RapidMiner eingebunden und ausgewertet werden konnte. 
 
 Schlussendlich wurden aus den eingebundenen Daten Entscheidungsbäume für die Variante mit GIS-Daten und ohne generiert. Diese können sowohl als Bilder als auch in Textform exportiert werden. In weiterer Folge wurde aus diesen Entscheidungsbäumen in Textform PHP-Klassen generiert (siehe Abschnitt ``\ref{entscheidungsbaumGenerierungPHP} \nameref{entscheidungsbaumGenerierungPHP}``).
 
@@ -108,7 +108,7 @@ Der ID3 Algorithmus (Iterative Dichotomiser 3) wurde von John Ross Quinlan in 19
 \item Nachfolgend werden alle anderen Elemente mit diesem Entscheidungsbaum klassifiziert. Kann der Baum alle Elemente korrekt klassifizieren, so ist ein ausreichend guter Entscheidungsbaum gefunden und das Ziel erreicht. Wenn nicht alle Elemente korrekt klassifiziert werden können, wird eine Auswahl der falsch klassifizierten Elemente in die Teilmenge (Window) übernommen und erneut ein Entscheidungsbaum gesucht. 
 \end{pitemize}
 
-Für das Erstellen des Entscheidungsbaumes selbst wird dabei auf das finden des Attributs / der Entscheidungsvariable mit der niedersten Entropie gesetzt. Diese Attribute oder Entscheidungsvariablen sind in diesem Fall die zusätzlich berechneten Werte pro Segment (Beschleunigung, Stopprate, ...). Entropie ist in diesem Zusammenhang ein Maß für die Reinheit bzw. die Verunreinigung. \cite{howard_hamilton_machine_2009} Ein hoher Reinheitswert bedeutet zugleich ein Gewinn an Information (information-gain) da sich der Informationsgewinn aus den berechneten Entropien-Werten berechnen lässt. \cite{thomas_mitchell_which_1997}
+Für das Erstellen des Entscheidungsbaumes selbst wird dabei auf das finden des Attributs / der Entscheidungsvariable mit der niedersten Entropie gesetzt. Diese Attribute oder Entscheidungsvariablen sind in diesem Fall die zusätzlich berechneten Werte pro Segment (Beschleunigung, Stopprate, ...). Entropie ist in diesem Zusammenhang ein Maß für die Reinheit bzw. die Verunreinigung. \cite{howard_hamilton_machine_2009} Ein hoher Reinheitswert bedeutet zugleich ein Gewinn an Information (information-gain) da sich der Informationsgewinn mit Hilfe der berechneten Entropie-Werte bestimmen lässt. \cite{thomas_mitchell_which_1997}
 
 Dies bedeutet, man sucht ein Attribut, welches für eine möglichst reine Menge an Objekten in diesem Knoten sorgt. Hat man zum Beispiel eine Menge von männlichen und weiblichen Personen so sucht man ein Attribut, welches bewirkt, dass im nächsten Knoten eine möglichst hohe Wahrscheinlichkeit für männlich oder weiblich Person gegeben ist und somit die Anzahl möglichst nicht ausbalanciert ist. Wäre die Anzahl genau ausbalanciert, so würde man durch diesen Knoten keinen Schritt näher an die schlussendliche Klassifizierung kommen was bedeutet die Verunreinigung wäre maximal und der Informationsgewinn minimal.
 
@@ -176,7 +176,7 @@ Der Entscheidungsbaum mit GIS-Daten ist in Abbildung \imgref{decisiontree-gis} z
 \clearpage
 
 \section{Neue Aufzeichnungen}
-Wie bereits im Abschnitt ``\ref{sec:trainingdata} \nameref{sec:trainingdata}`` erwähnt, wurden die neuen Daten mit zwei Smartphones (Samsung Galaxy S und einem LG Nexus 5) und der App ``MyTrack`` (sieh Abbildung \imgref{myTrack}) aufgezeichnet. Neben der einfachen Handhabung bietet diese App auch an nur Punkte mit einer Mindestgenauigkeit aufzuzeichnen was in Folge beim Filtern ein wenig Arbeit abnimmt. Diese neuen Daten werden hauptsächlich zum Testen verwendet werden und nur ein Teil davon ist in die Trainingsdaten eingeflossen. Weiters kann man zwar ein Fortbewegungsmittel pro Aufzeichnung angeben, aber dies hat keinerlei Einfluss auf die Aufzeichnung selbst oder die Daten - es dient lediglich der visuellen Darstellung/Unterscheidung der einzelnen Aufzeichnungen.
+Wie bereits im Abschnitt ``\ref{sec:trainingdata} \nameref{sec:trainingdata}`` erwähnt, wurden die neuen Daten mit zwei Smartphones (Samsung Galaxy S und einem LG Nexus 5) und der App ``MyTrack`` (siehe Abbildung \imgref{myTrack}) aufgezeichnet. Neben der einfachen Handhabung bietet diese App auch an nur Punkte mit einer Mindestgenauigkeit aufzuzeichnen was in Folge beim Filtern ein wenig Arbeit abnimmt. Diese neuen Daten werden hauptsächlich zum Testen verwendet werden und nur ein Teil davon ist in die Trainingsdaten eingeflossen. Weiters kann man zwar ein Fortbewegungsmittel pro Aufzeichnung angeben, aber dies hat keinerlei Einfluss auf die Aufzeichnung selbst oder die Daten - es dient lediglich der visuellen Darstellung/Unterscheidung der einzelnen Aufzeichnungen.
 
 \img{1}{document/graphics/myTrack.png}{Die App myTrack}{myTrack}
 

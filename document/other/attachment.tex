@@ -76,7 +76,7 @@ Im folgenden Abschnitt werden zwei Vorgänge beschrieben die für das Hinzufüge
 \section*{Ermittlung der Trainingsdaten}
 Grundsätzlich unterscheiden sich Trainingsdaten im Sinne von GPX-Dateien nicht wesentlich von den Rohdaten die man von dem GPX-Gerät bekommt. Da die anschließende Erstellung eines Entscheidungsbaums auf Basis dieser Daten geschieht, wird  eine zusätzliche Information über das tatsächlich verwendete Verkehrsmittel für das jeweilige Segment benötigt. Dies bedeutet, dass jede GPX-Trainingsdatei den selben Aufbau wie eine normale Datei hat, aber bei jedem Tracksegment (trkseg) ein Verkehrsmitteltyp mitangegeben werden muss (siehe Listing \coderef{gpxfile-trainingdata}).
 
-Dies bedeutet, dass bei all jenen Dateien die als Trainingsdaten verwendet werden sollen, die Tracksegmente korrekt gesetzt werden müssen und das Verkehrsmittel im Attribut ``type`` hinzugefügt werden muss.
+Wann immer ein Verkehrsmittelwechsel stattgefunden hat, muss ein GPX-Tracksegment in die Trainingsdaten eingepflegt werden. Dieses Segment muss zusätzlich auf über ein Attribut ``type`` verfügen, welches den eigentlichen Verkehrsmitteltyp angibt.
 
 \begin{code}[xml]{GPX-Datei für Trainingsdaten}{gpxfile-trainingdata}
 ...
@@ -112,9 +112,9 @@ Die im vorherigen Abschnitt generierte CSV-Datei mit den Trainingsdaten kann nun
 \begin{enumerate}
 \item Nachdem das Programm geöffnet worden ist kann über das Hauptmenü File -> Import Data -> Import CSV File die generierte Trainingsdaten-Datei als Datenresource importiert werden. 
 \item Dafür wählt man nun die entsprechende Datei im Dialog aus und folgt anschließend dem Dialog bis Schritt 4 (bei den Schritten 2 und 3 mussten für den Prototypen keine Änderungen vorgenommen werden). 
-\item In Schritt 4 ist es wichtig für die Resultat-Spalte (jene Spalte in, welcher die tatsächlichen Verkehrsmittel stehen) als Datentyp ``text`` und als allgemeinen Typ ``label`` auswählen. 
+\item In Schritt 4 ist es wichtig für die Resultat-Spalte (jene Spalte in, welcher die tatsächlichen Verkehrsmittel stehen) als Datentyp ``text`` und als allgemeinen Typ ``label`` auszuwählen. 
 \item Im nächsten Schritt kann man diese importierten Dateien zur Verwendung in RapidMiner unter dem gewünschten Namen ablegen.
-\item Für die Generierung des Entscheidungsbaums wird als erstes ein neuer Prozess benötigt. Diesen kann man bequem über das Hauptmenü anlegen (File -> New Process).
+\item Für die Generierung des Entscheidungsbaums wird als erstes ein neuer Prozess benötigt. Diesen kann man über das Hauptmenü anlegen (File -> New Process).
 \item Als nächstes kann man die zuvor importieren Daten aus dem Repository-Bereich (links unten) zu dem neuen Prozess per Drag-and-Drop hinzufügen. 
 \item Im nächsten Schritt zieht man den ``Decision-Tree``-Operator aus dem Operatoren-Bereich (links oben) in den Prozess. Diesen Verknüpft man nun mit den Daten (out/tra) sowie mit dem Ende des Prozesses (mod/res).
 \end{enumerate}

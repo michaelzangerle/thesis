@@ -7,8 +7,8 @@
 \contentsline {lstlisting}{\numberline {4.2}Segmentierungskonfiguration}{49}{lstlisting.4.2}
 \contentsline {lstlisting}{\numberline {4.3}Analysekonfiguration}{50}{lstlisting.4.3}
 \addvspace {10\p@ }
-\contentsline {lstlisting}{\numberline {5.1}Entscheidungsbaum in Textform}{67}{lstlisting.5.1}
-\contentsline {lstlisting}{\numberline {5.2}Ausschnitt des generierten Entscheidungsbaums als PHP-Klasse}{68}{lstlisting.5.2}
+\contentsline {lstlisting}{\numberline {5.1}Entscheidungsbaum in Textform}{66}{lstlisting.5.1}
+\contentsline {lstlisting}{\numberline {5.2}Ausschnitt des generierten Entscheidungsbaums als PHP-Klasse}{67}{lstlisting.5.2}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }

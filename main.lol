@@ -13,4 +13,4 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \contentsline {lstlisting}{\numberline {7.1}GPX-Datei f\IeC {\"u}r Trainingsdaten}{104}{lstlisting.7.1}
-\contentsline {lstlisting}{\numberline {7.2}Kommando f\IeC {\"u}r Erstellen der Trainingsdaten}{104}{lstlisting.7.2}
+\contentsline {lstlisting}{\numberline {7.2}Kommando f\IeC {\"u}r das Erstellen der Trainingsdaten}{104}{lstlisting.7.2}

@@ -70,7 +70,7 @@ CHAID steht für ``CHi-squared Automatic Interaction Detection`` und verwendet s
 Weiters arbeitet dieser Algorithmus nicht mit numerischen Werten und stoppt das Wachstum, des Baumes, bevor der Baum zu groß wird. CHAID benötigt eine große Menge an Daten, um verlässliche Ergebnisse / Entscheidungsbäume erzeugen zu können.\cite{rapidminer_rapidminer_2015}
 
 \subsubsection{Zusammenfassung}
-Die betrachteten Algorithmen unterscheiden sich nicht nur durch ihre eigenständigen Vorgehensweisen, sondern auch durch die verwendeten Entscheidungskriterien. Dabei setzen ID3 und C4.5 auf den Informationsgewinn, CART auf den Gini-Index und CHAID auf den Chi-Quadrat-Test. Der Informationsgewinn und der Gini-Index unterscheiden sich dabei zwar in der Berechnung, liefern aber laut Laura Raileanu in nur zwei Prozent der Fälle tatsächlich ein unterschiedliches Ergebnis \cite{laura_raileanu_2004}. 
+Die betrachteten Algorithmen unterscheiden sich nicht nur durch ihre eigenständigen Vorgehensweisen, sondern auch durch die verwendeten Entscheidungskriterien. Dabei setzen ID3 und C4.5 auf den Informationsgewinn, CART auf den Gini-Index und CHAID auf den Chi-Quadrat-Test. Der Informationsgewinn und der Gini-Index unterscheiden sich dabei zwar in der Berechnung, wählen aber laut Laura Raileanu in nur zwei Prozent der Fälle unterschiedliche Attribute aus \cite{laura_raileanu_2004}. 
 
 \subsection{Die Entscheidungsbaum-Operatoren von RapidMiner}
 \label{entschiedungskriterienRapidMiner}
@@ -98,13 +98,13 @@ Die maximale Tiefe des Baumes ist dabei ein maximaler Wert, der das Wachstum fü
 \label{entscheidungsbaum}
 Der Entscheidungsbaum ohne GIS-Daten ist in Abbildung \imgref{decisiontree} zu sehen. Bei diesem Entscheidungsbaum wurden mittlere und maximale Geschwindigkeit, Stopprate sowie mittlere und maximale Beschleunigung als Indikatoren für den Entscheidungsprozess gewählt. Wie diese Werte berechnet und ergänzt werden, wird im Abschnitt ``\ref {schlussfolgerungsvariablen}  \nameref{schlussfolgerungsvariablen}`` erklärt. 
 
-\img{0.68}{document/graphics/decision-tree.png}{Entscheidungsbaum ohne GIS-Daten}{decisiontree}
+\img{0.75}{document/graphics/decision-tree.png}{Entscheidungsbaum ohne GIS-Daten}{decisiontree}
 \clearpage
 
 \label{entscheidungsbaumGIS}
 Der Entscheidungsbaum mit GIS-Daten ist in Abbildung \imgref{decisiontree-gis} zu sehen. Bei diesem Entscheidungsbaum wurden zusätzlich zu den Geschwindigkeits-, Beschleunigungs- und Stoppwerten auch Werte für die verwendeten GIS-Daten gesammelt. Die zusätzlichen Werte beinhalten einen Wert (ptscloseness), welcher die Stopps in der Nähe von Bushaltestellen und Bahnhöfen widerspiegelt sowie zwei Werte für die Nähe zur Autobahn (highwaycloseness) und zu Gleisen (railcloseness). Wie diese Werte berechnet und ergänzt werden, wird im Abschnitt ``\ref{schlussfolgerungsvariablen} \nameref{schlussfolgerungsvariablen}`` erklärt.
 
-\img{0.68}{document/graphics/decision-tree-gis.png}{Entscheidungsbaum mit GIS-Daten}{decisiontree-gis}
+\img{0.82}{document/graphics/decision-tree-gis.png}{Entscheidungsbaum mit GIS-Daten}{decisiontree-gis}
 \clearpage
 
 \section{Trainingsdaten}

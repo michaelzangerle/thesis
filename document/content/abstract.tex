@@ -1,6 +1,6 @@
 \section*{Zusammenfassung}
 
-Die vorliegende Arbeit beschäftigt sich mit der Suche nach einer Methode, welche GPS-Tracks  aus dem Großraum Vorarlberg hinsichtlich der verwendeten Verkehrsmittel analysiert. Dafür sollen die Tracks selbst über keine zusätzlichen Informationen verfügen und auch keine zusätzlichen Sensoren verwendet werden.
+Die vorliegende Arbeit beschäftigt sich mit der Suche nach einer Methode, welche GPS-Tracks hinsichtlich der verwendeten Verkehrsmittel analysiert. Dafür verfügen die Tracks selbst über keine zusätzlichen Informationen und es werden auch keine zusätzlichen Sensoren verwendet.
 
 Für die Analyse von GPS-Tracks wurde eine grundlegende Filterlogik implementiert, um fehlerhafte Ausreißer aus den Rohdaten zu entfernen. Anschließend werden die verbleibenden Wegpunkte geteilt und zu Segmenten zusammengefasst, die mit nur einem Verkehrsmittel bewältigt worden sind. Für diese Segmente werden nun Zusatzwerte (z.B. Stopprate, Geschwindigkeit, ...) zu Bestimmung des Verkehrsmittels berechnet. Für die Bestimmung wurde auf Entscheidungsbäume als Schlussfolgerungsmodell gesetzt, da mit diesen in verschiedenen ähnlichen Publikationen vielversprechende Ergebnisse erzielt worden sind. Im letzten Schritt werden die Resultate ein letztes Mal mit Hilfe des Kontexts auf Plausibilität und Sinnhaftigkeit untersucht und gegebenenfalls angepasst.
 
@@ -11,11 +11,11 @@ Das Resultat dieser Arbeit ist der Prototyp einer Webapplikation, welche GPS-Spu
 
 \section*{Abstract}
 
-The main subject of this thesis is the search for a method to identify transport modes from GPS tracks in Vorarlberg. Therefore the tracks itself should not contain any additional information and no additional sensor should be used.
+The main subject of this thesis is the search for a method to identify transport modes from GPS tracks. Therefore the tracks itself should not contain any additional information and no additional sensor should be used.
 
-For the analysation process a basic filter to remove the noise on recorded GPS tracks was implemented and the remaining track points divided into segments with one transport mode only. For these segments additional values like a stop rate or velocity have been calculated. With these values the type of transport should be identified by using a decision tree as decision support tool. The decision tree was chosen because of it's promising results in other publications. Finally all segments will be anlaysed for the last time but with taking context into consideration to correct segments with a transport type that does not make sense or is not plausible.
+For the analysis process a basic filter to remove the noise on recorded GPS tracks was implemented and the remaining track points divided into segments with one transport mode only. For these segments, additional values like a stop rate or velocity have been calculated. With these values the type of transport should be identified by using a decision tree as decision support tool. The decision tree was chosen because of it's promising results in other publications. Finally all segments will be analysed for the last time but with taking context into consideration to correct segments with a transport type that does not make sense or is not plausible.
 
-The result of this thesis is a web application prototype which is able to process and identify a GPS track with different analyse methods. For the prototype two analyse methods have been implemented. They differ in their usage of GIS data. The accuracy of the classification achieved by these methods is 66\% without and 75\% with GIS data. But it has to be mentioned that very little data for training of the decision trees was available. Test and training data should be available adequate quantity and quality to train a decision tree properly and reach a satisfying result when identifying GPS tracks.
+The result of this thesis is a web application prototype which is able to process and identify a GPS track with different analysis methods. For the prototype two analyse methods have been implemented. They differ in their usage of GIS data. The accuracy of the classification achieved by these methods is 66\% without and 75\% with GIS data. But it has to be mentioned that very little data for training of the decision trees was available. Test and training data should be available in adequate quantity and quality to train a decision tree properly and reach a satisfying result when identifying GPS tracks.
 
 \afterpage{\blankpage}
 \newpage

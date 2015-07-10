@@ -16,7 +16,7 @@ Bei der Erstellung eines Entscheidungsbaums bzw. zur Bestimmung des nächsten At
 \centering
 \begin{tabular}{|l|c|c|c|}
 \hline
- & {\bf Informationsgew.} & {\bf Gewinn-Rate} & {\bf Gini-Index} \\ \hline
+{\bf Trainingsdatenvarianten} & {\bf Informationsgew.} & {\bf Gewinn-Rate} & {\bf Gini-Index} \\ \hline
 Ohne GIS-Daten & 61,40 & 66,67 & 71,93 \\ \hline
 Mit GIS-Daten & 64,91 & 64,91 & 73,68 \\ \hline
 Mit GIS-Daten ohne max. Beschl. & 64,91 & 59,65 & 73,68 \\ \hline
@@ -32,7 +32,7 @@ Mit GIS-Daten ohne Autobahn & 66,67 & 61,40 & 70,18 \\ \hline
 Mit GIS-Daten ohne Bushaltest. & 64,91 & 61,40 & 70,18 \\ \hline
 Mit GIS-Daten ohne Stoprate & 71,93 & 64,91 & 75,44 \\ \hline
 \end{tabular}
-\caption{Genauigkeit von Entscheidungsbäumen mit verschiedenen Algorithmen und Trainingsdatenvarianten}
+\caption{Genauigkeit von Entscheidungsbäumen mit verschiedenen Entscheidungskriterien und Trainingsdatenvarianten (siehe Abschnitte ``\ref{entscheidungsbaumAlgorithmen} \nameref{entscheidungsbaumAlgorithmen}`` und ``\ref{entschiedungskriterienRapidMiner} \nameref{entschiedungskriterienRapidMiner}``)}
 \label{dt-calculation-methods}
 \end{table}
 
@@ -59,6 +59,16 @@ Wie in Tabelle \ref{total-results} ersichtlich ist, schneiden alle Analysemethod
 
 Es wird deutlich, dass verschiedene Kombinationen von Entscheidungsvariablen sehr unterschiedliche Auswirkungen auf die tatsächliche Erkennung haben. Dies bestätigt auch die Aussagen von Zheng und Stenneth, wonach zu viele Variablen das Ergebnis verschlechtern können. \cite{zheng_understanding_2010} \cite{stenneth_transportation_2011}
 
+Da basierend auf den Testdaten und den Gesamtresultaten festgestellt werden kann, dass ohne Mittelwerte für Geschwindigkeit und Beschleunigung sowie der Stopprate bessere Ergebnisse erzielt werden können, kann festgehalten werden, dass folgenden Entscheidungsvariablen die sich sehr gut für den Erkennungsprozess eignen:
+
+\begin{pitemize}
+\item Maximale Geschwindigkeit
+\item Maximale Beschleunigung
+\item GIS-Daten für Gleise
+\item GIS-Daten für Autobahnen
+\item GIS-Daten für Busstationen
+\end{pitemize}
+
 \begin{table}[h]
 \centering
 \begin{tabular}{|l|c|c|}
@@ -80,7 +90,7 @@ Mit GIS-Daten ohne Stopprate & 997 & 74,02 \\ \hline
 Die Detailresultate sind spezifisch auf ein Verkehrsmittel ausgerichtet und betrachten die richtig klassifizierten Segmente dieses Verkehrsmittels. Ihnen gegenüber stehen die fälschlicherweise als der jeweilige Verkehrsmitteltyp klassifizierten Segmente. Diese werden auf die eigentlich richtigen Verkehrsmittel aufgeteilt.
 
 \textbf{Bus} \\
-Für die Segmente, die laut Prototyp mit einem Bus bewältigt worden sind, kann festgestellt werden, dass ein paar wenige Segmente eigentlich Fahrrad- oder Auto-Segmente gewesen sind. Weiters wurden ohne GIS-Daten, ohne Mittelwerte und ohne Stopprate deutlich weniger Bus-Segmente erkannt wie mit den anderen Entscheidungsbäumen. Ein Auszug der Statistik über die richtig erkannten Bus-Segmente ist in Tabelle \ref{result-bus} zu sehen und zeigt, dass Bus-Segmente mit einer Wahrscheinlichkeit von 36,19\% mit der GIS-Analyse erkannt werden.
+Für die Segmente, die laut Prototyp mit einem Bus bewältigt worden sind, kann festgestellt werden, dass ein paar wenige Segmente eigentlich Fahrrad- oder Auto-Segmente gewesen sind. Weiters wurden ohne GIS-Daten, ohne Mittelwerte und ohne Stopprate deutlich weniger Bus-Segmente erkannt wie mit den anderen Entscheidungsbäumen die GIS-Daten verwendeten. Ein Auszug der Statistik über die richtig erkannten Bus-Segmente ist in Tabelle \ref{result-bus} zu sehen und zeigt, dass Bus-Segmente mit einer Wahrscheinlichkeit von 36,19\% mit der GIS-Analyse erkannt werden.
 
 \begin{table}[h]
 \centering
@@ -99,7 +109,7 @@ Mit GIS-Daten ohne Stopprate & 14,29 \\ \hline
 \end{table}
 
 \textbf{Auto} \\
-Bei den Segmenten, welche als Auto-Segmente klassifiziert worden sind, kann festgestellt werden, dass die Erkennungsrate ungleich höher ist und zwischen 75 und 86\% liegt. Die meisten falsch als Auto klassifizierten Segmente sind dabei Bus- und Fahrrad-Segmente. Die Ähnlichkeiten zwischen Bus und Auto war bereits bekannt und nicht weiter überraschend. Die häufige Fehlklassifizierung von Fahrrad-Segmenten als Auto-Segmente führt jedoch zu der Erkenntnis, dass einige Fahrrad-Segmente in den Trainingsdaten sind, welche über eine hohe Geschwindigkeit verfügen und deshalb eine Fehlklassifizierung ermöglichen. Ein Auszug der Statistik über die richtig erkannten Auto-Segmente ist in Tabelle \ref{result-drive} zu sehen und zeigt, dass die Erkennung von Auto-Segmenten für die GIS-Analyse bei 82,22\% liegt. Die Analyse-Methoden ohne Beschleunigung liefern für diesen Fall die beste Erkennungsrate mit 86,12\%.
+Bei den Segmenten, welche als Auto-Segmente klassifiziert worden sind, kann festgestellt werden, dass die Erkennungsrate ungleich höher als jene der Bus-Segmente ist und zwischen 75 und 86\% liegt. Die meisten falsch als Auto klassifizierten Segmente sind dabei Bus- und Fahrrad-Segmente. Die Ähnlichkeiten zwischen Bus und Auto waren bereits bekannt und nicht weiter überraschend. Die häufige Fehlklassifizierung von Fahrrad-Segmenten als Auto-Segmente führt jedoch zu der Erkenntnis, dass einige Fahrrad-Segmente in den Trainingsdaten sind, welche über eine hohe Geschwindigkeit verfügen und deshalb eine Fehlklassifizierung ermöglichen. Ein Auszug der Statistik über die richtig erkannten Auto-Segmente ist in Tabelle \ref{result-drive} zu sehen und zeigt, dass die Erkennung von Auto-Segmenten für die GIS-Analyse bei 82,22\% liegt. Die Analyse-Methoden ohne Beschleunigung liefern für diesen Fall die beste Erkennungsrate mit 86,12\%.
 
 \begin{table}[h]
 \centering
@@ -137,7 +147,7 @@ Mit GIS-Daten ohne Stopprate & 70,33 \\ \hline
 \end{table}
 
 \textbf{Zu Fuß} \\
-Die Ergebnisse für die ``zu Fuß``-Segmente sind sehr eindeutig und liegen für alle Analyse-Methode über 93\%.  Aber auch hier liefert die GIS-Analyse-Methode mit weniger Zusatzvariablen bessere Ergebnisse. Die falschen Klassifizierungen liegen hauptsächlich im Bereich der Fahrrad-Segmente und Auto-Segmente. Dies lässt in beiden Fällen auf eine sehr langsame Fortbewegungsgeschwindigkeit schließen. Bei den Fahrrad-Segmenten konnte dies nach stichprobenartigen Untersuchungen auch belegt werden, denn dabei handelt es sich um Mountainbike-Touren, die bergaufwärts naturgemäß langsamere Geschwindigkeiten haben. Ein Auszug der Statistik über die richtig erkannten ``zu Fuß``-Segmente ist in Tabelle \ref{result-foot} zu sehen.
+Die Ergebnisse für die ``zu Fuß``-Segmente sind sehr eindeutig und liegen für alle Analyse-Methoden über 93\%.  Aber auch hier liefert die GIS-Analyse-Methoden mit weniger Zusatzvariablen bessere Ergebnisse. Die falschen Klassifizierungen liegen hauptsächlich im Bereich der Fahrrad-Segmente und Auto-Segmente. Dies lässt in beiden Fällen auf eine sehr langsame Fortbewegungsgeschwindigkeit schließen. Bei den Fahrrad-Segmenten konnte dies nach stichprobenartigen Untersuchungen auch belegt werden, denn dabei handelt es sich um Mountainbike-Touren, die bergaufwärts naturgemäß langsamere Geschwindigkeiten haben. Ein Auszug der Statistik über die richtig erkannten ``zu Fuß``-Segmente ist in Tabelle \ref{result-foot} zu sehen.
 
 \begin{table}[h]
 \centering
@@ -179,6 +189,6 @@ Wird das Gesamtergebnis der GIS-Analysevarianten betrachtet, so kann festgestell
 
 Die Fahrrad-Segmente haben zum Teil schlecht abgeschnitten, weil die Trainings- und Testdaten für die Fahrrad-Segmente großteils von Sportlern stammen. Zum einen ist damit gemeint, dass im Flachen (Rennrad) und abwärts sehr hohe Geschwindigkeiten gemessen worden sind. Dies erklärt die Fehlklassifizierungen der Fahrrad-Segmente als Auto-Segmente. Zum anderen wurden bei Fahrrad-Segmenten auch sehr langsame Geschwindigkeiten gemessen. Dies ist dann vorgekommen, wenn es bergaufwärts ging. Dabei waren diese Abschnitte aufwärts meistens nicht kurz (so wie in einer Stadt) und hatten Charakteristika, die eher zu Geh-Segmenten passten als zu einem Fahrrad-Segment.
 
-Weiters konnte beobachtet und schlussendlich auch bestätigt werden, dass zu viele Zusatzvariablen das Ergebnis verschlechtern können und mit weniger Variablen unter Umständen eine bessere Erkennungsrate erreicht werden kann. Dies bekräftigt auch die Aussagen von Zheng \cite{zheng_understanding_2010} und Stenneth \cite{stenneth_transportation_2011}, welche ihre verwendeten Zusatzvariablen evaluiert haben. Daraus ist bei beiden hervorgegangen, dass ab einer bestimmten Anzahl von Zusatzvariablen keine Verbesserung, sondern eher eine Verschlechterung des Ergebnisses zu erwarten ist. Dies lässt sich auch in den vorherigen Resultaten beobachten. Die fehlende Stopprate bei der Erkennung von Fahrradsegmenten bewirkt, dass deutlich mehr Fahrradsegmente richtig klassifiziert werden können. Im Gegensatz dazu steht allerdings das Resultat für die Analysevariante ohne Stopprate bei Bus-Segmenten. 
+Weiters konnte beobachtet und schlussendlich auch bestätigt werden, dass zu viele Zusatzvariablen das Ergebnis verschlechtern können und mit weniger Variablen unter Umständen eine bessere Erkennungsrate erreicht werden kann. Dies bekräftigt auch die Aussagen von Zheng \cite{zheng_understanding_2010} und Stenneth \cite{stenneth_transportation_2011}, welche ihre verwendeten Zusatzvariablen evaluiert haben. Daraus ist bei beiden hervorgegangen, dass bei einer bestimmten Anzahl von Zusatzvariablen keine Verbesserung, sondern eher eine Verschlechterung des Ergebnisses zu erwarten ist. Dies lässt sich auch in den vorherigen Resultaten beobachten. Die fehlende Stopprate bei der Erkennung von Fahrradsegmenten bewirkt, dass deutlich mehr Fahrradsegmente richtig klassifiziert werden können. Im Gegensatz dazu steht allerdings das Resultat für die Analysevariante ohne Stopprate bei Bus-Segmenten. 
 
 Bei der Betrachtung der Ergebnisse muss schlussendlich noch hervorgehoben werden, dass es sich bei den verwendeten Trainings- und Testdaten um überschaubare Datenmengen handelt und sich mit einer größeren Datenmenge wahrscheinlich bessere Erkennungsraten erzielen lassen werden. Dies kann damit begründet werden, dass bei kleinen Datenmengen wenige spezielle Testdaten, wie z.B. sehr langsame Fahrradsegmente (aufwärts) oder sehr schnelle Fahrradsegmente (abwärts, Rennradfahrer), wesentlich größeren Einfluss auf den Entscheidungsbaum und im Endeffekt auf die Erkennung haben. 

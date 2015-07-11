@@ -66,7 +66,8 @@ Der CART-Algorithmus benutzt im Gegensatz zu C4.5 und ID3 den Gini-Index als Ent
 Der Algorithmus wählt die Attribute auch nach dem Kriterium der Reinheit für die daraus folgenden Knoten. Das bedeutet, dass er die Daten so aufzuteilen versucht, dass möglichst reine Ergebnisse in den neuen Knoten entstehen. An dieser Stelle stoppt der Algorithmus jedoch nicht, sondern er wählt jenes Attribut, welches die Reinheit maximiert, und erzeugt  eine Reihe weiterer Teilbäume. Diese Teilbäume werden dann bis zur Wurzel zurückgeschnitten. Dabei wird abgeschätzt, wie hoch die Kosten für eine falsche Klassifizierung sind, und jener Teilbaum mit den geringsten Kosten gewählt. \cite{wei-yin_loh_classification_2008}
 
 \subsubsection{CHAID}
-CHAID steht für ``CHi-squared Automatic Interaction Detection`` und verwendet statt der Entropie und des Informationsgewinns den Chi-Quadrat-Test für die Auswahl des nächsten Attributs. Eine Erklärung zu diesem Test liefert zum Beispiel Dr. Chandran in der Präsentation mit dem Titel ``Chi-Square Test``  \url{http://de.slideshare.net/syamchandran3/chi-squared-test-2}.
+CHAID steht für ``CHi-squared Automatic Interaction Detection`` und verwendet statt der Entropie und des Informationsgewinns den Chi-Quadrat-Test für die Auswahl des nächsten Attributs. Eine Erklärung zu diesem Test liefert zum Beispiel Dr. Chandran in der Präsentation mit dem Titel ``Chi-Square Test``  \url{http://de.slideshare.net/syamchandran3/chi-squared-test-2}. \cite{rapidminer_rapidminer_2015}
+
 Weiters arbeitet dieser Algorithmus nicht mit numerischen Werten und stoppt das Wachstum, des Baumes, bevor der Baum zu groß wird. CHAID benötigt eine große Menge an Daten, um verlässliche Ergebnisse / Entscheidungsbäume erzeugen zu können.\cite{rapidminer_rapidminer_2015}
 
 \subsubsection{Zusammenfassung}
@@ -90,19 +91,21 @@ Die interessanteste Option ist allerdings das Feld Kriterium (criterion), da mit
 
 Wie sich die unterschiedlichen Methodiken / Berechnungsarten auf die Resultate auswirken, wird im Abschnitt ``\ref{rapidMinerResultat} \nameref{rapidMinerResultat}`` beschrieben.
 
-Die maximale Tiefe des Baumes ist dabei ein maximaler Wert, der das Wachstum für den Baum einschränkt und dadurch die Spezialisierung und mögliche Überanpassung an die Testdaten ab einem gewissen Punkt beschränkt. Der minimale Informationsgewinn hat dabei einen ähnlichen Effekt wie die maximale Tiefe. Kann beim Aufteilen des aktuellen Knotens ein weiterer Informationsgewinn über dem angegebenen Wert erreicht werden, so wird dieser aufgeteilt. Ansonsten wird der Baum an diesem Punkt nicht mehr wachsen, was wieder eine Überanpassung verhindern kann. Der Zuversichtswert ist ein Wert, der für das Zurückschneiden des Baumes verwendet wird und angibt, welches Level an Zuversicht gegeben sein muss, um das Zurückschneiden tatsächlich anzuwenden (er steht im Zusammenhang mit den durch das Zurückschneiden verursachten Fehlentscheidungen). \cite{rapidminer_rapidminer_2015}
+Die maximale Tiefe des Baumes ist dabei ein maximaler Wert, der das Wachstum für den Baum einschränkt und dadurch die Spezialisierung und mögliche Überanpassung an die Testdaten ab einem gewissen Punkt beschränkt. Der minimale Informationsgewinn hat dabei einen ähnlichen Effekt wie die maximale Tiefe. Kann beim Aufteilen des aktuellen Knotens ein weiterer Informationsgewinn über dem angegebenen Wert erreicht werden, so wird dieser aufgeteilt. Ansonsten wird der Baum an diesem Punkt nicht mehr wachsen, was wieder eine Überanpassung verhindern kann. \cite{rapidminer_rapidminer_2015}
 
-\img{0.68}{document/graphics/decision-tree-config.png}{Konfigurationsmöglichkeiten für Entscheidungsbäume}{decissiontree-config}
+Der Zuversichtswert ist ein Wert, der für das Zurückschneiden des Baumes verwendet wird und angibt, welches Level an Zuversicht gegeben sein muss, um das Zurückschneiden tatsächlich anzuwenden (er steht im Zusammenhang mit den durch das Zurückschneiden verursachten Fehlentscheidungen). \cite{rapidminer_rapidminer_2015}
+
+\img{0.75}{document/graphics/decision-tree-config.png}{Konfigurationsmöglichkeiten für Entscheidungsbäume}{decissiontree-config}
 
 \subsection{Einfluss der GIS-Daten auf den Entscheidungsbaum}
 \label{entscheidungsbaum}
 Der Entscheidungsbaum ohne GIS-Daten ist in Abbildung \imgref{decisiontree} zu sehen. Bei diesem Entscheidungsbaum wurden mittlere und maximale Geschwindigkeit, Stopprate sowie mittlere und maximale Beschleunigung als Indikatoren für den Entscheidungsprozess gewählt. Wie diese Werte berechnet und ergänzt werden, wird im Abschnitt ``\ref {schlussfolgerungsvariablen}  \nameref{schlussfolgerungsvariablen}`` erklärt. 
 
-\img{0.75}{document/graphics/decision-tree.png}{Entscheidungsbaum ohne GIS-Daten}{decisiontree}
-\clearpage
-
 \label{entscheidungsbaumGIS}
 Der Entscheidungsbaum mit GIS-Daten ist in Abbildung \imgref{decisiontree-gis} zu sehen. Bei diesem Entscheidungsbaum wurden zusätzlich zu den Geschwindigkeits-, Beschleunigungs- und Stoppwerten auch Werte für die verwendeten GIS-Daten gesammelt. Die zusätzlichen Werte beinhalten einen Wert (ptscloseness), welcher die Stopps in der Nähe von Bushaltestellen und Bahnhöfen widerspiegelt sowie zwei Werte für die Nähe zur Autobahn (highwaycloseness) und zu Gleisen (railcloseness). Wie diese Werte berechnet und ergänzt werden, wird im Abschnitt ``\ref{schlussfolgerungsvariablen} \nameref{schlussfolgerungsvariablen}`` erklärt.
+
+\img{0.75}{document/graphics/decision-tree.png}{Entscheidungsbaum ohne GIS-Daten}{decisiontree}
+\clearpage
 
 \img{0.82}{document/graphics/decision-tree-gis.png}{Entscheidungsbaum mit GIS-Daten}{decisiontree-gis}
 \clearpage
@@ -173,7 +176,6 @@ Ein Trackpoint entspricht einem Punkt des aufgezeichneten Tracks und enthält ei
     </trk>
 </gpx>
 \end{code}
-\clearpage
 
 \section{Neue Aufzeichnungen}
 Wie bereits im Abschnitt ``\ref{sec:trainingdata} \nameref{sec:trainingdata}`` erwähnt, wurden die neuen Daten mit zwei Smartphones (Samsung Galaxy S und einem LG Nexus 5) und der App ``MyTrack`` (siehe Abbildung \imgref{myTrack}) aufgezeichnet. Neben der einfachen Handhabung bietet diese App auch an, nur Punkte mit einer Mindestgenauigkeit aufzuzeichnen, was beim nachfolgenden Filtern ein wenig Arbeit abnimmt. Diese neuen Daten werden hauptsächlich zum Testen verwendet, nur ein Teil davon ist in die Trainingsdaten eingeflossen. Weiters kann man zwar ein Fortbewegungsmittel pro Aufzeichnung angeben, aber dies hat keinerlei Einfluss auf die Aufzeichnung selbst oder die Daten - es dient lediglich der visuellen Darstellung/Unterscheidung der einzelnen Aufzeichnungen.
@@ -181,7 +183,9 @@ Wie bereits im Abschnitt ``\ref{sec:trainingdata} \nameref{sec:trainingdata}`` e
 \img{1}{document/graphics/myTrack.png}{Die App myTrack}{myTrack}
 
 \section{GIS-Daten}
-Als relevante GIS-Daten kommen laut den erwähnten Publikationen zum Thema Verkehrsmittelerkennung einige in Frage, wie z.B. Parkplätze, Busstationen, Gleise, Bahnhöfe und das gesamte Straßennetz. All diese Daten mögen zwar relevant sein, aber es handelt sich auch um sehr viele Daten, was wiederum bedeutet, dass die Bearbeitungszeit einer Aufzeichnung rasch ansteigt. Da der Prototyp auch für konkrete EndbenutzerInnen interessant sein soll, wird auf die Verwendung des gesamten Straßennetzes und der Parkplätze verzichtet, um die Bearbeitungszeit möglichst gering zu halten. Deshalb wird auf die Verwendung von Busstationen und der Gleise, gesetzt da dies schon in der Arbeit von Stenneth \cite{stenneth_transportation_2011} zu guten Resultaten geführt hat. Dieser Ansatz wird ergänzt mit den GIS-Daten des Autobahnnetzes, da in diesen viel Potential vermutet wird und es sich um eine überschaubare Menge an Daten handelt.
+Als relevante GIS-Daten kommen laut den erwähnten Publikationen zum Thema Verkehrsmittelerkennung einige in Frage, wie z.B. Parkplätze, Busstationen, Gleise, Bahnhöfe und das gesamte Straßennetz. 
+
+All diese Daten mögen zwar relevant sein, aber es handelt sich auch um sehr viele Daten, was wiederum bedeutet, dass die Bearbeitungszeit einer Aufzeichnung rasch ansteigt. Da der Prototyp auch für konkrete EndbenutzerInnen interessant sein soll, wird auf die Verwendung des gesamten Straßennetzes und der Parkplätze verzichtet, um die Bearbeitungszeit möglichst gering zu halten. Deshalb wird auf die Verwendung von Busstationen und der Gleise, gesetzt da dies schon in der Arbeit von Stenneth \cite{stenneth_transportation_2011} zu guten Resultaten geführt hat. Dieser Ansatz wird ergänzt mit den GIS-Daten des Autobahnnetzes, da in diesen viel Potential vermutet wird und es sich um eine überschaubare Menge an Daten handelt.
 
 \textbf{Akquirierung}\\
 Allgemein sind GIS-Daten z.B. via OpenStreetMaps oder Google-Maps verfügbar, aber in einzelnen Stichproben hat sich herausgestellt, dass die Zusatzinformationen in OpenStreetMaps wesentlich detaillierter und einfacher zu extrahieren sind. Dafür wurde in Kauf genommen, dass diese Daten nicht standardisiert eingetragen wurden.

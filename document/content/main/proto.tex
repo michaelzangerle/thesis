@@ -38,7 +38,7 @@ Die Anordnung der einzelnen Filter für die Verarbeitung der GPS-Daten, die übe
 
 Der Ablauf ist hierbei ähnlich wie jener bei den Trainingsdaten, und es wird wiederum zwischen den zwei Modi mit GIS-Daten (orange) oder ohne GIS-Daten (grün) unterschieden. Ausgehend vom FileReader und Trackpoint-Filter kommen die Daten in den Segmentation-Filter. Von dort kommen sie, je nach Analyse-Art, in den Tracksegment-Filter oder in den GISTracksegment-Filter. Das Ergebnis dieser Filter kommt danach in den TravelModel-Filter, wo die eigentlichen Verkehrsmittel bestimmt werden. Anschließend werden die Ergebnisse dem Postprocess-Filter übergeben, welcher die bestimmten Verkehrsmittel ein letztes Mal überprüft. Nun werden sie an den Database-Filter übergeben, welcher die Ergebnisse für die Datenbank aufbereitet und in dieser ablegt.
 
-\img{0.85}{document/graphics/pipes_and_filter_diagram.png}{Pipes- und Filter- Struktur der Webapplikation}{pipesAndFilter}
+\img{0.7}{document/graphics/pipes_and_filter_diagram.png}{Pipes- und Filter- Struktur der Webapplikation}{pipesAndFilter}
 
 \subsubsection{Segmentation-Filter}
 Der Segmentation-Filter teilt die Tracksegmente der einzelnen Tracks in Teile, welche mit hoher Wahrscheinlichkeit nur mit einem Verkehrsmittel bewältigt wurden. Dazu verwendet dieser ermittelte Geschwindigkeits- sowie Beschleunigungswerte. Dieser Vorgang stützt sich auf die Ergebnisse aus den Publikationen von Zheng \cite{zheng_understanding_2010} und Biljecki \cite{biljecki_transportation_2013}. Der genaue Ablauf dieses Prozesses ist im Abschnitt ``\ref{segmentierung} \nameref{segmentierung}`` beschrieben.
@@ -58,7 +58,7 @@ Die Oberfläche der Webapplikation ist sehr einfach gehalten und besteht im Wese
 \subsection{Create-Seite}
 Auf dieser Seite wird dem Benutzer/der Benutzerin die Möglichkeit geboten, einen Track hochzuladen und diesen mit einem von den zwei Varianten (mit und ohne GIS-Daten) analysieren zu lassen. Ist dies geschehen, so wird eine Karte angezeigt, auf welcher die ausgelesenen Segmente dargestellt werden. Diese Segmente werden, je nach Verkehrsmitteltyp, in verschiedenen Farben visualisiert. Per Klick auf eines dieser Segmente kann der Verkehrsmitteltyp des Segments korrigiert werden (siehe Abbildung \imgref{webapp1}). Diese Korrektur hat wiederum Einfluss auf die Auswertung der Ergebnisse, welche in Abbildung \imgref{webapp2} ersichtlich sind.
 
-\img{0.75}{document/graphics/webapp1.png}{Korrigieren eines Verkehrsmitteltyps eines analysierten Tracks}{webapp1}
+\img{0.7}{document/graphics/webapp1.png}{Korrigieren eines Verkehrsmitteltyps eines analysierten Tracks}{webapp1}
 
 \subsection{Results-Seite}
 \label{results-seite}
@@ -66,7 +66,7 @@ Die Resultate aller vorgenommenen Analysen und Änderungen werden auf dieser Sei
 
 Alle Diagramme zeigen dabei die Werte für sämtliche verfügbaren Analysemethoden an, um einen direkten Vergleich zu ermöglichen. Ein Ausschnitt dieser Seite ist in Abbildung \imgref{webapp2} zu sehen. In dieser Abbildung sind auch die Resultate der Untersuchungen mit verschiedenen Kombinationen der Zusatzvariablen sichtbar (siehe Abschnitt \ref{auswertung} \nameref{auswertung}).
 
-\img{0.75}{document/graphics/webapp2.png}{Ausschnitt zu den Resultaten der analysierten Tracks}{webapp2}
+\img{0.7}{document/graphics/webapp2.png}{Ausschnitt zu den Resultaten der analysierten Tracks}{webapp2}
 
 \section{Konfiguration des Prototyps}
 Der Prototyp lässt sich in den verschiedenen Bereichen weitestgehend konfigurieren. Diese Konfiguration kann in einer separaten Datei (app/config/config.yml) vorgenommen werden. Die Konfigurationsmöglichkeiten beinhalten unter anderem:
@@ -113,7 +113,7 @@ Im Abschnitt der Segmentierungskonfiguration (siehe Listing \coderef{segmentConf
 \subsection{Konfiguration der Analysemethoden}
 Für die Analyse können verschiedenste Methoden definiert werden. In Listing \coderef{analyseConfig} ist die Konfiguration für die Analysemethoden ohne GIS-Daten abgebildet. Hierbei werden unter einem Namen für die Analysemethode (basic) verschiedene Konfigurationsvariablen abgelegt, darunter zum einen Variablen für die Erstellung des Entscheidungsbaums, zu anderen Variablen für die Generierung der Datei mit den Trainingsdaten.
 
-Die Konfiguration für den Entscheidungsbaum umfasst einen Klassennamen (zugleich auch Name der generierten Datei), das Verzeichnis, in welchem die generierte Entscheidungsbaum-Datei abgelegt werden soll, sowie den Pfad, wo die Textdatei mit der Definition des Entscheidungsbaums gefunden wird. Wozu diese Werte benötigt werden, wird im Abschnitt ``\ref{entscheidungsbaumGenerierungPHP} \nameref{entscheidungsbaumGenerierungPHP}`` genauer erklärt. Hinter der Konfigurationsvariable ``csv\_columns`` verstecken sich die Spalten, welche beim Erstellen der Trainingsdatendatei verwendet werden.  Diese definieren somit auch, welche Entscheidungsvariablen im Entscheidungsbaum verwendet werden.
+Die Konfiguration für den Entscheidungsbaum umfasst einen Klassennamen (zugleich auch Name der generierten Datei), das Verzeichnis, in welchem die generierte Entschei- dungsbaum-Datei abgelegt werden soll, sowie den Pfad, wo die Textdatei mit der Definition des Entscheidungsbaums gefunden wird. Wozu diese Werte benötigt werden, wird im Abschnitt ``\ref{entscheidungsbaumGenerierungPHP} \nameref{entscheidungsbaumGenerierungPHP}`` genauer erklärt. Hinter der Konfigurationsvariable ``csv\_columns`` verstecken sich die Spalten, welche beim Erstellen der Trainingsdatendatei verwendet werden.  Diese definieren somit auch, welche Entscheidungsvariablen im Entscheidungsbaum verwendet werden.
 
 \begin{code}[]{Analysekonfiguration}{analyseConfig}
     basic:

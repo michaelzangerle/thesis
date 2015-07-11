@@ -26,8 +26,7 @@ Für den Prototyp wurde im Wesentlichen der durch Biljecki erweiterte Ansatz von
 
  Das Resultat eines Segmentierungsvorgangs kann man in Abbildung \imgref{segmentierung} sehen. Jeder Kreis auf der eingezeichneten Route zeigt den Start bzw. das Ende eines Segments. Auf Basis dieser ersten Aufteilung kann nun die genauere Bestimmung des Verkehrsmittels erfolgen.
 
-\img{0.75}{document/graphics/segmentierung.png}{Grundlegende Segmentierung}{segmentierung}
-\clearpage
+\img{0.65}{document/graphics/segmentierung.png}{Grundlegende Segmentierung}{segmentierung}
 
 \section{Schlussfolgerungsvariablen}
 \label{schlussfolgerungsvariablen}
@@ -210,7 +209,7 @@ Die Nachbearbeitung der Segmente mit dem bestimmten Verkehrsmittel wurde sowohl 
 
 Ein Beispiel dafür ist in Abbildung \imgref{nopostprocessing-vs-postprocessing} zu sehen. Links sieht man dabei den analysierten Track ohne Nachbearbeitung und rechts mit Nachbearbeitung. Die Abfolge der Verkehrsmittel links ist dabei Bus->Auto->Fahrrad->Auto->Fahrrad->Bus->Auto, was schlicht nicht möglich ist aber aufgrund der Trainingsdaten und des fehlenden Kontexts entstanden ist. Am Ende der Nachbearbeitung ist das korrekte Resultat eine durchgängige Busfahrt. 
 
-\img{1}{document/graphics/postprocessing.png}{Kein Nachbearbeiten vs. Nachbearbeiten}{nopostprocessing-vs-postprocessing}
+\img{0.95}{document/graphics/postprocessing.png}{Kein Nachbearbeiten vs. Nachbearbeiten}{nopostprocessing-vs-postprocessing}
 
 Eine weitere Aufgabe der Nachbearbeitung ist das herausfiltern von einzelnen Fahrradsegmenten. Diese sind aufgrund der vielen unterschiedlichen Fahrrad-Trainingsdaten entstanden. In einigen Fällen konnte es dadurch vorkommen, dass Segmente als Fahrrad-Segment identifiziert wurden, diese aber für sich alleine standen wie z.B. zu Fuß->Fahrrad->Bus->Bus->Bus. Aus diesem Grund wurde das Nachbearbeiten dahingehend erweitert, dass einzelne Fahrradsegmente herausgefiltert werden bzw. der Typ des Segments mit dem des vorherigen oder nächsten Segments abgestimmt wird.
 \clearpage

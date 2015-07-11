@@ -111,7 +111,9 @@ Im Abschnitt der Segmentierungskonfiguration (siehe Listing \coderef{segmentConf
 \end{code}
 
 \subsection{Konfiguration der Analysemethoden}
-Für die Analyse können verschiedenste Methoden definiert werden. In Listing \coderef{analyseConfig} ist die Konfiguration für die Analysemethoden ohne GIS-Daten abgebildet. Hierbei werden unter einem Namen für die Analysemethode (basic) verschiedene Konfigurationsvariablen abgelegt, darunter zum einen Variablen für die Erstellung des Entscheidungsbaums, zu anderen Variablen für die Generierung der Datei mit den Trainingsdaten. Die Konfiguration für den Entscheidungsbaum umfasst einen Klassennamen (zugleich auch Name der generierten Datei), das Verzeichnis, in welchem die generierte Entscheidungsbaum-Datei abgelegt werden soll, sowie den Pfad, wo die Textdatei mit der Definition des Entscheidungsbaums gefunden wird. Wozu diese Werte benötigt werden, wird im Abschnitt ``\ref{entscheidungsbaumGenerierungPHP} \nameref{entscheidungsbaumGenerierungPHP}`` genauer erklärt. Hinter der Konfigurationsvariable ``csv\_columns`` verstecken sich die Spalten, welche beim Erstellen der Trainingsdatendatei verwendet werden.  Diese definieren somit auch, welche Entscheidungsvariablen im Entscheidungsbaum verwendet werden.
+Für die Analyse können verschiedenste Methoden definiert werden. In Listing \coderef{analyseConfig} ist die Konfiguration für die Analysemethoden ohne GIS-Daten abgebildet. Hierbei werden unter einem Namen für die Analysemethode (basic) verschiedene Konfigurationsvariablen abgelegt, darunter zum einen Variablen für die Erstellung des Entscheidungsbaums, zu anderen Variablen für die Generierung der Datei mit den Trainingsdaten.
+
+Die Konfiguration für den Entscheidungsbaum umfasst einen Klassennamen (zugleich auch Name der generierten Datei), das Verzeichnis, in welchem die generierte Entscheidungsbaum-Datei abgelegt werden soll, sowie den Pfad, wo die Textdatei mit der Definition des Entscheidungsbaums gefunden wird. Wozu diese Werte benötigt werden, wird im Abschnitt ``\ref{entscheidungsbaumGenerierungPHP} \nameref{entscheidungsbaumGenerierungPHP}`` genauer erklärt. Hinter der Konfigurationsvariable ``csv\_columns`` verstecken sich die Spalten, welche beim Erstellen der Trainingsdatendatei verwendet werden.  Diese definieren somit auch, welche Entscheidungsvariablen im Entscheidungsbaum verwendet werden.
 
 \begin{code}[]{Analysekonfiguration}{analyseConfig}
     basic:
@@ -128,3 +130,20 @@ Für die Analyse können verschiedenste Methoden definiert werden. In Listing \c
 \end{code}
 
 \subsection{Zusammenfassung}
+Der gesamten Analyseprozess mit den Hauptschritten - dem Filtern, dem Segmentieren, dem Bestimmen der Verkehrsmittel und dem Nachbearbeiten - ist in den folgenden Abbildungen ersichtlich. In der Abbildung \imgref{step1} sind die Rohdaten eines GPS-Tracks abgebildet. Am rechten Ende des Tracks sind geradlinige Spitzen zu erkennen, was darauf schließen lässt, dass es sich dabei um fehlerhafte Ausreißer handelt die herausgefiltert werden sollen.
+
+\img{1}{document/graphics/1_small.png}{Rohdaten eines GPS-Tracks}{step1}
+
+In Abbildung \imgref{step2} sind die bereits gefilterten Daten zu sehen. Zu erkennen ist auch, dass die Spitzen am rechten Ende des GPS-Tracks entfernt bzw. geglättet wurden.
+
+\img{1}{document/graphics/2_small.png}{Gefilterte Rohdaten eines GPS-Tracks}{step2}
+
+ In Abbildung \imgref{step3} wurde der GPS-Track segmentiert und in einzelne Abschnitte aufgeteilt (jeder Kreis symbolisiert den Beginn oder das Ende eines Segments). Dabei sind die roten Abschnitte jene die zu Fuß bewältigt wurden. Die anderen Segmente sind noch unbestimmt.
+
+\img{1}{document/graphics/3_small.png}{Segmentierter GPS-Track}{step3}
+
+In Abbildung \imgref{step4} wurden die Verkehrsmittel der einzelnen Segmente bereits bestimmt und in Abbildung \imgref{step5} wurden diese zum Schluss auf Sinnhaftigkeit und Plausibilität kontrolliert (ein vereinzeltes Fahrradsegment in grün wurde korrigiert).
+
+\img{1}{document/graphics/4_small.png}{GPS-Track mit bestimmten Verkehrsmitteln}{step4}
+
+\img{1}{document/graphics/5_small.png}{Nachbearbeiteter GPS-Track}{step5}

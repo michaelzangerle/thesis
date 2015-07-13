@@ -38,7 +38,7 @@ Die Anordnung der einzelnen Filter für die Verarbeitung der GPS-Daten, die übe
 
 Der Ablauf ist hierbei ähnlich wie jener bei den Trainingsdaten, und es wird wiederum zwischen den zwei Modi mit GIS-Daten (orange) oder ohne GIS-Daten (grün) unterschieden. Ausgehend vom FileReader und Trackpoint-Filter kommen die Daten in den Segmentation-Filter. Von dort kommen sie, je nach Analyse-Art, in den Tracksegment-Filter oder in den GISTracksegment-Filter. Das Ergebnis dieser Filter kommt danach in den TravelModel-Filter, wo die eigentlichen Verkehrsmittel bestimmt werden. Anschließend werden die Ergebnisse dem Postprocess-Filter übergeben, welcher die bestimmten Verkehrsmittel ein letztes Mal überprüft. Nun werden sie an den Database-Filter übergeben, welcher die Ergebnisse für die Datenbank aufbereitet und in dieser ablegt.
 
-\img{0.7}{document/graphics/pipes_and_filter_diagram.png}{Pipes- und Filter- Struktur der Webapplikation}{pipesAndFilter}
+\img{0.8}{document/graphics/pipes_and_filter_diagram.png}{Pipes- und Filter- Struktur der Webapplikation}{pipesAndFilter}
 
 \subsubsection{Segmentation-Filter}
 Der Segmentation-Filter teilt die Tracksegmente der einzelnen Tracks in Teile, welche mit hoher Wahrscheinlichkeit nur mit einem Verkehrsmittel bewältigt wurden. Dazu verwendet dieser ermittelte Geschwindigkeits- sowie Beschleunigungswerte. Dieser Vorgang stützt sich auf die Ergebnisse aus den Publikationen von Zheng \cite{zheng_understanding_2010} und Biljecki \cite{biljecki_transportation_2013}. Der genaue Ablauf dieses Prozesses ist im Abschnitt ``\ref{segmentierung} \nameref{segmentierung}`` beschrieben.

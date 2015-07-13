@@ -64,8 +64,8 @@ Der Höhenfilter entfernt, ähnlich wie der Geschwindigkeitsfilter, jene GPS-Pun
 \section*{Resultat der Filter}
 Das Resultat der angewandten Filter auf die GPS Daten ist in Abbildung \imgref{withoutFilter} (vor Filterung)  und Abbildung \imgref{withFilter} (nach Filterung) zu sehen. Es konnte jedoch festgestellt werden, dass zum Beispiel eine zu hohe Mindestdistanz bei Testdaten einer Mountainbike-Tour zu einem Verlust von sehr vielen Trackpunkten führen würde. Darum sollte die Mindestdistanz eher kleiner gewählt werden, um auch bei solchen Tracks gute Resultate und eine gewisse Detailtreue zu erhalten oder gänzlich auf solche Testdaten verzichtet werden.
 
-\img{0.75}{document/graphics/not_filtered_track.png}{GPS-Track ohne Filter}{withoutFilter}
-\img{0.75}{document/graphics/filtered_track.png}{GSP-Track mit Filter}{withFilter}
+\img{0.5}{document/graphics/not_filtered_track.png}{GPS-Track ohne Filter}{withoutFilter}
+\img{0.5}{document/graphics/filtered_track.png}{GSP-Track mit Filter}{withFilter}
 
 \chapter*{Anhang 2\markleft{Anhang 2}}
 \label{anhang2}
@@ -84,10 +84,24 @@ Bei jedem Verkehrsmittelwechsel muss ein GPX-Tracksegment in die Trainingsdaten 
         ...
         <trkseg type=``bike``>
             <trkpt lat=``47.39786`` lon=``9.735109``>
-                <ele>475.0</ele>
+                <ele>476.0</ele>
                 <time>2015-02-19T07:20:18.156Z</time>
             </trkpt>
             ...
+        </trkseg>
+        <trkseg type=``walk``>
+        	   <trkpt lat=``47.39796`` lon=``9.736109``>
+               <ele>475.0</ele>
+               <time>2015-02-19T08:20:18.156Z</time>
+            </trkpt>
+            		...
+        </trkseg>
+        <trkseg type=``drive``>
+        	   <trkpt lat=``47.39896`` lon=``9.736309``>
+               <ele>474.0</ele>
+               <time>2015-02-19T09:20:18.156Z</time>
+            </trkpt>
+            		...
         </trkseg>
         ...
     </trk>

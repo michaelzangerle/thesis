@@ -11,7 +11,7 @@ Schlussendlich werden die klassifizierten Abschnitte ein letztes Mal auf ihre Pl
 \label{segmentierung}
 Bei der Segmentierung geht es in erster Linie darum, den Umfang des Problems der Verkehrsmittelbestimmung zu verkleinern. Man versucht also, das angegebene GPX-Tracksegment in Geh-Segmente und Nicht-Geh-Segmente aufzuteilen. Dadurch muss man statt zwischen mehreren Verkehrsmitteln (Gehen, Bus, Zug, Auto, Fahrrad) nur mehr zwischen zwei unterscheiden. Die genauere Unterscheidung kann dann in einem weiteren Schritt folgen, in welchem jedoch schon klar ist, ob es sich um ein Segment handelt, in welchem eine Person zu Fuß unterwegs war oder nicht. 
 
-Zheng sagt in diesem Zusammenhang, dass es zwischen jedem Wechsel eines Verkehrsmittels einen Abschnitt gibt, in welchem man zu Fuß unterwegs war und ein Stopp stattgefunden hat, auch wenn dieser Abschnitt sehr klein war. Ein Wechsel erfolgt nie direkt, wie z.B. von einem Zug in den Bus ohne anzuhalten und über einen Bahnsteig gehen zu müssen. Wenn also, ein Verkehrsmittelwechsel stattgefunden hat, dann gibt es neben Geh-Punkten auch Trackpunkte, in welchen eine Geschwindigkeit und eine Beschleunigung von nahezu 0 zu erwarten ist. Diese Aussage hat sich aus seinen umfangreichen Testdaten ableiten lassen. Daraus hat er folgenden Algorithmus abgeleitet:  \cite{zheng_understanding_2010}
+Zheng sagt in diesem Zusammenhang, dass es zwischen jedem Wechsel eines Verkehrsmittels einen Abschnitt gibt, in welchem man zu Fuß unterwegs war und ein Stopp stattgefunden hat, auch wenn dieser Abschnitt sehr klein war. Ein Wechsel erfolgt nie direkt, wie z.B. von einem Zug in den Bus ohne anzuhalten und über einen Bahnsteig gehen zu müssen. Wenn also, ein Verkehrsmittelwechsel stattgefunden hat, dann gibt es neben Geh-Punkten auch Trackpunkte, in welchen eine Geschwindigkeit und eine Beschleunigung von nahezu null zu erwarten ist. Diese Aussage hat sich aus seinen umfangreichen Testdaten ableiten lassen. Daraus hat er folgenden Algorithmus abgeleitet:  \cite{zheng_understanding_2010}
 
 \begin{pitemize}
 \item Finde alle Geh-Punkte und Nicht-Geh-Punkte des betrachteten Abschnitts oder Tracks anhand von Grenzwerten für Geschwindigkeit und Beschleunigung 
@@ -173,8 +173,7 @@ meanvelocity <= 20.830
 ...
 \end{code}
 
-\textbf{Parsen und Cachen der Entscheidungsbäume} \\
-\label{parsenCachenEntscheidungsbaum}
+\textbf{Parsen und Cachen der Entscheidungsbäume} \label{parsenCachenEntscheidungsbaum}\\
 Die von RapidMiner gelieferten Entscheidungsbäume wurden im Prototyp als Teil der Konfiguration hinterlegt. Damit die Entscheidungsbäume nicht für jede Anfrage geparst und erstellt werden müssen, bietet das Framework Symfony die Möglichkeit, die aus Konfigurationsdateien entstandenen Resultate zu cachen. Das bedeutet in diesem Fall, dass die Entscheidungsbäume eingelesen sowie geparst werden und danach mit Hilfe des Resultats eine PHP-Datei erstellt wird. Darin wird die Initialisierung des Entscheidungsbaums als Code abgelegt (siehe Listing \coderef{entscheidungsbaumPHP}). Dadurch muss der Entscheidungsbaum nicht jedes Mal neu geparst, sondern nur ein Objekt mit genau diesem Baum instanziiert werden. 
 
 \begin{code}[PHP]{Ausschnitt des generierten Entscheidungsbaums als PHP-Klasse}{entscheidungsbaumPHP}
@@ -201,7 +200,7 @@ Damit dieser Vorgang nur gemacht wird, wenn sich die Datei mit dem Entscheidungs
 
 \subsection{Verwendung der Entscheidungsbäume}
 \label{entscheidungsbaum_verwendung}
-Die jeweiligen Entscheidungsbäume werden basierend auf der Analysemethode im Travel-Mode-Filter verwendet. Dabei wird für jedes Segment der Entscheidungsbaum traversiert und das Resultat beim jeweiligen Segment hinterlegt. Schlussendlich hat jedes Segment einen Verkehrsmitteltyp zugeordnet bekommen und wird zur Nachbearbeitung weitergegeben.
+Die jeweiligen Entscheidungsbäume werden basierend auf der Analysemethode im Trav- el-Mode-Filter verwendet. Dabei wird für jedes Segment der Entscheidungsbaum traversiert und das Resultat beim jeweiligen Segment hinterlegt. Schlussendlich hat jedes Segment einen Verkehrsmitteltyp zugeordnet bekommen und wird zur Nachbearbeitung weitergegeben.
 
 \subsection{Nachbearbeitung}
 \label{nachbearbeitung}

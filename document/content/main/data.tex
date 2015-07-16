@@ -8,7 +8,7 @@ Außerdem wird dargelegt, woher die verwendeten GIS-Daten stammen, wie diese ext
 
 \section{Entscheidungsbaum als Schlussfolgerungsmodell}
 \label{entscheidungsbaumAlsSchlussfolgerungsmodell}
-Aufgrund des guten Abschneidens des Entscheidungsbaums in verschiedenen Arbeiten  - \cite{stenneth_transportation_2011}, \cite{reddy_using_2010}, \cite{sebastian_nagel_moglichkeitsstudie_2011}und \cite{zheng_learning_2008} -  wurde auch in dieser Arbeit ein Entscheidungsbaum als Schlussfolgerungsmodell verwendet. Um einen Entscheidungsbaum erstellen zu können, werden Trainingsdaten benötigt. Daraus werden dann die Regeln für den Entscheidungsbaum bzw. die jeweiligen Entscheidungen des Baums abgeleitet.
+Aufgrund des guten Abschneidens des Entscheidungsbaums in verschiedenen Arbeiten  - \cite{stenneth_transportation_2011}, \cite{reddy_using_2010}, \cite{sebastian_nagel_moglichkeitsstudie_2011} und \cite{zheng_learning_2008} -  wurde auch in dieser Arbeit ein Entscheidungsbaum als Schlussfolgerungsmodell verwendet. Um einen Entscheidungsbaum erstellen zu können, werden Trainingsdaten benötigt. Daraus werden dann die Regeln für den Entscheidungsbaum bzw. die jeweiligen Entscheidungen des Baums abgeleitet.
 
 Deshalb wurde für diese Trainingsdaten ein Teil der gesammelten GPS-Daten manuell segmentiert und mit dem benutzten Verkehrsmittel ergänzt. Mit Hilfe des Prototyps wurden die Trainingsdaten eingelesen, gefiltert und mit zusätzlichen Informationen angereichert. Diese zusätzlichen Informationen sind bei der Variante ohne GIS-Daten zum Beispiel Geschwindigkeit und Beschleunigung. Bei der Variante mit GIS-Daten wird unter anderem die Nähe zu Bushaltestellen oder zu Schienen ergänzt. Danach wurden für alle eingelesenen Segmente die berechneten Werte und das dazugehörige Verkehrsmittel in einer Datei im CSV-Format abgelegt. 
 
@@ -25,6 +25,7 @@ Ist ein Entscheidungsbaum zu sehr  auf die Trainingsdaten angepasst, so muss die
 \subsection{Generierung eines Entscheidungsbaumes}
 \label{entscheidungsbaumAlgorithmen}
 Um einen Entscheidungsbaum generieren zu können, gibt es verschiedene Algorithmen und Ansätze, die im folgenden Abschnitt kurz erklärt werden. Die betrachteten Algorithmen sind:
+\clearpage
 \begin{pitemize}
 \item ID3
 \item C4.5
@@ -50,7 +51,7 @@ ID3 macht kein Backtracking und überdenkt sozusagen seine Auswahl an Attributen
 
 \subsubsection{C4.5}
 Der C4.5 Algorithmus ist eine Erweiterung des ID3 Algorithmus, welche unter anderem versucht, folgende Probleme des ID3 Algorithmus zu adressieren:  \cite{howard_hamilton_machine_2009}
-
+\clearpage
 \begin{pitemize}
 \item Überanpassen des Entscheidungsbaums an die Daten
 \item Vermeiden von fehlerhaftem Zurückschneiden

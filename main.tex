@@ -3,7 +3,7 @@
 % Author: Wachter Johannes, Stefan Laesser
 % Date: 17.01.2014
 % File: main.tex
-%
+% 
 % Main
 
 %%%%%%%%%%%%%%
@@ -146,7 +146,7 @@
 % table of figures
 \ifthenelse{\boolean{myAddTofBoolean}}{
 	\listoffigures
-  \addcontentsline{toc}{chapter}{Abbilungsverzeichnis}
+  \addcontentsline{toc}{chapter}{Abbildungsverzeichnis}
 }{}
 
 % attachment
@@ -154,5 +154,7 @@
 	\include{document/other/attachment}
 }{}
 
+% added no cite to build document without citing
+\nocite{}
 
 \end{document}

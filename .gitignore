@@ -5,7 +5,7 @@ TSWLatexianTemp_*.pdf
 /.texpadtmp/
 
 *.db
-
+*.tks
 *.acn
 *.acr
 *.alg

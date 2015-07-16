@@ -1,2 +1,138 @@
-\chapter*{Anhang}
-\addcontentsline{toc}{chapter}{Anhang}
+\chapter*{Anhang 1\markleft{Anhang 1}}
+\label{anhang1}
+\addcontentsline{toc}{chapter}{Anhang 1}
+
+Wie auch bei vielen anderen Publikation, die sich mit GPS-Daten beschäftigen,  konnte auch bei dieser Arbeit festgestellt werden, dass sich in den GPS-Spuren einige Ausreißer befanden. Dies konnte vor allem dann beobachtet werden, wenn man sich in einem Zug befand, durch einen Tunnel fuhr oder auch wenn man sich auf einem überdachten Bahnsteig befand. Die Ausreißer werden durch unrealistisch große Distanzabstände oder Sprünge in den Höhenwerten bemerkt. Da diese Werte das Ergebnis verfälschen würden, mussten verschiedene Filter implementiert werden. 
+
+In verschiedensten Publikation zum Thema GPS wird beim Filtern von fehlerhaften Ausreißern auf den Kalman-Filter gesetzt (z.B. \cite{caron_gpsimu_2006} und \cite{jun_smoothing_2006}). Da das Filtern an sich aber nicht im Fokus dieser Arbeit stand und es zur Zeit dieser Arbeit keine Implementation des Kalmanfilters für die gewählte Programmiersprache PHP gab, wurde auf einfachere Filtermöglichkeiten, wie sie in \cite{schuessler_processing_2009} grob beschrieben werden, gesetzt. 
+
+Konkret wurden Filter für Zeit, Distanz und Höhenmeter implementiert. Die somit bereinigten Resultate hatten bereits auf den Entscheidungsbaum ohne GIS-Daten große Auswirkungen. Die Grenzwerte für diese Filter können in einer Konfigurationsdatei festgelegt und je nach geografischer Region und Testdaten angepasst werden. Diese Filter können auch als konfigurierbares Regelwerk verstanden und wie folgt beeinflusst werden:
+
+\begin{pitemize}
+\item minimale Zeitspanne zwischen zwei Punkten
+\item maximale Distanz pro Sekunde
+\item minimale Distanz pro Sekunde
+\item maximale Änderung der Höhenmeter zwischen zwei Punkten pro Sekunde
+\item minimaler Wert für das Verhältnis zwischen gültigen und aufgezeichneten Punkten
+\item Anzahl der zu überspringenden Punkte am Start
+\item minimale Anzahl von Punkten pro Segment
+\end{pitemize}
+
+GPS-Punkte, welche nicht den definierten Grenzwerten entsprechen, werden in die weiteren Verarbeitung nicht einbezogen. Abgesehen vom Zeitfilter betrachten alle anderen Filter die gemessenen Werte in Relation zur gemessenen Zeit, was bedeutet, dass der Zeitwert größer als 0 sein muss und von mehreren GPS-Punkten mit derselben Zeit nur einer betrachtet wird. In den nächsten Absätzen findet sich eine genauere Beschreibung der einzelnen Parameter und ihrer Auswirkungen.
+
+\paragraph{Minimale Zeitspanne zwischen zwei Punkten} Mit Hilfe dieses Konfigurationsparameters kann zum einen sichergestellt werden, dass sich nicht mehrere Trackpunkte mit dem selben Zeitstempel eingeschlichen haben. Zum anderen kann man damit auch die Genauigkeit bzw. die Anzahl der zu verarbeitenden Punkte steuern.
+
+\paragraph{Maximale/minimale Distanz pro Sekunde} Durch diesen Parameter kann sichergestellt werden, dass man innerhalb einer bestimmten Zeitspanne nur eine gewisse Strecke zurücklegen kann. Es können auch Punkte gefiltert werden,  in denen man sich nicht wirklich bewegt hat. Dadurch können die richtig großen Sprünge und Punkte ohne Bewegung herausgefiltert werden.
+
+\paragraph{Maximale Änderung der Höhenmeter zwischen zwei Punkten pro Sekunde} Hierbei wird überprüft, ob es große Sprünge im Bereich der Höhenmeter gibt. 
+
+\paragraph{Minimaler Wert für das Verhältnis zwischen gültigen und aufgezeichneten Punkten} Durch dieses Verhältnis kann entschieden werden, ob sich überhaupt noch genug gültige GPS-Informationen für den weiteren Bestimmungsprozess in einem Track befinden.
+
+\paragraph{Anzahl der zu überspringenden Punkte am Start} Durch diesen Konfigurationsparameter kann gesteuert werden, wie viele Punkte am Beginn einer Aufzeichnung übersprungen werden. Dies rührt daher, dass sich beim Start einer Aufzeichnung gerne Ausreißer einschleichen, bis sich der Positionsbestimmungsvorgang eingependelt hat. Durch diesen Parameter können einige dieser Trackpoints übersprungen werden.
+
+\paragraph{Minimale Anzahl von Punkten pro Segment} Über diesen Parameter kann gesteuert werden, wie viele Punkte sich in einem Tracksegment befinden, damit es überhaupt weiterverarbeitet wird. Der minimale Wert für diesen Parameter ist 2. 
+
+\section*{Verschiedene Fälle beim Filtern}
+Es gibt drei Fälle, welche beim Filtern von Ausreißern abgedeckt werden sollten. Der grundlegende Algorithmus, welcher vom aktuellen Punkt ausgehend einen neuen gültigen Punkt sucht und alle ungültigen überspringt, funktioniert in den ersten zwei Fällen. Im dritten Fall muss noch eine zusätzliche Überprüfung stattfinden.
+
+\textbf{1. Fall}\\
+Beim ersten Fall befinden sich ein oder mehrere Ausreißer am Ende der GPS-Spur, wie es in Abbildung \imgref{filterCase1} beim letzten Punkt der Fall ist. Dies bedeutet, dass ab einem gewissen Punkt keine weiteren validen Punkte gefunden und alle folgenden Punkte übersprungen werden.
+
+\img{0.75}{document/graphics/filterCase1.png}{Filtern - 1. Fall}{filterCase1}
+
+\textbf{2. Fall}\\
+Beim zweiten Fall befinden sich ein oder mehrere Ausreißer zwischen validen vorangegangenen und nachfolgenden Punkten. Ein Beispiel ist in Abbildung \imgref{filterCase2} mit dem vierten Punkt als Ausreißer abgebildet. Dies bedeutet, dass ein oder mehrere Punkte übersprungen werden und danach mit den gültigen Punkten weitergearbeitet werden kann.
+
+\img{0.75}{document/graphics/filterCase2.png}{Filtern - 2. Fall}{filterCase2}
+
+\textbf{3. Fall}\\
+Im dritten Fall befinden sich ein oder mehrere Ausreißer am Beginn der GPS-Spur. Damit ist gemeint, dass vom Start weg keine gültigen Punkte vorhanden sind und erst im Laufe der Aufzeichnung gültige Punkte aufgezeichnet werden. Dies kann vorkommen, wenn die Aufzeichnung der GPS-Spur sofort nach dem Aktivieren des GPS-Moduls startet. Die Position konnte noch nicht mit ausreichender Genauigkeit bestimmt werden, und es wird mit einer niederen Genauigkeit gestartet. Im Laufe der Aufzeichnung steigt die Genauigkeit, wodurch es zu einem Sprung von ungenauen zu den genauen Punkten kommen kann. Ein Beispiel hierfür ist in Abbildung \imgref{filterCase3} mit den ersten drei Punkten als Ausreißern ersichtlich.
+
+\img{0.75}{document/graphics/filterCase3.png}{Filtern - 3. Fall}{filterCase3}
+
+Da keinerlei Information über die Genauigkeit der aufgezeichneten GPS-Punkte gesammelt wurde, ist es eine komplexe Aufgabe, einen gültigen Startpunkt zu finden ohne unnötig viele GPS-Daten zu überspringen. In einzelnen Testfällen kam es vor, dass ein großer Teil der Strecke einfach weggelassen wurde, weil kein gültiger Startpunkt bzw. nicht genügend valide und aufeinanderfolgende Punkte gefunden werden konnten. Deshalb wurde ein konstanter Parameter für die Anzahl der zu überspringenden GPS-Punkte am Anfang eines Tracks festgelegt.
+
+\section*{Zeitfilter}
+Der Zeitfilter überprüft, ob der Abstand zwischen zwei GPS-Punkten größer oder gleich einem minimalen Wert (in diesem Fall 0) ist. Dadurch wird verhindert, dass zwei Punkte mit demselben Zeitstempel verarbeitet werden und bei den zeitabhängigen Berechnungen durch 0 dividiert wird. Außerdem kann man dadurch auch steuern, wie viele Punkte pro GPS-Spur überprüft werden  (z.B. nur jeder zweite Punkt). Es kann festgelegt werden, welche Punkte ausgelassen werden sollen, um den Prozess zu beschleunigen oder weil sich der Grad an Genauigkeit nicht wesentlich verbessert.
+
+\section*{Distanzfilter}
+Der Distanzfilter kontrolliert, ob sich der Abstand zwischen zwei Punkten im Verhältnis zur Zeit in einem gewissen Bereich befindet. In dieser Arbeit wurde größer 0 Meter pro Zeiteinheit als minimale und kleiner 50 Meter pro Zeiteinheit als maximale Distanz festgelegt. Liegt ein Punkt nicht innerhalb dieser Grenzen, so wird der aktuelle Punkt mit dem Punkt nach dem Ausreißer verglichen. Dies wird solange gemacht, bis wieder ein Punkt mit valider Distanz gefunden wird oder keine GPS-Punkte mehr vorhanden sind.
+
+\section*{Höhenfilter}
+Der Höhenfilter entfernt, ähnlich wie der Geschwindigkeitsfilter, jene GPS-Punkte, bei welchen die Differenz der Höhenwerte zu groß ist. Im Fall der hier verwendeten Trainingsdaten wurde 25 m/s  für diesen Filter festgelegt,  alle Punkte mit einen größeren Differenz werden herausgefiltert.
+
+\section*{Resultat der Filter}
+Das Resultat der angewandten Filter auf die GPS Daten ist in Abbildung \imgref{withoutFilter} (vor Filterung)  und Abbildung \imgref{withFilter} (nach Filterung) zu sehen. Es konnte jedoch festgestellt werden, dass zum Beispiel eine zu hohe Mindestdistanz bei Testdaten einer Mountainbike-Tour zu einem Verlust von sehr vielen Trackpunkten führen würde. Darum sollte die Mindestdistanz eher kleiner gewählt werden, um auch bei solchen Tracks gute Resultate und eine gewisse Detailtreue zu erhalten oder gänzlich auf solche Testdaten verzichtet werden.
+
+\img{0.5}{document/graphics/not_filtered_track.png}{GPS-Track ohne Filter}{withoutFilter}
+\img{0.5}{document/graphics/filtered_track.png}{GPS-Track mit Filter}{withFilter}
+
+\chapter*{Anhang 2\markleft{Anhang 2}}
+\label{anhang2}
+\addcontentsline{toc}{chapter}{Anhang 2}
+
+Im folgenden Abschnitt werden zwei Vorgänge beschrieben, die für das Hinzufügen von weiteren Analysemethoden (neben der Basis- und GIS-Variante) oder das Erstellen von Entscheidungsbäumen anhand neuer Daten essentiell sind. Der erste Abschnitt beschreibt dabei, welche Schritte auszuführen sind, um mit Hilfe neuer/geänderter Rohdaten neue Trainingsdaten zu erstellen. Der zweite Abschnitt geht dann auf die Erstellung eines Entscheidungsbaums mit RapidMiner auf Basis der Trainingsdaten ein. 
+
+\section*{Ermittlung der Trainingsdaten}
+Grundsätzlich unterscheiden sich Trainingsdaten im Sinne von GPX-Dateien nicht wesentlich von den Rohdaten, die man vom GPX-Gerät bekommt. Da die anschließende Erstellung eines Entscheidungsbaums auf Basis dieser Daten erfolgt, wird  eine zusätzliche Information über das tatsächlich verwendete Verkehrsmittel für das jeweilige Segment benötigt. Dies bedeutet, dass jede GPX-Trainingsdatei denselben Aufbau wie eine normale Datei hat, aber bei jedem Tracksegment (trkseg) ein Verkehrsmitteltyp mitangegeben werden muss (siehe Listing \coderef{gpxfile-trainingdata}).
+
+Bei jedem Verkehrsmittelwechsel muss ein GPX-Tracksegment in die Trainingsdaten eingepflegt werden. Dieses Segment muss zusätzlich über das Attribut ``type`` verfügen, welches den eigentlichen Verkehrsmitteltyp angibt.
+
+\begin{code}[xml]{GPX-Datei für Trainingsdaten}{gpxfile-trainingdata}
+...
+    <trk>
+        ...
+        <trkseg type=``bike``>
+            <trkpt lat=``47.39786`` lon=``9.735109``>
+                <ele>476.0</ele>
+                <time>2015-02-19T07:20:18.156Z</time>
+            </trkpt>
+            ...
+        </trkseg>
+        <trkseg type=``walk``>
+        	   <trkpt lat=``47.39796`` lon=``9.736109``>
+               <ele>475.0</ele>
+               <time>2015-02-19T08:20:18.156Z</time>
+            </trkpt>
+            		...
+        </trkseg>
+        <trkseg type=``drive``>
+        	   <trkpt lat=``47.39896`` lon=``9.736309``>
+               <ele>474.0</ele>
+               <time>2015-02-19T09:20:18.156Z</time>
+            </trkpt>
+            		...
+        </trkseg>
+        ...
+    </trk>
+...
+\end{code}
+
+Auf Basis dieser Trainingsdaten kann dann mit folgendem Kommando (siehe Listing \coderef{generateTrainingdata}) eine CSV-Datei generiert werden. Dieses Kommando muss im Wurzelverzeichnis des Projekts ausgeführt werden und akzeptiert drei Argumente in folgender Reihenfolge:
+
+\begin{pitemize}
+\item der \textbf{Verzeichnisname} bzw. Pfad zum Verzeichnis mit den Trainingsdaten
+\item der \textbf{Dateiname} für die generierte Datei
+\item die \textbf{Analysemethode}, die zum Generieren verwendet werden soll
+\end{pitemize}
+
+\begin{code}[xml]{Kommando für das Erstellen der Trainingsdaten}{generateTrainingdata}
+app/console tmd:generate:trainingdata
+\end{code}
+
+\section*{Generierung des Entscheidungsbaums}
+Die im vorherigen Abschnitt generierte CSV-Datei mit den Trainingsdaten kann nun in RapidMiner importiert werden. Aus dieser kann dann schlussendlich mit folgenden Schritten ein Entscheidungsbaum generiert werden: 
+
+\begin{enumerate}
+\item Nachdem das Programm geöffnet worden ist, kann über das Hauptmenü File -> Import Data -> Import CSV File die generierte Trainingsdaten-Datei als Datenresource importiert werden. 
+\item Dafür wählt man nun die entsprechende Datei im Dialog aus und folgt anschließend dem Dialog bis Schritt 4 (bei den Schritten 2 und 3 mussten für den Prototypen keine Änderungen vorgenommen werden). 
+\item In Schritt 4 ist es wichtig, für die Resultat-Spalte (jene Spalte in, welcher die tatsächlichen Verkehrsmittel stehen) als Datentyp ``text`` und als allgemeinen Typ ``label`` auszuwählen. 
+\item Im nächsten Schritt kann man diese importierten Dateien zur Verwendung in RapidMiner unter dem gewünschten Namen ablegen.
+\item Für die Generierung des Entscheidungsbaums wird als Erstes ein neuer Prozess benötigt. Diesen kann man über das Hauptmenü anlegen (File -> New Process).
+\item Als Nächstes kann man die zuvor importieren Daten aus dem Repository-Bereich (links unten) zum neuen Prozess per Drag-and-Drop hinzufügen. 
+\item Im nächsten Schritt zieht man den ``Decision-Tree``-Operator aus dem Operatoren-Bereich (links oben) in den Prozess. Diesen verknüpft man nun mit den Daten (out/tra) sowie mit dem Ende des Prozesses (mod/res).
+\end{enumerate}
+
+Jetzt kann man mit Hilfe des ``Run``-Buttons (blaues Dreick) unterhalb des Hauptmenüs den Prozess ausführen und bekommt den Entscheidungsbaum sowohl in grafischer als auch textueller Darstellung zu sehen. Eine etwas ausführlichere Anleitung ist auch auf Youtube unter \url{https://www.youtube.com/watch?v=Vf6G1HNdBoI} zu finden.
+
+Der Entscheidungsbaum in Textform kann nunmehr in einer Datei im Projekt abgelegt werden (definiert in der Konfiguration). Beim nächsten Analyseprozess wird erkannt, dass es sich um eine geänderte/neue Datei handelt und automatisch eine neue PHP-Datei mit dem Baum als PHP-Code  generiert (siehe Abschnitt \ref{parsenCachenEntscheidungsbaum} \nameref{parsenCachenEntscheidungsbaum}).

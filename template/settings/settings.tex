@@ -1,6 +1,6 @@
 %%%%%%%%%%%%%%%%%%%%%
 % 
-% Author: Wachter Johannes, Stefan Laesser
+% Author: Wachter Johannes, Stefan Laesser, Michael Zangerle
 % Date: 17.01.2014
 % File: template/settings.tex
 %
@@ -42,7 +42,7 @@
 % e.g., 10pt, 11pt, 12pt
 % The font size of the main text in pt (points).
 
-\newcommand{\mylinespread}{1.25} 
+\newcommand{\mylinespread}{1.5} 
 % e.g., 1.0, 1.5, 2.0
 % Line spacing in %/100. For example 1.5 means 150% of the usual line
 % spacing. Please use with caution: 100% ("1.0") is fine because the
@@ -65,14 +65,14 @@
 % e.g. 1cm
 % define page borders, for twosided left != right, will be alternated every page
 
-\newcommand{\myaddblockingnotice}{true}
+\newcommand{\myaddblockingnotice}{false}
 \newcommand{\myaddtitle}{true}
 \newcommand{\myaddabstract}{true}
 \newcommand{\myaddtoc}{true}
 \newcommand{\myaddtol}{true} % table of listings
 \newcommand{\myaddtof}{true} % table of figures
 \newcommand{\myaddtot}{true} % table of tables
-\newcommand{\myaddlistoftodos}{true}
+\newcommand{\myaddlistoftodos}{false}
 \newcommand{\myaddreferences}{true}
 \newcommand{\myaddattachment}{true}
 \newcommand{\myaddstatutorydeclaration}{true}
@@ -98,3 +98,17 @@
 \newcommand{\imglabelprefix}{img}
 \newcommand{\algolabelprefix}{algo}
 % label prefixes
+
+% lists with less margin
+\newenvironment{pitemize}{
+\begin{itemize}
+  \setlength{\itemsep}{1pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}
+}{\end{itemize}}
+
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}

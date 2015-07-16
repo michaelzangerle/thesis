@@ -1,13 +1,16 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {lstlisting}{\numberline {3.1}Inline code}{5}{lstlisting.3.1}
-\contentsline {lstlisting}{\numberline {3.3}Include a code file}{6}{lstlisting.3.3}
-\contentsline {lstlisting}{\numberline {3.2}example caption}{6}{lstlisting.3.2}
-\contentsline {lstlisting}{\numberline {3.4}caption}{7}{lstlisting.3.4}
-\contentsline {lstlisting}{\numberline {3.5}Inline code}{7}{lstlisting.3.5}
-\contentsline {lstlisting}{\numberline {3.6}Algorithm code}{9}{lstlisting.3.6}
+\contentsline {lstlisting}{\numberline {3.1}GPX-Datei}{35}{lstlisting.3.1}
+\addvspace {10\p@ }
+\contentsline {lstlisting}{\numberline {4.1}Filterkonfiguration}{48}{lstlisting.4.1}
+\contentsline {lstlisting}{\numberline {4.2}Segmentierungskonfiguration}{49}{lstlisting.4.2}
+\contentsline {lstlisting}{\numberline {4.3}Analysekonfiguration}{50}{lstlisting.4.3}
+\addvspace {10\p@ }
+\contentsline {lstlisting}{\numberline {5.1}Entscheidungsbaum in Textform}{66}{lstlisting.5.1}
+\contentsline {lstlisting}{\numberline {5.2}Ausschnitt des generierten Entscheidungsbaums als PHP-Klasse}{67}{lstlisting.5.2}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\addvspace {10\p@ }
+\contentsline {lstlisting}{\numberline {7.1}GPX-Datei f\IeC {\"u}r Trainingsdaten}{104}{lstlisting.7.1}
+\contentsline {lstlisting}{\numberline {7.2}Kommando f\IeC {\"u}r das Erstellen der Trainingsdaten}{105}{lstlisting.7.2}

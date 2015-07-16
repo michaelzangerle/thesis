@@ -1,0 +1,213 @@
+\chapter{Modellbildung und Einbindung der GPS- und GIS-Daten}
+Dieser Abschnitt behandelt die Akquirierung und die Struktur der verwendeten GPS-Daten für das Training des Entscheidungsbaums. Außerdem wird erläutert, wieso der Entscheidungsbaum als Schlussfolgerungsmodell ausgewählt und wie er erstellt wurde. 
+
+Sowohl für die Trainingsdaten für den Entscheidungsbaum als auch für die Testdaten wird erläutert, wie diese aufgezeichnet wurden. Dies inkludiert sowohl die Geräte als auch die Software, welche dazu verwendet wurde. Weiters wird auf die Struktur der GPS-Spuren und der GIS-Daten eingegangen.
+
+Außerdem wird dargelegt, woher die verwendeten GIS-Daten stammen, wie diese extrahiert wurden und welche Rolle sie im weiteren Prozess spielen. Abschließend wird auch auf die Positionsdaten der verschiedenen Verkehrsmittel des ÖPNV eingegangen und in welcher Weise diese hätten eingesetzt werden können.
+\clearpage
+
+\section{Entscheidungsbaum als Schlussfolgerungsmodell}
+\label{entscheidungsbaumAlsSchlussfolgerungsmodell}
+Aufgrund des guten Abschneidens des Entscheidungsbaums in verschiedenen Arbeiten  - \cite{stenneth_transportation_2011}, \cite{reddy_using_2010}, \cite{sebastian_nagel_moglichkeitsstudie_2011} und \cite{zheng_learning_2008} -  wurde auch in dieser Arbeit ein Entscheidungsbaum als Schlussfolgerungsmodell verwendet. Um einen Entscheidungsbaum erstellen zu können, werden Trainingsdaten benötigt. Daraus werden dann die Regeln für den Entscheidungsbaum bzw. die jeweiligen Entscheidungen des Baums abgeleitet.
+
+Deshalb wurde für diese Trainingsdaten ein Teil der gesammelten GPS-Daten manuell segmentiert und mit dem benutzten Verkehrsmittel ergänzt. Mit Hilfe des Prototyps wurden die Trainingsdaten eingelesen, gefiltert und mit zusätzlichen Informationen angereichert. Diese zusätzlichen Informationen sind bei der Variante ohne GIS-Daten zum Beispiel Geschwindigkeit und Beschleunigung. Bei der Variante mit GIS-Daten wird unter anderem die Nähe zu Bushaltestellen oder zu Schienen ergänzt. Danach wurden für alle eingelesenen Segmente die berechneten Werte und das dazugehörige Verkehrsmittel in einer Datei im CSV-Format abgelegt. 
+
+Für die konkrete Generierung der Entscheidungsbäume wurde das Tool RapidMiner verwendet. Dabei handelt es sich um eine Datamining Software, welche sowohl verschiedenste Datenquellen unterstützt (Datenbanken und auch einzelne Dateien in unterschiedlichen Dateiformaten) als auch die Generierung von Entscheidungsbäumen über eine komfortable grafische BenutzerInnenoberfläche erlaubt. In der freien Version ist jedoch nur der CSV-Import verfügbar. Deshalb wurde vom Prototypen auch eine CSV-Datei generiert, welche in der Folge einfach in RapidMiner eingebunden und ausgewertet werden konnte. 
+
+Schlussendlich wurden aus den eingebundenen Daten Entscheidungsbäume für die Variante mit bzw. ohne GIS-Daten generiert. Diese können sowohl als Bilder als auch in Textform exportiert werden. In weiterer Folge wurden aus diesen Entscheidungsbäumen in Textform PHP-Klassen generiert (siehe Abschnitt ``\ref{entscheidungsbaumGenerierungPHP} \nameref{entscheidungsbaumGenerierungPHP}``).
+
+\subsubsection{Überanpassung (Overfitting)}
+Beim Erstellen von Entscheidungsbäumen wie auch bei anderen von Trainingsdaten lernenden Algorithmen muss beachtet werden, dass das Ergebnis nicht zu sehr auf die Trainingsdaten zugeschnitten ist. Man möchte also, dass mit Hilfe der Trainingsdaten ein Modell generiert wird, welches auch für Nichttrainingsdaten ein akzeptables Resultat liefert und nicht zu sehr auf die Gegebenheiten/Ungenauigkeiten in den Trainingsdaten spezialisiert ist. Ist dies jedoch der Fall, so spricht man von einer Überanpassung (Overfitting) des Modells an die Daten.  \cite{tom_dietterich_overfitting_1995}
+
+\subsubsection{Zurückschneiden (Pruning)}
+Ist ein Entscheidungsbaum zu sehr  auf die Trainingsdaten angepasst, so muss dieser wieder zurückgeschnitten werden. Dies bedeutet, dass einzelne Blätter oder auch Teilbäume wieder entfernt werden, um ein bestmögliches Resultat (geringe Anzahl an Fehlern) für Nichttrainingsdaten zu erhalten. Für diese Aufgabe wurden verschiedene Algorithmen entwickelt, welche unter anderem in der Publikation ``Pruning Decision Trees with Misclassification Costs`` von Jeffrey Bradford beschrieben werden. \cite{jeffrey_p._bradford_pruning_1998}
+
+\subsection{Generierung eines Entscheidungsbaumes}
+\label{entscheidungsbaumAlgorithmen}
+Um einen Entscheidungsbaum generieren zu können, gibt es verschiedene Algorithmen und Ansätze, die im folgenden Abschnitt kurz erklärt werden. Die betrachteten Algorithmen sind:
+\clearpage
+\begin{pitemize}
+\item ID3
+\item C4.5
+\item CART
+\item CHAID
+\end{pitemize}
+
+\subsubsection{ID3}
+Der ID3 Algorithmus (Iterative Dichotomiser 3) wurde von John Ross Quinlan 1986 entwickelt und ist der Vorgänger von C4.5. ID3 wurde entworfen, um nicht alle möglichen Entscheidungsbäume generieren zu müssen, wenn man nur einen möglichst guten Entscheidungsbaum für die gegebenen Daten benötigt. Im Allgemeinen generiert ID3 einfache Entscheidungsbäume, aber es kann nicht garantiert werden, dass es keine besseren Entscheidungsbäume gibt. Der allgemeine Algorithmus ist iterativ und geht dabei wie folgt vor: \cite{john_ross_quinlan_1986}
+
+\begin{pitemize}
+\item Es wird eine Teilmenge der Trainingsdaten per Zufall ausgewählt (Window) und für diese ein Entscheidungsbaum generiert. Dieser Entscheidungsbaum ist für alle Elemente innerhalb der Teilmenge gültig und kann diese korrekt klassifizieren. 
+\item Nachfolgend werden alle anderen Elemente mit diesem Entscheidungsbaum klassifiziert. Kann der Baum alle Elemente korrekt klassifizieren, so ist ein ausreichend guter Entscheidungsbaum gefunden und das Ziel erreicht. Wenn nicht alle Elemente korrekt klassifiziert werden können, wird eine Auswahl der falsch klassifizierten Elemente in die Teilmenge (Window) übernommen und erneut ein Entscheidungsbaum gesucht. 
+\end{pitemize}
+
+Für das Erstellen des Entscheidungsbaumes selbst wird dabei auf das Finden des Attributs/der Entscheidungsvariable mit der niedersten Entropie gesetzt. Diese Attribute oder Entscheidungsvariablen sind in diesem Fall die zusätzlich berechneten Werte pro Segment (Beschleunigung, Stopprate, ...). Entropie ist in diesem Zusammenhang ein Maß für die Reinheit bzw. die Verunreinigung. \cite{howard_hamilton_machine_2009} Ein hoher Reinheitswert bedeutet zugleich einen Gewinn an Information (information-gain), da sich der Informationsgewinn mit Hilfe der berechneten Entropie-Werte bestimmen lässt. \cite{thomas_mitchell_which_1997}
+
+Dies bedeutet, man sucht ein Attribut, welches für eine möglichst reine Menge an Objekten in diesem Knoten sorgt. Hat man zum Beispiel eine Menge von männlichen und weiblichen Personen, so sucht man ein Attribut, welches bewirkt, dass im nächsten Knoten eine möglichst hohe Wahrscheinlichkeit für männliche oder weibliche Personen gegeben ist und somit die Anzahl möglichst nicht ausbalanciert ist. Wäre die Anzahl genau ausbalanciert, so würde man durch diesen Knoten keinen Schritt näher an die schlussendliche Klassifizierung kommen, was bedeutet, die Verunreinigung wäre maximal und der Informationsgewinn minimal.
+
+Mit diesem Ansatz können Entscheidungsbäume bereits nach wenigen Iterationen für ein Trainingsset von bis zu 30.000 Objekten und 50 Attributen gefunden werden. \cite{john_ross_quinlan_1986}
+
+ID3 macht kein Backtracking und überdenkt sozusagen seine Auswahl an Attributen zu keinem späteren Zeitpunkt. Dies kann auch dazu führen, dass ein lokales, aber kein globales Optimum gefunden wird. \cite{howard_hamilton_machine_2009} Weiters kann es vorkommen, dass der erstellte Entscheidungsbaum überangepasst ist, wenn eine zu kleine Menge an Trainingsdaten verwendet worden ist. \cite{rapidminer_rapidminer_2015}
+
+\subsubsection{C4.5}
+Der C4.5 Algorithmus ist eine Erweiterung des ID3 Algorithmus, welche unter anderem versucht, folgende Probleme des ID3 Algorithmus zu adressieren:  \cite{howard_hamilton_machine_2009}
+\clearpage
+\begin{pitemize}
+\item Überanpassen des Entscheidungsbaums an die Daten
+\item Vermeiden von fehlerhaftem Zurückschneiden
+\item Verbesserung der Effektivität der Berechnung
+\item Handhabung von nicht diskreten Werten durch Umformen der Bedingung für das Attribut auf  größer oder kleiner gleich. Kann ein Attribut eine unendliche Anzahl von Werten annehmen, so wird durch diese umgeformten Bedingungen entschieden, welchem Pfad gefolgt werden soll.
+\item Handhabung von Trainingsdaten mit fehlenden Attributen
+\item Nachträgliches Zurückschneiden von Teilbäumen und Ersetzen dieser durch Blätter-Knoten
+\end{pitemize}
+
+\subsubsection{CART}
+Der CART-Algorithmus benutzt im Gegensatz zu C4.5 und ID3 den Gini-Index als Entscheidungskriterium zur Bestimmung des nächsten Attributs. \cite{rapidminer_rapidminer_2015} Der Gini-Index ist ein weiteres statistisches Maß für die Angabe der Reinheit. 
+
+Der Algorithmus wählt die Attribute auch nach dem Kriterium der Reinheit für die daraus folgenden Knoten. Das bedeutet, dass er die Daten so aufzuteilen versucht, dass möglichst reine Ergebnisse in den neuen Knoten entstehen. An dieser Stelle stoppt der Algorithmus jedoch nicht, sondern er wählt jenes Attribut, welches die Reinheit maximiert, und erzeugt  eine Reihe weiterer Teilbäume. Diese Teilbäume werden dann bis zur Wurzel zurückgeschnitten. Dabei wird abgeschätzt, wie hoch die Kosten für eine falsche Klassifizierung sind, und jener Teilbaum mit den geringsten Kosten gewählt. \cite{wei-yin_loh_classification_2008}
+
+\subsubsection{CHAID}
+CHAID steht für ``CHi-squared Automatic Interaction Detection`` und verwendet statt der Entropie und des Informationsgewinns den Chi-Quadrat-Test für die Auswahl des nächsten Attributs. Eine Erklärung zu diesem Test liefert zum Beispiel Dr. Chandran in der Präsentation mit dem Titel ``Chi-Square Test``  \url{http://de.slideshare.net/syamchandran3/chi-squared-test-2}. \cite{rapidminer_rapidminer_2015}
+
+Weiters arbeitet dieser Algorithmus nicht mit numerischen Werten und stoppt das Wachstum, des Baumes, bevor der Baum zu groß wird. CHAID benötigt eine große Menge an Daten, um verlässliche Ergebnisse/Entscheidungsbäume erzeugen zu können.\cite{rapidminer_rapidminer_2015}
+
+\subsubsection{Zusammenfassung}
+Die betrachteten Algorithmen unterscheiden sich nicht nur durch ihre eigenständigen Vorgehensweisen, sondern auch durch die verwendeten Entscheidungskriterien. Dabei setzen ID3 und C4.5 auf den Informationsgewinn, CART auf den Gini-Index und CHAID auf den Chi-Quadrat-Test. Der Informationsgewinn und der Gini-Index unterscheiden sich dabei zwar in der Berechnung, wählen aber laut Laura Raileanu in nur zwei Prozent der Fälle unterschiedliche Attribute aus \cite{laura_raileanu_2004}. 
+
+\subsection{Die Entscheidungsbaum-Operatoren von RapidMiner}
+\label{entschiedungskriterienRapidMiner}
+Wie bereits am Beginn des Kapitels beschrieben wurde, wurde die Datamining-Software RapidMiner verwendet. Diese Software bietet verschiedene Operatoren für die verschiedenen Algorithmen an, darunter einen ID3-Operator für den ID3-Algorithmus und einen CHAID-Operator für den CHAID-Algorithmus. Weiters gibt es einen Decision-Tree-Operator, welcher abhängig vom ausgewählten Klassifizierungskriterium, den CART-Algorithmus (``gini-index``)  oder C4.5-Algorithmus (``gian-ratio``, ``information-gain``) für den Entscheidungsbaum auswählt. \cite{rapidminer_rapidminer_2015} 
+
+Neben den erwähnten Algorithmen gibt es noch den C5.0- und den MARS-Algorithmus, welche aber nicht in RapidMiner verfügbar sind und deshalb auch nicht weiter betrachtet werden.
+
+RapidMiner bietet die Möglichkeit, sowohl Einfluss auf das Zurückschneiden als auch auf das Überanpassen von Entscheidungsbäumen zu nehmen. Grundsätzlich kann ein Entscheidungsbaum durch  verschiedene Parameter beeinflusst werden (siehe Abbildung \imgref{decissiontree-config}). Die für diese Arbeit interessanten Parameter waren die maximale Tiefe des Baumes, der Zuversichtswert und die Option, welche das Zurückschneiden anwendet.
+
+Die interessanteste Option ist allerdings das Feld Kriterium (criterion), da mit diesem beeinflusst werden kann, mit welchem Entscheidungskriterium entschieden (Gini-Index, Informationsgewinn, ...) wird, welches Attribut beim Aufbau eines Entscheidungsbaums als nächstes verwendet wird. Indirekt kann dadurch auch beeinflusst werden, welcher Algorithmus (CART, C4.5) verwendet wird um den Entscheidungsbaum zu generieren. RapidMiner bietet dabei mehrere Optionen an, wobei die Interessantesten folgende sind:
+
+\begin{pitemize}
+\item \textbf{Informationsgewinn (information\_gain)} Der Informationsgewinn wird über die Entropie (die Reinheit) der entstehenden Teilresultate in diesem potentiellen neuen Knoten berechnet und wird vom ID3- und C4.5-Algorithmus verwendet.
+\item \textbf{Informationsgewinnrate (gain\_ratio)} Die Informationsgewinnrate berechnet für alle Attribute eine Gewichtung auf Basis der Anzahl und der Größe der entstehenden Teilbäume. Je höher das Gewicht, umso wichtiger ist das Attribut. Dadurch versucht man die Nachteile, die durch den reinen Informationsgewinn entstehen können, zu verhindern. Ein Beispiel wäre bei Kundendaten der hohe Informationsgewinn durch die Kreditkartennummer, da diese einen Kunden eindeutig identifiziert. Aber ein solches Attribut ist nicht zwangsläufig jenes, welches eine so hohe Relevanz im Entscheidungsbaum haben soll. Dies versucht man durch eine Gewichtung von Attributen durch die Informationsgewinnrate zu verhindern. Diese Rate kann vom ID3- und C4.5-Algorithmus als Entscheidungskriterium verwendet werden. \cite{rapidminer_rapidminer_2015} \cite{johannes_furnkranz_decision-tree_2008} 
+\item \textbf{Gini-Index (gini\_index)} Der Gini-Index ist ein statistisches Maß (wie der Informationsgewinn) und wird vom CART-Algorithmus verwendet. Dabei wird im Gegensatz zum Informationsgewinn nicht die Entropie sondern die Verunreinigung gemessen. Diese wird in weiterer Folge minimiert um die das beste Attribut bestimmen zu können. \cite{johannes_furnkranz_decision-tree_2008}
+\end{pitemize}
+
+Wie sich die unterschiedlichen Methodiken/Berechnungsarten auf die Resultate auswirken, wird im Abschnitt ``\ref{rapidMinerResultat} \nameref{rapidMinerResultat}`` beschrieben.
+
+Die maximale Tiefe des Baumes ist dabei ein maximaler Wert, der das Wachstum für den Baum einschränkt und dadurch die Spezialisierung und mögliche Überanpassung an die Testdaten ab einem gewissen Punkt beschränkt. Der minimale Informationsgewinn hat dabei einen ähnlichen Effekt wie die maximale Tiefe. Kann beim Aufteilen des aktuellen Knotens ein weiterer Informationsgewinn über dem angegebenen Wert erreicht werden, so wird dieser aufgeteilt. Ansonsten wird der Baum an diesem Punkt nicht mehr wachsen, was wieder eine Überanpassung verhindern kann. \cite{rapidminer_rapidminer_2015}
+
+Der Zuversichtswert ist ein Wert, der für das Zurückschneiden des Baumes verwendet wird und angibt, welches Level an Zuversicht gegeben sein muss, um das Zurückschneiden tatsächlich anzuwenden (er steht im Zusammenhang mit den durch das Zurückschneiden verursachten Fehlentscheidungen). \cite{rapidminer_rapidminer_2015}
+
+\img{0.75}{document/graphics/decision-tree-config.png}{Konfigurationsmöglichkeiten für Entscheidungsbäume in  RapidMiner}{decissiontree-config}
+
+\subsection{Einfluss der GIS-Daten auf den Entscheidungsbaum}
+\label{entscheidungsbaum}
+Der Entscheidungsbaum ohne GIS-Daten ist in Abbildung \imgref{decisiontree} zu sehen. Bei diesem Entscheidungsbaum wurden mittlere und maximale Geschwindigkeit, Stopprate sowie mittlere und maximale Beschleunigung als Indikatoren für den Entscheidungsprozess gewählt. Wie diese Werte berechnet und ergänzt werden, wird im Abschnitt ``\ref {schlussfolgerungsvariablen}  \nameref{schlussfolgerungsvariablen}`` erklärt. 
+
+\label{entscheidungsbaumGIS}
+Der Entscheidungsbaum mit GIS-Daten ist in Abbildung \imgref{decisiontree-gis} zu sehen. Bei diesem Entscheidungsbaum wurden zusätzlich zu den Geschwindigkeits-, Beschleunigungs- und Stoppwerten auch Werte für die verwendeten GIS-Daten gesammelt. Die zusätzlichen Werte beinhalten einen Wert (ptscloseness), welcher die Stopps in der Nähe von Bushaltestellen und Bahnhöfen widerspiegelt sowie zwei Werte für die Nähe zur Autobahn (highwaycloseness) und zu Gleisen (railcloseness). Wie diese Werte berechnet und ergänzt werden, wird im Abschnitt ``\ref{schlussfolgerungsvariablen} \nameref{schlussfolgerungsvariablen}`` erklärt.
+
+\img{0.75}{document/graphics/decision-tree.png}{Entscheidungsbaum ohne GIS-Daten}{decisiontree}
+\clearpage
+
+\img{0.82}{document/graphics/decision-tree-gis.png}{Entscheidungsbaum mit GIS-Daten}{decisiontree-gis}
+\clearpage
+
+\section{Trainingsdaten}
+\label{sec:trainingdata}
+Für das Training der Entscheidungsbäume konnten GPS-Aufzeichnungen aus einem Projekt von Sebastian Nagel ``Möglichkeitsstudie zum Projekt: Mobilitäts-Tracker`` verwendet werden. Diese Daten wurden mit verschiedenen GPS-Geräten (Wintec WTB-202, Columbus V-900, photoMate 887 Lite, qStarz BT-Q1300, xaiox) und der Hilfe von mehreren Personen aufgezeichnet. \cite{sebastian_nagel_moglichkeitsstudie_2011}
+
+Weiters wurden zum Training auch neue Datensätze verwendet, die mit zwei verschiedenen Smartphones und mit Hilfe der App ``MyTrack`` aufgezeichnet wurden. Diese App wurde ausgewählt, da sie sich sehr einfach handhaben lässt und die einzelnen Aufzeichnungen komfortabel exportiert werden können. 
+
+Einen groben Überblick über die verwendeten Trainingsdaten bietet die Tabelle \ref{datenuebsicht}. Die erste Spalte enthält den Verkehrsmitteltyp, die zweite die Anzahl der Segmente  und die dritte Spalte enthält die Gesamtdistanz in Kilometern vom jeweiligen Typ. Insgesamt beinhalten die Trainingsdaten 191 Segmente der verschiedenen Transportmittel und erstrecken sich über 2.250 Kilometer.
+
+\begin{table}
+\centering
+\begin{tabular}{| c | c | c | }
+\hline
+\textbf{Typ} & \textbf{Anzahl} & \textbf{Distanz (km)}\\ 
+\hline
+Auto & 73 & 752,33\\
+\hline
+Fußgänger &	53 & 71,73\\
+\hline
+Fahrrad	& 41 & 1.120,93\\
+\hline
+Zug & 8 & 239,04\\
+\hline
+Bus	& 16 & 66,03\\
+\hline
+\textbf{Gesamt} & \textbf{191} & \textbf{2.250,06}\\
+\hline
+\end{tabular}
+\caption{Trainingsdatenübersicht}
+\label{datenuebsicht}
+\end{table}
+
+\subsection*{Struktur der GPS-Daten}
+Die Training- und Testsdaten sind in einzelnen Dateien als XML abgelegt und entsprechen dem gängigen GPX-Format, wie es im Listing \coderef{gpxfile} ersichtlich ist. Die Spezifikation für GPX kann auf der Webseite von Topografix unter \url{ http://www.topografix.com/GPX/1/1/} gefunden werden. Ein zugehöriges XML-Schema findet man hier: \url{http://www.topografix.com/GPX/1/1/gpx.xsd}. \cite{topografix_gpx_2004} 
+
+\paragraph{Track (trk)}
+Üblicherweise beginnt eine solche Datei mit einem gpx-Element, welches wiederum einen Track enthält. Ein Track repräsentiert eine Aufzeichnung oder Spur und enthält eine Folge aller aufgezeichneten Trackpoints. Diese sind aber wiederum in ein oder mehrere Tracksegmente gegliedert. \cite{topografix_gpx_2004}
+
+\paragraph{Tracksegment (trkseg)}
+Ein Track kann aus einem oder mehreren Tracksegmenten bestehen. Die Tracksegmente enthalten wiederum beliebig viele aufeinander folgende Trackpoints. Mit diesen Segmenten kann ein Track in logische Abschnitte unterteilt werden. Außerdem kann ein neues Segment begonnen werden, wenn zum Beispiel die Verbindung verloren oder der GPS-Empfänger aus- und wieder eingeschaltet wurde. \cite{topografix_gpx_2004}
+
+\paragraph{Trackpoint (trkpt)}
+Ein Trackpoint entspricht einem Punkt des aufgezeichneten Tracks und enthält eine Koordinate (Längen- und Breitengrad) sowie einen Zeitstempel und die Höhenmeter. Es gibt aber auch Varianten, bei denen Geschwindigkeits- und Beschleunigungswerte zu einem Trackpoint abgelegt werden. \cite{topografix_gpx_2004}
+ 
+\begin{code}[xml]{GPX-Datei}{gpxfile}
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<gpx xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.topografix.com/GPX/1/1" ...>
+    <metadata>
+        <name>Badgasse - FH</name>
+        <desc></desc>
+    </metadata>
+    <trk>
+        <name>Badgasse - FH</name>
+        <trkseg>
+            <trkpt lat="47.39786" lon="9.735109">
+                <ele>475.0</ele>
+                <time>2015-02-19T07:20:18.156Z</time>
+            </trkpt>
+            <trkpt lat="47.397805" lon="9.735115">
+                <ele>476.0</ele>
+                <time>2015-02-19T07:20:33.163Z</time>
+            </trkpt>
+            <trkpt lat="47.397742" lon="9.735134">
+                <ele>478.0</ele>
+                <time>2015-02-19T07:20:34.157Z</time>
+            </trkpt>
+            <trkpt lat="47.397673" lon="9.7352">
+                <ele>475.0</ele>
+                <time>2015-02-19T07:20:35.933Z</time>
+            </trkpt>
+            ...
+            <trkpt lat="47.405439" lon="9.744841">
+                <ele>492.0</ele>
+                <time>2015-02-19T07:24:35.160Z</time>
+            </trkpt>
+        </trkseg>
+    </trk>
+</gpx>
+\end{code}
+
+\section{Neue Aufzeichnungen}
+Wie bereits im Abschnitt ``\ref{sec:trainingdata} \nameref{sec:trainingdata}`` erwähnt, wurden die neuen Daten mit zwei Smartphones (Samsung Galaxy S und einem LG Nexus 5) und der App ``MyTrack`` (siehe Abbildung \imgref{myTrack}) aufgezeichnet. Neben der einfachen Handhabung bietet diese App auch an, nur Punkte mit einer Mindestgenauigkeit aufzuzeichnen, was beim nachfolgenden Filtern ein wenig Arbeit abnimmt. Diese neuen Daten werden hauptsächlich zum Testen verwendet, nur ein Teil davon ist in die Trainingsdaten eingeflossen. Weiters kann man zwar ein Fortbewegungsmittel pro Aufzeichnung angeben, aber dies hat keinerlei Einfluss auf die Aufzeichnung selbst oder die Daten - es dient lediglich der visuellen Darstellung/Unterscheidung der einzelnen Aufzeichnungen.
+
+\img{1}{document/graphics/myTrack.png}{Die App myTrack}{myTrack}
+
+\section{GIS-Daten}
+Als relevante GIS-Daten kommen laut den erwähnten Publikationen zum Thema Verkehrsmittelerkennung einige in Frage, wie z.B. Parkplätze, Busstationen, Gleise, Bahnhöfe und das gesamte Straßennetz. 
+
+All diese Daten mögen zwar relevant sein, aber es handelt sich auch um sehr viele Daten, was wiederum bedeutet, dass die Bearbeitungszeit einer Aufzeichnung rasch ansteigt. Da der Prototyp auch für konkrete EndbenutzerInnen interessant sein soll, wird auf die Verwendung des gesamten Straßennetzes und der Parkplätze verzichtet, um die Bearbeitungszeit möglichst gering zu halten. Deshalb wird auf die Verwendung von Busstationen und der Gleise, gesetzt da dies schon in der Arbeit von Stenneth \cite{stenneth_transportation_2011} zu guten Resultaten geführt hat. Dieser Ansatz wird ergänzt mit den GIS-Daten des Autobahnnetzes, da in diesen viel Potential vermutet wird und es sich um eine überschaubare Menge an Daten handelt.
+
+\textbf{Akquirierung}\\
+Allgemein sind GIS-Daten z.B. via OpenStreetMaps oder Google-Maps verfügbar, aber in einzelnen Stichproben hat sich herausgestellt, dass die Zusatzinformationen in OpenStreetMaps wesentlich detaillierter und einfacher zu extrahieren sind. Dafür wurde in Kauf genommen, dass diese Daten nicht standardisiert eingetragen wurden.
+
+Die Österreich-Daten von OpenStreetMaps wurden als Archiv heruntergeladen und mit Hilfen von JOSM auf den relevanten Bereich eingegrenzt. JOSM ist ein Tool mit welchem die Daten von OpenStreetMaps gepflegt werden können (zu finden unter \url{https://josm.openstreetmap.de/}). Nachdem der Bereich auf Vorarlberg eingegrenzt worden ist, konnte dieser mit Hilfe von osmosis (weiteres Tool der OpenStreetMaps-Community \url{http://wiki.openstreetmap.org/wiki/Osmosis#Downloading}) nach bestimmten Punkten und Verbindungen gefiltert werden. Dadurch war es möglich, das Schienennetz von Vorarlberg sowie die Busstationen und das Autobahnnetz von Vorarlberg als XML-Datei zu exportieren. Diese XML-Dateien für Busstationen, das Autobahnnetz und das Schienennetz wurden anschließend eingelesen und in die Datenbank importiert. 
+
+In weiterer Folge können diese Daten zur genaueren Bestimmung eines Verkehrsmitteltyps verwendet werden. Dazu werden Werte für die Nähe zu Bushaltestellen sowie Bahnhöfen bei Trackpoints ohne bzw. mit minimaler Bewegung ermittelt. Außerdem wird in regelmäßigen Abständen die Nähe zu den Schienen und der Autobahn für jedes Segment berechnet. Diese Werte fließen dann in den Bestimmungsprozess ein und werden im Abschnitt ``\ref{gisdaten} \nameref{gisdaten}`` genauer beschrieben.
+
+\section{Weitere Daten}
+Neben den zusätzlichen Werten, die aus den GPS-Spuren berechnet werden können, und den GIS-Daten, bestand die Möglichkeit, Daten des öffentlichen Personennahverkehrs einzubinden, da diese in Vorarlberg die GPS-Tracks eines jeden Busses enthalten. Die Verwendung dieser Daten wäre insofern vielversprechend gewesen, als dass man einen ähnlichen Ansatz wie Stenneth verfolgen hätte können. Man hätte dadurch überprüfen können, ob an der jeweiligen Stelle gerade ein Bus steht und daraus Rückschlüsse ziehen können. Da diese Daten aber zum Zeitpunkt dieser Arbeit weder für diese Arbeit noch für die Öffentlichkeit verfügbar waren, konnte dieser Ansatz nicht weiter verfolgt werden.
+
+\clearpage
